@@ -1,0 +1,1770 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KPSS 2026 KOMUTA & ANALİZ MERKEZİ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <meta name="apple-mobile-web-app-title" content="KPSS 2026">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="KPSS 2026">
+    <meta name="theme-color" content="#0F172A">
+    <link rel="apple-touch-icon" href="icon.png">
+    <link rel="icon" href="icon.png">
+
+    <style>
+        :root {
+            --bg-base: #050507; 
+            --bg-panel: rgba(18, 18, 20, 0.65); 
+            --bg-surface-grad: linear-gradient(145deg, rgba(34, 34, 40, 0.7) 0%, rgba(24, 24, 28, 0.7) 100%);
+            
+            --border: rgba(255, 255, 255, 0.06);
+            --border-light: rgba(255, 255, 255, 0.15);
+            
+            --text-main: #f4f4f5;
+            --text-muted: #a1a1aa;
+            
+            --accent: #FF6B00; 
+            --accent-hover: #ff8533;
+            --accent-glow: rgba(255, 107, 0, 0.35);
+            
+            --success: #10B981;
+            --danger: #EF4444;
+            --warning: #F59E0B;
+            --info: #3B82F6; 
+            --pomo-color: #8B5CF6; 
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            background-image: 
+                radial-gradient(circle at 15% 0%, rgba(255, 107, 0, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 85% 100%, rgba(16, 185, 129, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.02) 0%, transparent 60%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            font-family: 'Roboto', system-ui, sans-serif; 
+            -webkit-font-smoothing: antialiased;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2vh 2vw;
+            overflow: hidden; 
+        }
+
+        h1, h2, h3, h4, h5, h6, .tab-btn, .btn, th, .kronos-title {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .container {
+            width: 96vw;
+            height: 96vh;
+            max-width: 1920px;
+            background: var(--bg-panel);
+            backdrop-filter: blur(24px); 
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem 2.5rem; 
+            box-shadow: 0 40px 80px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.08);
+            position: relative;
+            z-index: 10;
+            overflow: hidden; 
+        }
+
+        .header-title {
+            text-align: center; 
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 1rem;
+            color: var(--text-main);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center; 
+            gap: 15px;
+            text-shadow: 0 0 25px rgba(255,255,255,0.15);
+        }
+
+        .header-title span { color: var(--accent); font-weight: 400; opacity: 0.8;}
+
+        .tabs {
+            display: flex;
+            justify-content: center; 
+            gap: 2.5rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 1.5rem;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 20;
+        }
+
+        .tab-btn {
+            padding: 0.75rem 0;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            white-space: nowrap; 
+        }
+
+        .tab-btn:hover { color: var(--text-main); transform: translateY(-1px); }
+        .tab-btn.active { color: var(--text-main); font-weight: 600; }
+
+        .tab-btn::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background-color: var(--accent);
+            border-radius: 3px 3px 0 0;
+            transition: width 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .tab-btn.active::after {
+            width: 100%;
+            box-shadow: 0 -2px 12px var(--accent-glow);
+        }
+
+        .tab-content {
+            display: none;
+            flex: 1; 
+            flex-direction: column;
+            overflow: hidden; 
+            min-height: 0;
+            animation: fadeScale 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            position: relative;
+            z-index: 15;
+            opacity: 0;
+        }
+
+        .tab-content.active { display: flex; opacity: 1; }
+
+        @keyframes fadeScale {
+            from { opacity: 0; transform: translateY(10px) scale(0.99); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .top-row {
+            display: flex;
+            gap: 1.25rem; 
+            margin-bottom: 1rem;
+            flex-shrink: 0;
+        }
+
+        .ai-assistant-panel, .countdown-box, .pomodoro-box, .progress-box, .analysis-card, .stat-card, .chart-box, .trade-form, .filter-bar {
+            background: var(--bg-surface-grad); 
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06);
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        .ai-assistant-panel {
+            flex: 1.4;
+            padding: 1rem 1.25rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 4px solid var(--accent);
+        }
+        
+        .ai-assistant-panel:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1);
+        }
+
+        .ai-header-left { display: flex; align-items: center; gap: 1rem; }
+        .ai-icon { font-size: 2.2rem; filter: drop-shadow(0 0 12px var(--accent-glow)); transition: transform 0.3s; }
+        .ai-assistant-panel:hover .ai-icon { transform: scale(1.1); }
+        
+        .ai-content h3 { font-size: 1rem; font-weight: 600; color: var(--text-main); margin-bottom: 0.2rem; }
+        .ai-content p { font-size: 0.75rem; color: var(--text-muted); }
+
+        .countdown-box {
+            flex: 1;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-left: 4px solid var(--warning);
+        }
+
+        .pomodoro-box {
+            flex: 1.2;
+            padding: 0.8rem 1rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-left: 4px solid var(--info);
+        }
+
+        .pomo-task-input {
+            width: 95%;
+            padding: 0.4rem 0.8rem;
+            margin-bottom: 0.5rem;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 0.8rem;
+            text-align: center; 
+            font-family: 'Roboto', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .pomo-task-input:focus {
+            border-color: var(--info);
+            background: rgba(0,0,0,0.6);
+            outline: none;
+            box-shadow: 0 0 12px rgba(59, 130, 246, 0.4);
+        }
+
+        .pomo-controls {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.4rem;
+            flex-wrap: wrap; 
+            justify-content: center;
+        }
+
+        .pomo-btn {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 0.3rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+        }
+
+        .pomo-btn:hover { background: rgba(255,255,255,0.08); border-color: var(--border-light); transform: translateY(-1px); }
+        .pomo-btn.active-play { background: var(--info); color: #fff; border-color: var(--info); box-shadow: 0 4px 12px rgba(59,130,246,0.4);}
+        .pomo-btn.active-pause { background: var(--warning); color: #fff; border-color: var(--warning); box-shadow: 0 4px 12px rgba(245,158,11,0.4);}
+        .pomo-btn.active-reset { background: var(--danger); color: #fff; border-color: var(--danger); box-shadow: 0 4px 12px rgba(239,68,68,0.4);}
+
+        .cd-title {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 0.4rem;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-align: center;
+        }
+
+        .cd-timer { display: flex; gap: 0.8rem; justify-content: center; }
+        .cd-item { display: flex; flex-direction: column; align-items: center; min-width: 40px; }
+
+        .cd-val {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-main);
+            font-family: 'Poppins', sans-serif;
+            line-height: 1;
+            text-shadow: 0 0 20px rgba(255,255,255,0.15);
+            transition: color 0.3s ease;
+        }
+
+        .cd-lbl { font-size: 0.65rem; color: var(--text-muted); margin-top: 0.25rem; font-weight: 500; }
+
+        .progress-box {
+            flex: 1;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 0.8rem;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            background: rgba(0,0,0,0.6); 
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .progress-bar-fill {
+            background: linear-gradient(90deg, var(--accent), #ff913d);
+            height: 100%;
+            width: 0%;
+            transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 15px var(--accent-glow);
+            border-radius: 4px;
+        }
+
+        .middle-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 1.25rem;
+            margin-bottom: 1rem;
+            flex-shrink: 0;
+        }
+
+        .analysis-card, .stat-card {
+            padding: 1rem 1.25rem;
+            display: flex;
+            flex-direction: column;
+            text-align: center; 
+        }
+
+        .analysis-card:hover, .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1);
+            border-color: var(--border-light);
+        }
+
+        .analysis-card h3 {
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .task-list {
+            list-style: none;
+            font-size: 0.8rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .task-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-main);
+            background: rgba(0,0,0,0.3); 
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            border: 1px solid rgba(255,255,255,0.03);
+            transition: background 0.2s, border-color 0.2s;
+        }
+        
+        .task-item:hover {
+            background: rgba(0,0,0,0.5);
+            border-color: rgba(255,255,255,0.08);
+        }
+
+        .stat-card { justify-content: space-between; }
+        .stat-card.c-soru { border-left: 4px solid var(--accent); }
+        .stat-card.c-net { border-left: 4px solid var(--info); }
+        .stat-card.c-ders { border-left: 4px solid var(--success); }
+
+        .stat-card h4 {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .stat-card .val {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-main);
+            line-height: 1;
+            margin-bottom: 0.75rem;
+            text-shadow: 0 0 25px rgba(255,255,255,0.15);
+        }
+
+        .stat-list {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            border-top: 1px dashed var(--border);
+            padding-top: 0.75rem;
+        }
+
+        .stat-list span {
+            float: right;
+            font-weight: 600;
+            color: var(--text-main);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .charts-container { 
+            display: flex; 
+            gap: 1.5rem; 
+            flex: 1; 
+            min-height: 0; 
+            width: 100%; 
+        }
+        
+        .chart-box {
+            flex: 1; 
+            width: 100%;
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chart-box h3 {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-main);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .canvas-container { position: relative; flex: 1; width: 100%; min-height: 0; }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            z-index: 20;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-primary { background: var(--accent); color: #fff; box-shadow: 0 4px 15px var(--accent-glow); }
+        .btn-primary:hover { background: var(--accent-hover); transform: translateY(-2px); box-shadow: 0 8px 25px rgba(255,107,0,0.5); }
+
+        .btn-outline { background: rgba(255,107,0,0.05); border: 1px solid var(--accent); color: var(--accent); padding: 0.6rem 1.2rem;}
+        .btn-outline:hover { background: var(--accent); color: #fff; transform: translateY(-2px); box-shadow: 0 8px 25px var(--accent-glow); }
+        
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            padding: 0.4rem 0.8rem;
+            font-size: 0.75rem;
+            border-radius: 6px;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s;
+        }
+        .btn-danger:hover { background: var(--danger); border-color: var(--danger); color: #fff; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(239,68,68,0.4); }
+
+        .trade-form, .filter-bar { padding: 1.25rem 1.5rem; margin-bottom: 1.25rem; flex-shrink: 0; }
+        .form-row { display: flex; gap: 1.25rem; flex-wrap: wrap; align-items: flex-end; justify-content: center; }
+        .input-group { display: flex; flex-direction: column; flex: 1; min-width: 140px; text-align: center; }
+
+        .input-group label, .filter-bar label {
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            text-align: center; 
+        }
+
+        input, select {
+            padding: 0.65rem 1rem;
+            background: rgba(0,0,0,0.4); 
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-family: 'Roboto', sans-serif;
+            font-size: 0.9rem;
+            outline: none;
+            transition: all 0.3s ease;
+            text-align: center; 
+        }
+
+        input:hover, select:hover { border-color: var(--border-light); }
+        input:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); background: rgba(0,0,0,0.6); }
+        .filter-bar { display: flex; align-items: center; justify-content: center; gap: 1.5rem; }
+
+        .table-responsive {
+            flex: 1;
+            overflow-y: auto; 
+            background: var(--bg-surface-grad);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06);
+        }
+
+        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; text-align: center; } 
+
+        th {
+            background: rgba(0,0,0,0.6); 
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border-light);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap; 
+            backdrop-filter: blur(10px);
+            text-align: center; 
+        }
+
+        td {
+            padding: 0.85rem 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            color: var(--text-main);
+            vertical-align: middle;
+            white-space: nowrap;
+            transition: background 0.2s;
+            text-align: center; 
+        }
+
+        tr { transition: transform 0.2s ease, background 0.2s ease; }
+        tr:hover td { background: rgba(255,255,255,0.05); color: #fff; } 
+
+        .subject-name { display: block; margin-bottom: 0.4rem; font-weight: 500; font-size: 0.85rem; color: var(--text-main); white-space: normal; text-align: center;}
+
+        .status-btn {
+            display: inline-block;
+            padding: 0.35rem 0.8rem;
+            border: 1px solid var(--border-light);
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            background: rgba(0,0,0,0.4);
+            min-width: 100px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: 'Poppins', sans-serif;
+            position: relative;
+            z-index: 20;
+        }
+
+        .status-btn:hover { transform: scale(1.05); }
+        .status-btn.yesil { background-color: rgba(16, 185, 129, 0.15); color: var(--success); border-color: rgba(16, 185, 129, 0.4); box-shadow: 0 4px 10px rgba(16,185,129,0.1); }
+        .status-btn.kirmizi { background-color: rgba(239, 68, 68, 0.15); color: var(--danger); border-color: rgba(239, 68, 68, 0.4); box-shadow: 0 4px 10px rgba(239,68,68,0.1); }
+
+        .deneme-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 1.25rem;
+            padding-top: 1.25rem;
+            margin-top: 1rem;
+            border-top: 1px dashed var(--border);
+        }
+
+        .d-input-group { display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem; justify-content: center; }
+        .d-input-group input { width: 60px; padding: 0.5rem; text-align: center; }
+        .d-input-group label { width: 20px; margin-bottom: 0; color: var(--text-main); font-family: 'Poppins', sans-serif; font-weight: 600; text-align:center; }
+
+        /* MODAL KORUMASI */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 9999;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            justify-content: center;
+            align-items: center;
+            pointer-events: none; 
+        }
+        
+        .modal-overlay.active { display: flex; animation: fadeInModal 0.3s cubic-bezier(0.4, 0, 0.2, 1); pointer-events: auto; }
+
+        @keyframes fadeInModal {
+            from { opacity: 0; backdrop-filter: blur(0px); }
+            to { opacity: 1; backdrop-filter: blur(12px); }
+        }
+
+        .modal-content {
+            background: var(--bg-surface-grad);
+            border: 1px solid var(--border-light);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 680px;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 3rem;
+            position: relative;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.1);
+            transform: scale(0.95);
+            animation: scaleUpModal 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes scaleUpModal {
+            to { transform: scale(1); }
+        }
+
+        .modal-close { position: absolute; top: 1.5rem; right: 1.5rem; font-size: 2rem; color: var(--text-muted); cursor: pointer; background: none; border: none; transition: color 0.3s, transform 0.3s; }
+        .modal-close:hover { color: var(--text-main); transform: rotate(90deg); }
+
+        .kronos-header { display: flex; align-items: center; justify-content: center; gap: 1.5rem; margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px dashed var(--border-light); }
+        .kronos-title { color: var(--text-main); font-size: 1.6rem; font-weight: 600; text-shadow: 0 0 15px rgba(255,255,255,0.1); text-align: center;}
+
+        .kronos-report-item { background: rgba(0,0,0,0.3); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 1.25rem; transition: transform 0.2s, background 0.2s; }
+        .kronos-report-item:hover { background: rgba(0,0,0,0.4); transform: translateX(5px); border-color: var(--border-light); }
+        .kronos-report-item h4 { font-size: 1rem; color: var(--text-main); margin-bottom: 0.75rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; text-align: center; }
+
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 10px; transition: background 0.3s; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+        
+        .color-success { color: var(--success) !important; }
+        .color-danger { color: var(--danger) !important; }
+        .color-warning { color: var(--warning) !important; }
+        .color-info { color: var(--info) !important; }
+        .color-accent { color: var(--accent) !important; }
+        .color-pomo { color: var(--pomo-color) !important; }
+        .fw-bold { font-weight: 600 !important; }
+
+        @media (max-width: 1400px) {
+            .middle-grid { grid-template-columns: repeat(3, 1fr); } 
+            .top-row { flex-wrap: wrap; }
+            .ai-assistant-panel, .countdown-box, .pomodoro-box, .progress-box { flex: 1 1 45%; min-width: 300px; }
+            body { overflow-y: auto; height: auto; } 
+            .container { height: auto; min-height: 96vh; overflow: visible; }
+            .tab-content { overflow: visible; }
+        }
+
+        @media (max-width: 992px) {
+            .charts-container { flex-direction: column; } 
+            .chart-box { min-height: 350px; }
+            .container { width: 100vw; border-radius: 0; border: none; padding: 1.5rem; min-height: 100vh; }
+            body { padding: 0; }
+        }
+
+        @media (max-width: 768px) {
+            .header-title { font-size: 1.4rem; flex-wrap: wrap; text-align: center; justify-content: center; margin-bottom: 1rem; }
+            .tabs { overflow-x: auto; padding-bottom: 10px; justify-content: flex-start; -webkit-overflow-scrolling: touch; }
+            .tabs::-webkit-scrollbar { height: 4px; }
+            .tabs::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
+            .top-row { flex-direction: column; }
+            .ai-assistant-panel, .countdown-box, .pomodoro-box, .progress-box { flex: 1 1 100%; min-width: 100%; width: 100%; }
+            .middle-grid { grid-template-columns: 1fr; } 
+            .form-row { flex-direction: column; align-items: center; }
+            .input-group { width: 100%; }
+            .filter-bar { flex-direction: column; align-items: center; }
+            .deneme-grid { grid-template-columns: repeat(2, 1fr); }
+            .modal-content { padding: 2rem; width: 95%; margin: 1rem auto; }
+            .kronos-header { flex-direction: column; text-align: center; }
+            .kronos-header .ai-icon { font-size: 3rem; }
+            .modal-close { top: 1rem; right: 1rem; }
+        }
+        
+        @media (max-width: 480px) {
+            .deneme-grid { grid-template-columns: 1fr; }
+            .cd-timer { gap: 0.5rem; }
+            .cd-val { font-size: 1.4rem; }
+            .ai-header-left { flex-direction: column; text-align: center; }
+            .ai-assistant-panel { flex-direction: column; gap: 1rem; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+<datalist id="kpssTumKonular"></datalist>
+
+<div class="modal-overlay" id="kronosModal">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeKronos()">×</button>
+        <div class="kronos-header">
+            <div class="ai-icon" style="font-size: 3.2rem; color: var(--accent);">👁️‍🗨️</div>
+            <div class="kronos-title">KRONOS<br><span style="font-size:0.9rem; color:var(--text-muted); font-weight:400; font-family:'Roboto', sans-serif;">Yapay Zeka Strateji Koçu</span></div>
+        </div>
+        <div id="kronosReportContent"></div>
+        <div style="text-align:center; margin-top:2.5rem; font-size:0.9rem; color:var(--text-muted); font-style:italic;">
+            "Sınavı çok çalışan değil, zamanı ve kör noktalarını iyi yöneten kazanır." - Kronos
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="header-title">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 50px; height: 50px;">
+          <rect width="512" height="512" rx="112" fill="#0F172A"/>
+          <path d="M 180 355 L 180 440 L 200 420 L 220 440 L 220 370" fill="#0F172A" stroke="#FBBF24" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M 120 210 C 120 210, 180 190, 256 230 C 332 190, 392 210, 392 210 L 392 370 C 392 370, 332 350, 256 390 C 180 350, 120 370, 120 370 Z" fill="#0F172A" stroke="#F8FAFC" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
+          <line x1="256" y1="230" x2="256" y2="390" stroke="#F8FAFC" stroke-width="24" stroke-linecap="round"/>
+          <line x1="160" y1="270" x2="216" y2="278" stroke="#F8FAFC" stroke-width="12" stroke-linecap="round" opacity="0.4"/>
+          <line x1="160" y1="310" x2="216" y2="318" stroke="#F8FAFC" stroke-width="12" stroke-linecap="round" opacity="0.4"/>
+          <path d="M 130 90 Q 130 115 155 115 Q 130 115 130 140 Q 130 115 105 115 Q 130 115 130 90 Z" fill="#FBBF24"/>
+          <g transform="translate(320, 240) rotate(35)">
+             <path d="M -16 60 L -16 -84 A 16 16 0 0 1 16 -84 L 16 60 Z" fill="#0F172A" stroke="#38BDF8" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
+             <path d="M -16 60 L 0 105 L 16 60 Z" fill="#0F172A" stroke="#38BDF8" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
+             <line x1="0" y1="60" x2="0" y2="85" stroke="#38BDF8" stroke-width="8" stroke-linecap="round"/>
+             <path d="M 16 -50 L 32 -50 L 32 -10" fill="none" stroke="#38BDF8" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+          </g>
+        </svg>
+        KPSS 2026 <span>/</span> KOMUTA MERKEZİ
+    </div>
+    
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('ozet-tab')">Genel Özet</button>
+        <button class="tab-btn" onclick="switchTab('konu-tab')">Konu Takibi</button>
+        <button class="tab-btn" onclick="switchTab('soru-tab')">Soru Çözümü</button>
+        <button class="tab-btn" onclick="switchTab('deneme-tab')">Deneme Sınavları</button>
+        <button class="tab-btn" onclick="switchTab('pomo-tab')" style="color:var(--pomo-color); font-weight: 600;">Pomodoro Takibi</button>
+    </div>
+
+    <div id="ozet-tab" class="tab-content active">
+        
+        <div class="top-row">
+            <div class="ai-assistant-panel">
+                <div class="ai-header-left">
+                    <div class="ai-icon">🧠</div>
+                    <div class="ai-content">
+                        <h3>KRONOS YAPAY ZEKA</h3>
+                        <p>Verilerinizi tarayıp stratejik rapor sunar.</p>
+                    </div>
+                </div>
+                <button class="btn btn-outline" onclick="generateKronosReport()">Rapor Oluştur</button>
+            </div>
+
+            <div class="countdown-box">
+                <div class="cd-title">KPSS LİSANS (6 EYLÜL 2026)</div>
+                <div class="cd-timer">
+                    <div class="cd-item"><span class="cd-val" id="cd-days">00</span><span class="cd-lbl">GÜN</span></div>
+                    <div class="cd-item"><span class="cd-val" id="cd-hours">00</span><span class="cd-lbl">SAAT</span></div>
+                    <div class="cd-item"><span class="cd-val" id="cd-minutes">00</span><span class="cd-lbl">DAK.</span></div>
+                    <div class="cd-item"><span class="cd-val color-accent" id="cd-seconds">00</span><span class="cd-lbl">SAN.</span></div>
+                </div>
+            </div>
+
+            <div class="pomodoro-box">
+                <div class="cd-title" id="pomo-title">POMODORO (25D / 5D)</div>
+                <input type="text" id="pomo-task" class="pomo-task-input" placeholder="Çalışılacak Konu (Örn: Coğrafya İklim)" autocomplete="off">
+                <div class="pomo-timer">
+                    <span class="cd-val color-info" id="pomo-time">25:00</span>
+                </div>
+                <div class="pomo-controls">
+                    <button class="pomo-btn" id="pomo-start" onclick="startPomodoro()">BAŞLAT</button>
+                    <button class="pomo-btn" id="pomo-pause" onclick="pausePomodoro()">DURDUR</button>
+                    <button class="pomo-btn" id="pomo-reset" onclick="resetPomodoro()">SIFIRLA</button>
+                </div>
+            </div>
+
+            <div class="progress-box">
+                <div class="progress-info">
+                    <span>Genel İlerleme</span>
+                    <span id="konuSayaci" style="font-family:'Roboto', sans-serif; font-weight:500;">0 / 0</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="konuProgressBar"></div>
+                </div>
+                <div class="progress-info">
+                    <span>Tamamlanan Oran</span>
+                    <span id="konuProgressYuzde" class="color-accent fw-bold" style="font-size: 1.2rem; text-shadow: 0 0 12px rgba(255,107,0,0.4);">%0</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="middle-grid">
+            <div class="analysis-card" style="border-top: 3px solid var(--danger);">
+                <h3 class="color-danger">Eksik Konular</h3>
+                <ul class="task-list" id="aiCalendarTasks"></ul>
+            </div>
+            <div class="analysis-card" style="border-top: 3px solid var(--warning);">
+                <h3 class="color-warning">Net Düşürenler</h3>
+                <ul class="task-list" id="aiWeakTasks"></ul>
+            </div>
+            <div class="analysis-card" style="border-top: 3px solid var(--success);">
+                <h3 class="color-success">Güçlü Konular</h3>
+                <ul class="task-list" id="aiStrongTasks"></ul>
+            </div>
+
+            <div class="stat-card c-soru">
+                <h4>Çözülen Soru</h4>
+                <div class="val" id="dashTotalSoru">0</div>
+                <div class="stat-list">
+                    Doğru <span id="dashDogru" class="color-success">0</span>
+                    Yanlış <span id="dashYanlis" class="color-danger">0</span>
+                </div>
+            </div>
+            <div class="stat-card c-net">
+                <h4>Ort. Deneme Neti</h4>
+                <div class="val" id="dashOrtDeneme">0.00</div>
+                <div class="stat-list">
+                    Genel Yetenek <span id="dashOrtGY">0.00</span>
+                    Genel Kültür <span id="dashOrtGK">0.00</span>
+                </div>
+            </div>
+            <div class="stat-card c-ders">
+                <h4 style="color: var(--success);">En Verimli Ders</h4>
+                <div class="val color-success" id="dashBestLesson" style="font-size: 1.8rem; margin-top: 0.5rem;">-</div>
+            </div>
+        </div>
+
+        <div class="charts-container">
+            <div class="chart-box">
+                <h3>Deneme Sınavları Gelişim Grafiği</h3>
+                <div class="canvas-container">
+                    <canvas id="denemeChart"></canvas>
+                </div>
+            </div>
+            <div class="chart-box">
+                <h3>Derslere Göre Net Analizi</h3>
+                <div class="canvas-container">
+                    <canvas id="netChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="konu-tab" class="tab-content">
+        <div class="filter-bar">
+            <label>Hafta Filtresi</label>
+            <select id="weekSelect" onchange="haftayiGoster()">
+                <option value="1">1. Hafta (Gün 1-7)</option>
+                <option value="2">2. Hafta (Gün 8-14)</option>
+                <option value="3">3. Hafta (Gün 15-21)</option>
+                <option value="4">4. Hafta (Gün 22-28)</option>
+                <option value="5">5. Hafta (Gün 29-35)</option>
+                <option value="6">6. Hafta (Gün 36-42)</option>
+                <option value="7">7. Hafta (Gün 43-49)</option>
+                <option value="8">8. Hafta (Gün 50-56)</option>
+            </select>
+        </div>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>GÜN</th>
+                        <th>TÜRKÇE</th>
+                        <th>MATEMATİK</th>
+                        <th>TARİH</th>
+                        <th>COĞRAFYA</th>
+                        <th>VATANDAŞLIK</th>
+                    </tr>
+                </thead>
+                <tbody id="konuTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="soru-tab" class="tab-content">
+        <div class="dashboard" id="soruDersDashboard" style="margin-bottom: 1.25rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; flex-shrink: 0;"></div>
+
+        <div class="trade-form">
+            <div class="form-row">
+                <div class="input-group">
+                    <label>Tarih</label>
+                    <input type="date" id="inpTarih">
+                </div>
+                <div class="input-group">
+                    <label>Ders Seçimi</label>
+                    <select id="inpDers" onchange="updateKonuListesi()">
+                        <option value="Türkçe">Türkçe</option>
+                        <option value="Matematik">Matematik</option>
+                        <option value="Tarih">Tarih</option>
+                        <option value="Coğrafya">Coğrafya</option>
+                        <option value="Vatandaşlık">Vatandaşlık</option>
+                    </select>
+                </div>
+                <div class="input-group" style="flex: 2;">
+                    <label>Çözülen Konu</label>
+                    <input type="text" id="inpKonu" list="kpssTumKonular" placeholder="Ders seçin, konular listelensin..." autocomplete="off">
+                </div>
+                <div class="input-group">
+                    <label>Soru</label>
+                    <input type="number" id="inpToplam" placeholder="0">
+                </div>
+                <div class="input-group">
+                    <label>Doğru</label>
+                    <input type="number" id="inpDogru" placeholder="0">
+                </div>
+                <div class="input-group">
+                    <label>Yanlış</label>
+                    <input type="number" id="inpYanlis" placeholder="0">
+                </div>
+            </div>
+            <div class="form-row" style="justify-content: center; margin-top: 1rem;">
+                 <button class="btn btn-primary" onclick="kaydetSoru()">İstatistiğe Ekle</button>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>TARİH</th>
+                        <th>DERS</th>
+                        <th>KONU ADI</th>
+                        <th>SORU</th>
+                        <th>DOĞRU</th>
+                        <th>YANLIŞ</th>
+                        <th>BOŞ</th>
+                        <th>NET</th>
+                        <th>İŞLEM</th>
+                    </tr>
+                </thead>
+                <tbody id="soruListesi"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="deneme-tab" class="tab-content">
+        <div class="trade-form">
+            <div class="form-row">
+                <div class="input-group" style="flex: 1;">
+                    <label>Tarih</label>
+                    <input type="date" id="denemeTarih">
+                </div>
+                <div class="input-group" style="flex: 3;">
+                    <label>Deneme Adı / Yayın</label>
+                    <input type="text" id="denemeAdi" placeholder="Örn: Türkiye Geneli TG-1" autocomplete="off">
+                </div>
+            </div>
+            
+            <div class="deneme-grid">
+                <div>
+                    <label style="font-size:0.85rem; font-weight:600; color:var(--text-muted); display:block; margin-bottom:0.5rem; font-family:'Poppins', sans-serif; text-align: center;">TÜRKÇE (30)</label>
+                    <div class="d-input-group"><label>D</label><input type="number" id="dTrD" min="0" max="30"></div>
+                    <div class="d-input-group"><label>Y</label><input type="number" id="dTrY" min="0" max="30"></div>
+                </div>
+                <div>
+                    <label style="font-size:0.85rem; font-weight:600; color:var(--text-muted); display:block; margin-bottom:0.5rem; font-family:'Poppins', sans-serif; text-align: center;">MATEMATİK (30)</label>
+                    <div class="d-input-group"><label>D</label><input type="number" id="dMatD" min="0" max="30"></div>
+                    <div class="d-input-group"><label>Y</label><input type="number" id="dMatY" min="0" max="30"></div>
+                </div>
+                <div>
+                    <label style="font-size:0.85rem; font-weight:600; color:var(--text-muted); display:block; margin-bottom:0.5rem; font-family:'Poppins', sans-serif; text-align: center;">TARİH (27)</label>
+                    <div class="d-input-group"><label>D</label><input type="number" id="dTarD" min="0" max="27"></div>
+                    <div class="d-input-group"><label>Y</label><input type="number" id="dTarY" min="0" max="27"></div>
+                </div>
+                <div>
+                    <label style="font-size:0.85rem; font-weight:600; color:var(--text-muted); display:block; margin-bottom:0.5rem; font-family:'Poppins', sans-serif; text-align: center;">COĞRAFYA (18)</label>
+                    <div class="d-input-group"><label>D</label><input type="number" id="dCogD" min="0" max="18"></div>
+                    <div class="d-input-group"><label>Y</label><input type="number" id="dCogY" min="0" max="18"></div>
+                </div>
+                <div>
+                    <label style="font-size:0.85rem; font-weight:600; color:var(--text-muted); display:block; margin-bottom:0.5rem; font-family:'Poppins', sans-serif; text-align: center;">VATANDAŞLIK (15)</label>
+                    <div class="d-input-group"><label>D</label><input type="number" id="dVatD" min="0" max="15"></div>
+                    <div class="d-input-group"><label>Y</label><input type="number" id="dVatY" min="0" max="15"></div>
+                </div>
+            </div>
+
+            <div class="form-row" style="justify-content: center; margin-top: 1rem;">
+                 <button class="btn btn-primary" onclick="kaydetDeneme()">Denemeyi Kaydet</button>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>TARİH</th>
+                        <th>DENEME / YAYIN</th>
+                        <th>TÜRKÇE</th>
+                        <th>MAT</th>
+                        <th>TARİH</th>
+                        <th>COĞ</th>
+                        <th>VAT</th>
+                        <th>GY NET</th>
+                        <th>GK NET</th>
+                        <th>TOP. NET</th>
+                        <th>İŞLEM</th>
+                    </tr>
+                </thead>
+                <tbody id="denemeListesi"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="pomo-tab" class="tab-content">
+        <h3 style="color:var(--pomo-color); font-size:1.2rem; margin-bottom:1.5rem; text-align:center; letter-spacing:0.5px; border-bottom:1px dashed var(--border-light); padding-bottom:1rem; flex-shrink: 0;">📅 POMODORO ÇALIŞMA GEÇMİŞİ</h3>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>TARİH</th>
+                        <th>SAAT</th>
+                        <th>SEANS TÜRÜ</th>
+                        <th>ÇALIŞILAN KONU / ETİKET</th>
+                        <th>İŞLEM</th>
+                    </tr>
+                </thead>
+                <tbody id="pomodoroListesi"></tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    /* ─── FIREBASE BAŞLATMA VE VERİTABANI BAĞLANTISI ─── */
+    const firebaseConfig = {
+      apiKey: "AIzaSyDflDPLKU5UvsvWnAygAdsI0TjqR8qwUSM",
+      authDomain: "kpss-2026-ec46f.firebaseapp.com",
+      databaseURL: "https://kpss-2026-ec46f-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "kpss-2026-ec46f",
+      storageBucket: "kpss-2026-ec46f.firebasestorage.app",
+      messagingSenderId: "1077675000074",
+      appId: "1:1077675000074:web:9c10cdf2ceb38abd2b7af3"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // Merkezi Uygulama Hafızası
+    let appKonuDurumlari = {};
+    let appSoruVerileri = [];
+    let appDenemeVerileri = [];
+    let appPomoVerileri = [];
+
+    // Veritabanı Dinleyicileri (Gerçek Zamanlı Senkronizasyon)
+    db.ref('kpss/konuDurumlari').on('value', (snapshot) => {
+        appKonuDurumlari = snapshot.val() || {};
+        haftayiGoster();
+        updateDashboard();
+    });
+
+    db.ref('kpss/soruVerileri').on('value', (snapshot) => {
+        appSoruVerileri = snapshot.val() || [];
+        updateDashboard();
+    });
+
+    db.ref('kpss/denemeVerileri').on('value', (snapshot) => {
+        appDenemeVerileri = snapshot.val() || [];
+        renderDeneme();
+        updateDashboard();
+    });
+
+    db.ref('kpss/pomodoroVerileri').on('value', (snapshot) => {
+        appPomoVerileri = snapshot.val() || [];
+        renderPomodoroHistory();
+    });
+
+    /* ─── KPSS MÜFREDAT LİSTELERİ ─── */
+    const trKonular = ["Sözcükte Anlam", "Cümlede Anlam", "Paragraf (Anlatım Teknikleri)", "Paragraf (Ana Düşünce)", "Ses Bilgisi", "Sözcükte Yapı (Kökler & Ekler)", "Sözcük Türleri (İsimler & Sıfatlar)", "Sözcük Türleri (Zamirler & Zarflar)", "Sözcük Türleri (Edat, Bağlaç, Ünlem)", "Söz Grupları (Tamlamalar)", "Cümlenin Öğeleri", "Cümle Türleri", "Yazım Kuralları - 1", "Yazım Kuralları - 2", "Noktalama İşaretleri - 1", "Noktalama İşaretleri - 2", "Anlatım Bozuklukları", "Sözel Mantık (Temel Akıl Yürütme)", "Sözel Mantık (Sıralama Soruları)", "Sözel Mantık (Tablo Kurma)", "Sözel Mantık (Kombinasyon)"];
+    const matKonular = ["Temel Matematik & Kavramlar", "Denklem Çözme", "Faktöriyel", "Sayıların Çözümlenmesi", "Ardışık Sayılar", "Bölme ve Bölünebilme", "Asal Çarpanlara Ayırma", "EBOB - EKOK", "Rasyonel Sayılar", "Ondalık Sayılar", "Mutlak Değer", "Üslü İfadeler", "Köklü İfadeler", "Basit Eşitsizlikler", "Çarpanlara Ayırma", "Oran - Orantı", "Sayı Problemleri - 1", "Sayı Problemleri - 2", "Kesir Problemleri", "Yaş Problemleri", "İşçi Problemleri", "Hareket Problemleri", "Yüzde Problemleri", "Kar - Zarar Problemleri", "Karışım Problemleri", "Grafik - Tablo Yorumlama", "Mantıksal Muhakeme", "Kümeler", "Fonksiyonlar", "İşlem - Modüler Aritmetik", "Permütasyon", "Kombinasyon", "Olasılık", "Sayısal Mantık - 1 (Şekil Yeteneği)", "Sayısal Mantık - 2 (Mantıksal Akıl)", "Sayısal Mantık - 3 (Sayı Dizileri)", "Geometri: Açılar ve Üçgenler", "Geometri: Dik ve Özel Üçgenler", "Geometri: Açıortay ve Kenarortay", "Geometri: Üçgende Benzerlik", "Geometri: Çokgenler ve Dörtgenler", "Geometri: Çember ve Daire", "Geometri: Analitik Geometri - 1", "Geometri: Analitik Geometri - 2", "Geometri: Katı Cisimler"];
+    const tarKonular = ["İslamiyet Öncesi Türk Tarihi", "İlk Türk-İslam Devletleri", "Anadolu Selçuklu Devleti", "Osmanlı Kuruluş Dönemi", "Osmanlı Yükselme Dönemi", "Osmanlı Kültür ve Medeniyeti - 1", "Osmanlı Kültür ve Medeniyeti - 2", "Osmanlı Duraklama Dönemi", "Osmanlı Gerileme Dönemi", "Osmanlı Dağılma Dönemi - 1", "Osmanlı Dağılma Dönemi - 2", "XX. Yüzyıl Başlarında Osmanlı - 1", "XX. Yüzyıl Başlarında Osmanlı - 2", "Mondros Ateşkes Antlaşması", "Millî Mücadele Hazırlık Dönemi - 1", "Millî Mücadele Hazırlık Dönemi - 2", "I. TBMM Dönemi Gelişmeleri", "Millî Mücadele Muharebeler Dönemi - 1", "Millî Mücadele Muharebeler Dönemi - 2", "Atatürk'ün Hayatı", "Atatürk Dönemi İç Politika", "Atatürk İlkeleri", "Atatürk İnkılapları (Siyasi & Hukuk)", "Atatürk İnkılapları (Eğitim & Toplumsal)", "Atatürk İnkılapları (Ekonomi)", "Cumhuriyet Dönemi Dış Politika - 1", "Cumhuriyet Dönemi Dış Politika - 2", "XX. Yüzyıl Başlarında Dünya", "II. Dünya Savaşı", "Soğuk Savaş Dönemi", "Yumuşama Dönemi", "Küreselleşen Dünya"];
+    const cogKonular = ["Türkiye'nin Coğrafi Konumu", "İklim (Sıcaklık)", "İklim (Basınç, Rüzgar, Nem)", "Yeryüzü Şekilleri (Dağlar)", "Yeryüzü Şekilleri (Akarsular ve Platolar)", "Yeryüzü Şekilleri (Ovalar ve Göller)", "Doğal Afetler & Dış Kuvvetler", "Türkiye'de Nüfus ve Dağılışı", "Türkiye'de Tarım", "Türkiye'de Hayvancılık", "Madenler ve Enerji Kaynakları", "Türkiye'de Sanayi", "Ulaşım, Ticaret ve Turizm", "Bölgesel Kalkınma Projeleri"];
+    const vatKonular = ["Hukukun Temel Kavramları", "Hukuk Kuralları & Yaptırımlar", "Hukuk Çeşitleri & Kaynakları", "Hukukun Dalları", "Hak Kavramı ve Türleri", "Anayasa Hukukuna Giriş", "Demokrasi & Anayasal Gelişmeler", "1982 Anayasası Genel Esasları", "Temel Hak ve Hürriyetler", "Temel Hakların Sınıflandırılması", "Yasama (TBMM Kuruluş)", "Yasama (Seçimler & Statü)", "Yasama (Görev & Yetkiler)", "Yasama (Bilgi Edinme)", "Yürütme (Cumhurbaşkanı & Bakanlar)", "Yürütme (DDK & Yönetmelikler)", "Yürütme (MGK & OHAL)", "Yargı (Genel Hükümler)", "Yargı (AYM, Yargıtay, Danıştay)", "Yargı (HSK, Sayıştay, Uyuşmazlık)", "İdare Hukuku (Merkezi İdare)", "İdare Hukuku (Yerinden Yönetim)", "İdare Hukuku (Kamu Görevlileri)", "İdare Hukuku (Disiplin Cezaları)", "İnsan Hakları Hukuku"];
+
+    function dengeliDagit(konuListesi, toplamGun) {
+        let sonuc = Array(toplamGun).fill("-");
+        if (konuListesi.length === 0) return sonuc;
+        if (konuListesi.length === 1) { sonuc[0] = konuListesi[0]; return sonuc; }
+        let adim = (toplamGun - 1) / (konuListesi.length - 1);
+        for (let i = 0; i < konuListesi.length; i++) {
+            let index = Math.round(i * adim);
+            if (sonuc[index] !== "-") {
+                let k = index;
+                while (k < toplamGun && sonuc[k] !== "-") k++;
+                if (k < toplamGun) index = k;
+                else {
+                    k = index;
+                    while (k >= 0 && sonuc[k] !== "-") k--;
+                    index = k;
+                }
+            }
+            sonuc[index] = konuListesi[i];
+        }
+        return sonuc;
+    }
+
+    const trDagitim = dengeliDagit(trKonular, 56);
+    const matDagitim = dengeliDagit(matKonular, 56);
+    const tarDagitim = dengeliDagit(tarKonular, 56);
+    const cogDagitim = dengeliDagit(cogKonular, 56);
+    const vatDagitim = dengeliDagit(vatKonular, 56);
+
+    const tamProgram = [];
+    for(let i=0; i<56; i++) {
+        tamProgram.push({
+            gun: `GÜN ${i+1}`, w: Math.floor(i/7) + 1,
+            tr: trDagitim[i], mat: matDagitim[i],
+            tar: tarDagitim[i], cog: cogDagitim[i],
+            vat: vatDagitim[i]
+        });
+    }
+
+    let chartNet = null;
+    let chartDeneme = null;
+
+    // SİSTEM BAŞLATMASI
+    document.addEventListener("DOMContentLoaded", () => {
+        try {
+            document.getElementById('inpTarih').valueAsDate = new Date();
+            document.getElementById('denemeTarih').valueAsDate = new Date();
+            
+            updateKonuListesi(); 
+            baslatGeriSayim();
+            updatePomoDisplay();
+        } catch(e) {
+            console.error("Arayüz başlatılırken bir hata oluştu:", e);
+        }
+    });
+
+    function switchTab(tabId) {
+        try {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
+            
+            let targetTab = document.getElementById(tabId);
+            if(targetTab) targetTab.classList.add('active');
+            
+            let buttons = document.querySelectorAll('.tab-btn');
+            for(let btn of buttons) {
+                if(btn.getAttribute('onclick').includes(tabId)) btn.classList.add('active');
+            }
+            if(tabId === 'ozet-tab') updateDashboard();
+        } catch(e) {
+            console.error("Sekme değiştirilemedi:", e);
+        }
+    }
+
+    function playChime() {
+        try {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            
+            osc.type = 'sine'; 
+            osc.frequency.setValueAtTime(880, ctx.currentTime); 
+            osc.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 1.5); 
+            
+            gain.gain.setValueAtTime(0.5, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 1.5); 
+            
+            osc.start(ctx.currentTime);
+            osc.stop(ctx.currentTime + 1.5);
+        } catch (e) {
+            console.log("Ses çalınamadı (Tarayıcı izni gerekiyor).");
+        }
+    }
+
+    // --- POMODORO MANTIĞI ---
+    let pomoTime = 25 * 60;
+    let pomoInterval = null;
+    let isPomoRunning = false;
+    let isBreak = false;
+
+    function updatePomoDisplay() {
+        let m = Math.floor(pomoTime / 60);
+        let s = pomoTime % 60;
+        let timeEl = document.getElementById('pomo-time');
+        if(timeEl) timeEl.innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    }
+
+    function resetPomoButtons() {
+        let b1 = document.getElementById('pomo-start');
+        let b2 = document.getElementById('pomo-pause');
+        let b3 = document.getElementById('pomo-reset');
+        if(b1) b1.classList.remove('active-play');
+        if(b2) b2.classList.remove('active-pause');
+        if(b3) b3.classList.remove('active-reset');
+    }
+
+    function kaydetPomodoroSeansi() {
+        try {
+            let taskInput = document.getElementById("pomo-task");
+            let task = (taskInput && taskInput.value.trim() !== "") ? taskInput.value.trim() : "Belirtilmedi";
+            let type = isBreak ? "MOLA (5 Dk)" : "ODAKLANMA (25 Dk)";
+            let now = new Date();
+            let dateStr = now.toLocaleDateString("tr-TR");
+            let timeStr = now.toLocaleTimeString("tr-TR", {hour: '2-digit', minute:'2-digit'});
+
+            let yeniSeans = { id: Date.now(), date: dateStr, time: timeStr, type: type, task: task };
+            appPomoVerileri.push(yeniSeans);
+            appPomoVerileri.sort((a, b) => b.id - a.id); 
+            
+            db.ref('kpss/pomodoroVerileri').set(appPomoVerileri);
+        } catch(e) {
+            console.error("Pomodoro kaydedilirken hata:", e);
+        }
+    }
+
+    function silPomodoro(id) {
+        appPomoVerileri = appPomoVerileri.filter(k => k.id !== id);
+        db.ref('kpss/pomodoroVerileri').set(appPomoVerileri);
+    }
+
+    function renderPomodoroHistory() {
+        try {
+            let html = '';
+            appPomoVerileri.forEach(p => {
+                let renk = p.type.includes("ODAKLANMA") ? "color:var(--info);" : "color:var(--success);";
+                html += `<tr>
+                    <td>${p.date}</td>
+                    <td><strong>${p.time}</strong></td>
+                    <td style="${renk} font-weight:600;">${p.type}</td>
+                    <td><span style="color:var(--text-main); font-style:italic;">${p.task}</span></td>
+                    <td><button class="btn-danger" onclick="silPomodoro(${p.id})">Sil</button></td>
+                </tr>`;
+            });
+            let target = document.getElementById("pomodoroListesi");
+            if(target) target.innerHTML = html;
+        } catch(e) {}
+    }
+
+    function startPomodoro() {
+        if (isPomoRunning) return;
+        isPomoRunning = true;
+        resetPomoButtons();
+        let btn = document.getElementById('pomo-start');
+        if(btn) btn.classList.add('active-play');
+        
+        pomoInterval = setInterval(() => {
+            if (pomoTime > 0) {
+                pomoTime--;
+                updatePomoDisplay();
+            } else {
+                clearInterval(pomoInterval);
+                isPomoRunning = false;
+                resetPomoButtons();
+                
+                kaydetPomodoroSeansi();
+                playChime();
+                
+                isBreak = !isBreak; 
+                pomoTime = isBreak ? 5 * 60 : 25 * 60;
+                
+                let timeEl = document.getElementById('pomo-time');
+                let titleEl = document.getElementById('pomo-title');
+                
+                if (isBreak) {
+                    if(timeEl) { timeEl.classList.remove('color-info'); timeEl.classList.add('color-success'); }
+                    if(titleEl) { titleEl.innerText = "MOLA ZAMANI (5D)"; titleEl.classList.add('color-success'); }
+                    alert("Odaklanma süresi bitti! Mola ver ve zihnini tazele.");
+                } else {
+                    if(timeEl) { timeEl.classList.remove('color-success'); timeEl.classList.add('color-info'); }
+                    if(titleEl) { titleEl.innerText = "POMODORO (25D / 5D)"; titleEl.classList.remove('color-success'); }
+                    alert("Mola bitti! Yeniden odaklanma vakti.");
+                }
+                updatePomoDisplay();
+            }
+        }, 1000);
+    }
+
+    function pausePomodoro() {
+        if (!isPomoRunning) return;
+        clearInterval(pomoInterval);
+        isPomoRunning = false;
+        resetPomoButtons();
+        let btn = document.getElementById('pomo-pause');
+        if(btn) btn.classList.add('active-pause');
+    }
+
+    function resetPomodoro() {
+        clearInterval(pomoInterval);
+        isPomoRunning = false;
+        isBreak = false;
+        pomoTime = 25 * 60;
+        
+        resetPomoButtons();
+        let btn = document.getElementById('pomo-reset');
+        if(btn) {
+            btn.classList.add('active-reset');
+            setTimeout(() => { btn.classList.remove('active-reset'); }, 300);
+        }
+        
+        let timeEl = document.getElementById('pomo-time');
+        let titleEl = document.getElementById('pomo-title');
+        
+        if(timeEl) { timeEl.classList.add('color-info'); timeEl.classList.remove('color-success'); }
+        if(titleEl) { titleEl.innerText = "POMODORO (25D / 5D)"; titleEl.classList.remove('color-success'); }
+        
+        updatePomoDisplay();
+    }
+    // --- POMODORO SONU ---
+
+    function baslatGeriSayim() {
+        const sinavTarihi = new Date("2026-09-06T10:15:00").getTime();
+        
+        const guncelleSaniye = setInterval(() => {
+            const simdi = new Date().getTime();
+            const fark = sinavTarihi - simdi;
+            
+            if (fark < 0) {
+                clearInterval(guncelleSaniye);
+                document.getElementById("cd-days").innerText = "00";
+                document.getElementById("cd-hours").innerText = "00";
+                document.getElementById("cd-minutes").innerText = "00";
+                document.getElementById("cd-seconds").innerText = "00";
+                const baslik = document.querySelector(".cd-title");
+                if(baslik) { baslik.innerText = "SINAV BAŞLADI!"; baslik.classList.add("color-success"); }
+                return;
+            }
+            
+            const gun = Math.floor(fark / (1000 * 60 * 60 * 24));
+            const saat = Math.floor((fark % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const dakika = Math.floor((fark % (1000 * 60 * 60)) / (1000 * 60));
+            const saniye = Math.floor((fark % (1000 * 60)) / 1000);
+            
+            let dEl=document.getElementById("cd-days"), hEl=document.getElementById("cd-hours");
+            let mEl=document.getElementById("cd-minutes"), sEl=document.getElementById("cd-seconds");
+            if(dEl) dEl.innerText = gun.toString().padStart(2, '0');
+            if(hEl) hEl.innerText = saat.toString().padStart(2, '0');
+            if(mEl) mEl.innerText = dakika.toString().padStart(2, '0');
+            if(sEl) sEl.innerText = saniye.toString().padStart(2, '0');
+        }, 1000);
+    }
+
+    function updateKonuListesi() {
+        let seciliDers = document.getElementById("inpDers");
+        if(!seciliDers) return;
+        let dersMap = { 'Türkçe': trKonular, 'Matematik': matKonular, 'Tarih': tarKonular, 'Coğrafya': cogKonular, 'Vatandaşlık': vatKonular };
+        let dl = document.getElementById("kpssTumKonular");
+        if(!dl) return;
+        dl.innerHTML = '';
+        dersMap[seciliDers.value].forEach(k => {
+            let opt = document.createElement("option"); opt.value = k; dl.appendChild(opt);
+        });
+        let inpKonu = document.getElementById("inpKonu");
+        if(inpKonu) inpKonu.value = '';
+    }
+
+    function haftayiGoster() {
+        let ws = document.getElementById("weekSelect");
+        if(!ws) return;
+        let seciliHafta = parseInt(ws.value);
+        const tbody = document.getElementById("konuTableBody");
+        if(!tbody) return;
+        tbody.innerHTML = "";
+        
+        let haftaVerisi = tamProgram.filter(item => item.w === seciliHafta);
+
+        haftaVerisi.forEach((row) => {
+            const tr = document.createElement("tr");
+            let html = `<td style="color:var(--text-muted); font-weight:600;">${row.gun}</td>`;
+            ['tr', 'mat', 'tar', 'cog', 'vat'].forEach(ders => {
+                if(row[ders] === "-") {
+                    html += `<td>-</td>`;
+                } else {
+                    let benzersizId = `btn_${row.gun.replace(/\s+/g, '')}_${ders}_${row.w}`;
+                    let durum = appKonuDurumlari[benzersizId] || "Bekliyor";
+                    let btnClass = "status-btn";
+                    if (durum === "Tamamlandı") btnClass += " yesil";
+                    if (durum === "Yapılmadı") btnClass += " kirmizi";
+                    html += `<td><span class="subject-name">${row[ders]}</span><button id="${benzersizId}" class="${btnClass}" data-durum="${durum}" onclick="durumDegistir('${benzersizId}')">${durum}</button></td>`;
+                }
+            });
+            tr.innerHTML = html;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function durumDegistir(btnId) {
+        let btn = document.getElementById(btnId);
+        if(!btn) return;
+        let mevcutDurum = btn.getAttribute("data-durum") || "Bekliyor";
+
+        let yeniDurum = "Bekliyor";
+        if (mevcutDurum === "Bekliyor") yeniDurum = "Tamamlandı";
+        else if (mevcutDurum === "Tamamlandı") yeniDurum = "Yapılmadı";
+        
+        appKonuDurumlari[btnId] = yeniDurum;
+        db.ref('kpss/konuDurumlari').set(appKonuDurumlari);
+    }
+
+    function kaydetSoru() {
+        try {
+            const tarih = document.getElementById("inpTarih").value;
+            const ders = document.getElementById("inpDers").value;
+            const konu = document.getElementById("inpKonu").value.trim() || "Genel Soru Çözümü";
+            const toplam = parseInt(document.getElementById("inpToplam").value) || 0;
+            const dogru = parseInt(document.getElementById("inpDogru").value) || 0;
+            const yanlis = parseInt(document.getElementById("inpYanlis").value) || 0;
+            
+            if (!tarih || toplam <= 0) return;
+            if (toplam < (dogru + yanlis)) { alert("Hata: Doğru ve yanlışın toplamı soru sayısını geçemez!"); return; }
+
+            let bos = toplam - (dogru + yanlis);
+            let net = dogru - (yanlis * 0.25);
+            
+            appSoruVerileri.push({ id: Date.now(), tarih, ders, konu, toplam, dogru, yanlis, bos, net });
+            appSoruVerileri.sort((a, b) => new Date(b.tarih) - new Date(a.tarih));
+            db.ref('kpss/soruVerileri').set(appSoruVerileri);
+            
+            document.getElementById("inpKonu").value = ''; document.getElementById("inpToplam").value = '';
+            document.getElementById("inpDogru").value = ''; document.getElementById("inpYanlis").value = '';
+        } catch(e) {}
+    }
+
+    function soruSil(id) {
+        appSoruVerileri = appSoruVerileri.filter(k => k.id !== id);
+        db.ref('kpss/soruVerileri').set(appSoruVerileri);
+    }
+
+    function calcNet(d, y) { return (d || 0) - ((y || 0) * 0.25); }
+    
+    function kaydetDeneme() {
+        try {
+            const tarih = document.getElementById("denemeTarih").value;
+            const adi = document.getElementById("denemeAdi").value.trim() || "Genel Deneme";
+            if (!tarih) return;
+
+            let trD = parseFloat(document.getElementById("dTrD").value) || 0; let trY = parseFloat(document.getElementById("dTrY").value) || 0;
+            let matD = parseFloat(document.getElementById("dMatD").value) || 0; let matY = parseFloat(document.getElementById("dMatY").value) || 0;
+            let tarD = parseFloat(document.getElementById("dTarD").value) || 0; let tarY = parseFloat(document.getElementById("dTarY").value) || 0;
+            let cogD = parseFloat(document.getElementById("dCogD").value) || 0; let cogY = parseFloat(document.getElementById("dCogY").value) || 0;
+            let vatD = parseFloat(document.getElementById("dVatD").value) || 0; let vatY = parseFloat(document.getElementById("dVatY").value) || 0;
+
+            let gyNet = calcNet(trD, trY) + calcNet(matD, matY);
+            let gkNet = calcNet(tarD, tarY) + calcNet(cogD, cogY) + calcNet(vatD, vatY);
+            let topNet = gyNet + gkNet;
+
+            appDenemeVerileri.push({ id: Date.now(), tarih, adi, tr: calcNet(trD,trY), mat: calcNet(matD,matY), tar: calcNet(tarD,tarY), cog: calcNet(cogD,cogY), vat: calcNet(vatD,vatY), gyNet, gkNet, topNet });
+            appDenemeVerileri.sort((a, b) => new Date(b.tarih) - new Date(a.tarih));
+            db.ref('kpss/denemeVerileri').set(appDenemeVerileri);
+
+            ['dTrD','dTrY','dMatD','dMatY','dTarD','dTarY','dCogD','dCogY','dVatD','dVatY','denemeAdi'].forEach(id => {
+                let el = document.getElementById(id);
+                if(el) el.value = '';
+            });
+        } catch(e) {}
+    }
+
+    function silDeneme(id) {
+        appDenemeVerileri = appDenemeVerileri.filter(k => k.id !== id);
+        db.ref('kpss/denemeVerileri').set(appDenemeVerileri);
+    }
+
+    function renderDeneme() {
+        try {
+            let html = '';
+            appDenemeVerileri.forEach(d => {
+                html += `<tr>
+                    <td>${d.tarih.split("-").reverse().join(".")}</td><td><strong>${d.adi}</strong></td>
+                    <td>${d.tr.toFixed(2)}</td><td>${d.mat.toFixed(2)}</td><td>${d.tar.toFixed(2)}</td>
+                    <td>${d.cog.toFixed(2)}</td><td>${d.vat.toFixed(2)}</td>
+                    <td style="color:var(--text-muted); font-weight:600;">${d.gyNet.toFixed(2)}</td>
+                    <td style="color:var(--text-muted); font-weight:600;">${d.gkNet.toFixed(2)}</td>
+                    <td style="color:var(--success); font-weight:700; font-size:1.1rem;">${d.topNet.toFixed(2)}</td>
+                    <td><button class="btn-danger" onclick="silDeneme(${d.id})">Sil</button></td>
+                </tr>`;
+            });
+            let dl = document.getElementById("denemeListesi");
+            if(dl) dl.innerHTML = html;
+        } catch(e) {}
+    }
+
+    function generateKronosReport() {
+        try {
+            let konuStats = {};
+            appSoruVerileri.forEach(k => {
+                if(k.konu.toLowerCase() === "genel soru çözümü") return;
+                if(!konuStats[k.konu]) konuStats[k.konu] = {d:0, tot:0, ders:k.ders, ad: k.konu};
+                konuStats[k.konu].d += k.dogru;
+                konuStats[k.konu].tot += k.toplam;
+            });
+            let korNoktalar = Object.values(konuStats).filter(v => v.tot >= 15 && (v.d/v.tot) < 0.65).sort((a,b) => (a.d/a.tot) - (b.d/b.tot));
+            
+            let korNoktaHtml = korNoktalar.length > 0
+                ? `<strong>${korNoktalar[0].ders} - ${korNoktalar[0].ad}</strong> konusunda başarı oranınız <span class="color-danger fw-bold">%${Math.round((korNoktalar[0].d/korNoktalar[0].tot)*100)}</span>. Bu konu denemelerde sizi dibe çekebilir. Acil tekrar şart.`
+                : `<span class="color-success fw-bold">Harika!</span> Kronos şu an için belirgin ve tehlikeli bir kör nokta tespit edemedi.`;
+
+            let dersler = {'Türkçe':0, 'Matematik':0, 'Tarih':0, 'Coğrafya':0, 'Vatandaşlık':0};
+            appSoruVerileri.forEach(k => { if(dersler[k.ders] !== undefined) dersler[k.ders] += k.toplam; });
+            let maxDers = Object.keys(dersler).reduce((a,b) => dersler[a] > dersler[b] ? a : b);
+            let minDers = Object.keys(dersler).reduce((a,b) => dersler[a] < dersler[b] ? a : b);
+            
+            let dengeHtml = "";
+            if (dersler[maxDers] > 0 && (dersler[maxDers] - dersler[minDers]) > 150) {
+                dengeHtml = `Denge şaşıyor! <span class="color-accent fw-bold">${maxDers} (${dersler[maxDers]} Soru)</span> yüklenirken, <span class="color-danger fw-bold">${minDers} (${dersler[minDers]} Soru)</span> ihmal ediliyor. Zayıf cepheyi güçlendirin.`;
+            } else if (dersler[maxDers] === 0) {
+                dengeHtml = "Henüz soru verisi girmediniz.";
+            } else {
+                dengeHtml = `Soru dağılımınız oldukça dengeli. Tüm cephelerde istikrarlı ilerliyorsunuz. Böyle devam edin.`;
+            }
+
+            let trendHtml = `<span class="color-muted">Trend analizi için en az 3 deneme girmelisiniz.</span>`;
+            if(appDenemeVerileri.length >= 3) {
+                let n1 = appDenemeVerileri[0].topNet; 
+                let n2 = appDenemeVerileri[1].topNet;
+                let n3 = appDenemeVerileri[2].topNet; 
+                if(n1 > n2 && n2 >= n3) trendHtml = `<span class="color-success fw-bold">📈 Yükseliş Trendi:</span> Son 3 denemede netleriniz tırmanışta (${n3} ➔ ${n2} ➔ ${n1}). İvmeniz mükemmel!`;
+                else if(n1 < n2 && n2 <= n3) trendHtml = `<span class="color-danger fw-bold">📉 Düşüş Trendi:</span> Son 3 denemede netleriniz düşüşte (${n3} ➔ ${n2} ➔ ${n1}). Zihinsel yorgunluk veya eksik tekrar olabilir. Dinlenin ve toparlanın.`;
+                else trendHtml = `<span class="color-warning fw-bold">〰️ Dalgalı Seyir:</span> Netleriniz bir inip bir çıkıyor (${n3} ➔ ${n2} ➔ ${n1}). Stabilizasyon için nokta atışı konu tekrarlarına odaklanın.`;
+            }
+
+            let yapilmadiCount = Object.values(appKonuDurumlari).filter(v => v === "Yapılmadı").length;
+            let riskHtml = "";
+            if(yapilmadiCount > 5) riskHtml = `<span class="color-danger fw-bold">Kırmızı Alarm (%85 Risk):</span> Tam ${yapilmadiCount} konuyu geride bıraktınız. Kartopu etkisiyle ezilmemek için acil telafi kampı yapın!`;
+            else if(yapilmadiCount > 0) riskHtml = `<span class="color-warning fw-bold">Sarı Alarm (%40 Risk):</span> ${yapilmadiCount} adet ertelenmiş konunuz var. Hafta sonu bunları eritmeye çalışın.`;
+            else riskHtml = `<span class="color-success fw-bold">Sıfır Risk:</span> Programda geride kalan hiçbir konunuz yok. Disiplininiz kusursuz.`;
+
+            let html = `
+                <div class="kronos-report-item">
+                    <h4>👁️‍🗨️ Kör Nokta Detektörü</h4>
+                    <div style="font-size:0.95rem; color:var(--text-muted); line-height:1.6;">${korNoktaHtml}</div>
+                </div>
+                <div class="kronos-report-item">
+                    <h4>⚖️ Soru Dağılım Dengesi</h4>
+                    <div style="font-size:0.95rem; color:var(--text-muted); line-height:1.6;">${dengeHtml}</div>
+                </div>
+                <div class="kronos-report-item">
+                    <h4>📊 Deneme Trend Radarı</h4>
+                    <div style="font-size:0.95rem; color:var(--text-muted); line-height:1.6;">${trendHtml}</div>
+                </div>
+                <div class="kronos-report-item">
+                    <h4>⚠️ Zaman Sıkışma Riski</h4>
+                    <div style="font-size:0.95rem; color:var(--text-muted); line-height:1.6;">${riskHtml}</div>
+                </div>
+            `;
+            
+            document.getElementById('kronosReportContent').innerHTML = html;
+            document.getElementById('kronosModal').classList.add('active');
+        } catch(e) {}
+    }
+
+    function closeKronos() {
+        let modal = document.getElementById('kronosModal');
+        if(modal) modal.classList.remove('active');
+    }
+
+    function updateDashboard() {
+        try {
+            let toplamGorev = 0; let tamamlanan = 0; let takvimEksikleri = [];
+
+            tamProgram.forEach(row => {
+                ['tr', 'mat', 'tar', 'cog', 'vat'].forEach(ders => {
+                    if(row[ders] !== "-") {
+                        toplamGorev++;
+                        let bId = `btn_${row.gun.replace(/\s+/g, '')}_${ders}_${row.w}`;
+                        let durum = appKonuDurumlari[bId] || "Bekliyor";
+                        if(durum === "Tamamlandı") tamamlanan++;
+                        if(durum === "Yapılmadı" && !takvimEksikleri.includes(row[ders])) takvimEksikleri.push(row[ders]);
+                    }
+                });
+            });
+
+            let yuzde = toplamGorev === 0 ? 0 : Math.round((tamamlanan / toplamGorev) * 100);
+            
+            let ks = document.getElementById("konuSayaci");
+            let kpb = document.getElementById("konuProgressBar");
+            let kpy = document.getElementById("konuProgressYuzde");
+            
+            if(ks) ks.innerText = `${tamamlanan} / ${toplamGorev}`;
+            if(kpb) kpb.style.width = `${yuzde}%`;
+            if(kpy) kpy.innerText = `%${yuzde}`;
+
+            let stats = {
+                'Türkçe': { tot: 0, d: 0, y: 0, b:0, net: 0 },
+                'Matematik': { tot: 0, d: 0, y: 0, b:0, net: 0 },
+                'Tarih': { tot: 0, d: 0, y: 0, b:0, net: 0 },
+                'Coğrafya': { tot: 0, d: 0, y: 0, b:0, net: 0 },
+                'Vatandaşlık': { tot: 0, d: 0, y: 0, b:0, net: 0 },
+                'GENEL': { tot: 0, d: 0, y: 0, b:0, net: 0 }
+            };
+            let konuStats = {};
+            let soruListesiHtml = '';
+
+            appSoruVerileri.forEach(kayit => {
+                stats[kayit.ders].tot += kayit.toplam; stats[kayit.ders].d += kayit.dogru; stats[kayit.ders].y += kayit.yanlis; stats[kayit.ders].b += kayit.bos; stats[kayit.ders].net += kayit.net;
+                stats['GENEL'].tot += kayit.toplam; stats['GENEL'].d += kayit.dogru; stats['GENEL'].y += kayit.yanlis; stats['GENEL'].b += kayit.bos; stats['GENEL'].net += kayit.net;
+
+                let kKey = kayit.konu;
+                if(!konuStats[kKey]) konuStats[kKey] = { d: 0, tot: 0, ders: kayit.ders };
+                konuStats[kKey].d += kayit.dogru; konuStats[kKey].tot += kayit.toplam;
+
+                let netRenk = kayit.net >= 0 ? "color:var(--success); font-weight:600;" : "color:var(--danger); font-weight:600;";
+                soruListesiHtml += `<tr>
+                    <td>${kayit.tarih.split("-").reverse().join(".")}</td>
+                    <td><strong>${kayit.ders}</strong></td>
+                    <td><span style="color:var(--text-muted);">${kayit.konu}</span></td>
+                    <td style="font-family:'Roboto', sans-serif;">${kayit.toplam}</td>
+                    <td style="color:var(--success); font-family:'Roboto', sans-serif;">${kayit.dogru}</td>
+                    <td style="color:var(--danger); font-family:'Roboto', sans-serif;">${kayit.yanlis}</td>
+                    <td style="color:var(--text-muted); font-family:'Roboto', sans-serif;">${kayit.bos}</td>
+                    <td style="${netRenk} font-family:'Roboto', sans-serif;">${kayit.net.toFixed(2)}</td>
+                    <td><button class="btn-danger" onclick="soruSil(${kayit.id})">Sil</button></td>
+                </tr>`;
+            });
+            
+            let sl = document.getElementById("soruListesi");
+            if(sl) sl.innerHTML = soruListesiHtml;
+
+            let zayifKonular = []; let gucluKonular = [];
+            Object.entries(konuStats).forEach(([konuAdi, v]) => {
+                if (v.tot >= 15 && konuAdi.toLowerCase() !== "genel soru çözümü") { 
+                    let bYuzde = (v.d / v.tot) * 100;
+                    if (bYuzde < 65) zayifKonular.push({ ad: konuAdi, ders: v.ders, yuzde: bYuzde });
+                    if (bYuzde >= 85) gucluKonular.push({ ad: konuAdi, ders: v.ders, yuzde: bYuzde });
+                }
+            });
+
+            let calTaskUl = document.getElementById("aiCalendarTasks");
+            if(calTaskUl) {
+                calTaskUl.innerHTML = "";
+                if(takvimEksikleri.length === 0) {
+                    calTaskUl.innerHTML = `<li class="text-muted" style="font-style:italic; margin-top: 0.5rem; background:transparent; border:none; justify-content:center;">Harika ilerliyorsun! Eksik yok.</li>`;
+                } else {
+                    takvimEksikleri.slice(0, 4).forEach(k => {
+                        calTaskUl.innerHTML += `<li class="task-item"><span>${k}</span> <strong class="color-danger">Eksik</strong></li>`;
+                    });
+                }
+            }
+
+            let weakUl = document.getElementById("aiWeakTasks");
+            if(weakUl) {
+                weakUl.innerHTML = "";
+                if(zayifKonular.length === 0) {
+                    weakUl.innerHTML = `<li class="text-muted" style="font-style:italic; margin-top: 0.5rem; background:transparent; border:none; justify-content:center;">Zayıf konu tespit edilmedi.</li>`;
+                } else {
+                    zayifKonular.sort((a,b)=>a.yuzde-b.yuzde).slice(0, 4).forEach(k => {
+                        weakUl.innerHTML += `<li class="task-item"><span>${k.ad}</span> <strong class="color-warning">%${Math.round(k.yuzde)}</strong></li>`;
+                    });
+                }
+            }
+
+            let strongUl = document.getElementById("aiStrongTasks");
+            if(strongUl) {
+                strongUl.innerHTML = "";
+                if(gucluKonular.length === 0) {
+                    strongUl.innerHTML = `<li class="text-muted" style="font-style:italic; margin-top: 0.5rem; background:transparent; border:none; justify-content:center;">Yüksek verimli veri bekleniyor.</li>`;
+                } else {
+                    gucluKonular.sort((a,b)=>b.yuzde-a.yuzde).slice(0, 4).forEach(k => {
+                        strongUl.innerHTML += `<li class="task-item"><span>${k.ad}</span> <strong class="color-success">%${Math.round(k.yuzde)}</strong></li>`;
+                    });
+                }
+            }
+
+            let dOrtGY = 0, dOrtGK = 0, dOrtTotal = 0;
+            if(appDenemeVerileri.length > 0) {
+                dOrtGY = appDenemeVerileri.reduce((sum, d) => sum + d.gyNet, 0) / appDenemeVerileri.length;
+                dOrtGK = appDenemeVerileri.reduce((sum, d) => sum + d.gkNet, 0) / appDenemeVerileri.length;
+                dOrtTotal = appDenemeVerileri.reduce((sum, d) => sum + d.topNet, 0) / appDenemeVerileri.length;
+            }
+
+            let eTS = document.getElementById('dashTotalSoru'); if(eTS) eTS.innerText = stats['GENEL'].tot;
+            let eDD = document.getElementById('dashDogru'); if(eDD) eDD.innerText = stats['GENEL'].d;
+            let eDY = document.getElementById('dashYanlis'); if(eDY) eDY.innerText = stats['GENEL'].y;
+            let eOD = document.getElementById('dashOrtDeneme'); if(eOD) eOD.innerText = dOrtTotal.toFixed(2);
+            let eOGY = document.getElementById('dashOrtGY'); if(eOGY) eOGY.innerText = dOrtGY.toFixed(2);
+            let eOGK = document.getElementById('dashOrtGK'); if(eOGK) eOGK.innerText = dOrtGK.toFixed(2);
+
+            let bestLesson = "-"; let maxRate = -1;
+            ['Türkçe', 'Matematik', 'Tarih', 'Coğrafya', 'Vatandaşlık'].forEach(d => {
+                if (stats[d].tot > 0) {
+                    let rate = stats[d].net / stats[d].tot;
+                    if (rate > maxRate) { maxRate = rate; bestLesson = d; }
+                }
+            });
+            let eBL = document.getElementById('dashBestLesson'); if(eBL) eBL.innerText = bestLesson;
+
+            let derslerListesi = ['Türkçe', 'Matematik', 'Tarih', 'Coğrafya', 'Vatandaşlık'];
+            let dersDashboardHtml = '';
+            derslerListesi.forEach(d => {
+                dersDashboardHtml += `
+                    <div class="stat-card" style="padding: 1.25rem;">
+                        <h4 style="font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--accent);">${d}</h4>
+                        <div class="val" style="font-size: 1.8rem; color: var(--text-main); margin-bottom: 0.2rem;">${stats[d].tot} <span style="font-size:0.75rem;color:var(--text-muted); font-weight: 500;">SORU</span></div>
+                        <div class="stat-list" style="margin-top: 0.5rem; font-size: 0.85rem; border-top: none; padding-top:0;">
+                            Net: <span style="color:var(--text-main)">${stats[d].net.toFixed(2)}</span>
+                            D/Y: <span style="color:var(--text-muted)"><strong class="color-success">${stats[d].d}</strong> / <strong class="color-danger">${stats[d].y}</strong></span>
+                        </div>
+                    </div>
+                `;
+            });
+            let sdd = document.getElementById('soruDersDashboard');
+            if(sdd) sdd.innerHTML = dersDashboardHtml;
+
+            try {
+                if (typeof Chart !== 'undefined') {
+                    if (chartNet) chartNet.destroy();
+                    if (chartDeneme) chartDeneme.destroy();
+
+                    Chart.defaults.color = '#a1a1aa';
+                    Chart.defaults.font.family = 'Roboto';
+
+                    let nc = document.getElementById('netChart');
+                    if (nc) {
+                        const ctxNet = nc.getContext('2d');
+                        chartNet = new Chart(ctxNet, {
+                            type: 'bar',
+                            data: {
+                                labels: ['TÜRKÇE', 'MAT', 'TARİH', 'COĞ', 'VAT'],
+                                datasets: [{
+                                    label: 'NET (SORU BANKASI)',
+                                    data: [stats['Türkçe'].net, stats['Matematik'].net, stats['Tarih'].net, stats['Coğrafya'].net, stats['Vatandaşlık'].net],
+                                    backgroundColor: '#FF6B00',
+                                    borderRadius: 6
+                                }]
+                            },
+                            options: { maintainAspectRatio: false, responsive: true, plugins: { legend: { display: false } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.05)' } }, x: { grid: { display: false } } } }
+                        });
+                    }
+
+                    let denemeLabels = appDenemeVerileri.slice().reverse().map(d => d.adi.substring(0, 10)); 
+                    let denemeData = appDenemeVerileri.slice().reverse().map(d => d.topNet);
+                    
+                    let dc = document.getElementById('denemeChart');
+                    if (dc) {
+                        const ctxDeneme = dc.getContext('2d');
+                        chartDeneme = new Chart(ctxDeneme, {
+                            type: 'line',
+                            data: {
+                                labels: denemeLabels.length > 0 ? denemeLabels : ['HENÜZ DENEME YOK'],
+                                datasets: [{
+                                    label: 'TOPLAM NET',
+                                    data: denemeData.length > 0 ? denemeData : [0],
+                                    borderColor: '#10B981',
+                                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                                    borderWidth: 3,
+                                    fill: true,
+                                    tension: 0.4,
+                                    pointBackgroundColor: '#FF6B00',
+                                    pointRadius: 4
+                                }]
+                            },
+                            options: { maintainAspectRatio: false, responsive: true, plugins: { legend: { display: false } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.05)' } }, x: { grid: { display: false } } } }
+                        });
+                    }
+                }
+            } catch (grafikHatasi) {
+                console.log("Grafikler yüklenemedi (İnternet bağlantısı yok veya Chart.js engellendi).");
+            }
+
+        } catch(genelHata) {
+            console.error("Dashboard güncellenirken hata oluştu:", genelHata);
+        }
+    }
+</script>
+</body>
+</html>
