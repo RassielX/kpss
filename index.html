@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KPSS & AGS KOMUTA MERKEZİ v7</title>
+    <title>KRONOS KOMUTA MERKEZİ v8</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
@@ -11,7 +11,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <meta name="apple-mobile-web-app-title" content="KPSS 2026">
+    <meta name="apple-mobile-web-app-title" content="KRONOS">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="mobile-web-app-capable" content="yes">
@@ -51,25 +51,19 @@
             font-family: 'Roboto', system-ui, sans-serif; 
             -webkit-font-smoothing: antialiased;
             height: 100vh;
-            display: flex; justify-content: center; align-items: center;
-            padding: 2vh 2vw; overflow: hidden; 
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            overflow: hidden; 
             position: relative;
             z-index: 1;
         }
 
         /* ─── HAREKETLİ NEBULA ARKA PLAN ─── */
         .space-bg {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            z-index: -1; pointer-events: none;
-            background: var(--bg-base);
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -1; pointer-events: none; background: var(--bg-base);
             background-image: radial-gradient(circle at 50% 50%, rgba(15, 23, 42, 1) 0%, rgba(5, 5, 7, 1) 100%);
         }
-        .space-stars, .space-stars-2 {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-repeat: repeat;
-        }
+        .space-stars, .space-stars-2 { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-repeat: repeat; }
         .space-stars {
             background-image: 
                 radial-gradient(1.5px 1.5px at 25px 5px, rgba(255,255,255,0.7) 100%, transparent),
@@ -78,9 +72,7 @@
                 radial-gradient(2.5px 2.5px at 50px 75px, rgba(255,255,255,0.4) 100%, transparent),
                 radial-gradient(1.5px 1.5px at 15px 125px, rgba(255,255,255,0.8) 100%, transparent),
                 radial-gradient(2px 2px at 110px 80px, rgba(255,107,0,0.3) 100%, transparent);
-            background-size: 180px 180px;
-            animation: starDrift 70s linear infinite;
-            opacity: 0.6;
+            background-size: 180px 180px; animation: starDrift 70s linear infinite; opacity: 0.6;
         }
         .space-stars-2 {
             background-image: 
@@ -88,38 +80,34 @@
                 radial-gradient(2.5px 2.5px at 100px 50px, rgba(255,255,255,0.4) 100%, transparent),
                 radial-gradient(1.5px 1.5px at 20px 80px, rgba(255,107,0,0.6) 100%, transparent),
                 radial-gradient(2px 2px at 150px 150px, rgba(255,255,255,0.5) 100%, transparent);
-            background-size: 280px 280px;
-            animation: starDrift 120s linear infinite;
-            opacity: 0.4;
+            background-size: 280px 280px; animation: starDrift 120s linear infinite; opacity: 0.4;
         }
-        @keyframes starDrift {
-            from { background-position: 0 0; }
-            to { background-position: -500px -1000px; }
-        }
-        /* ───────────────────────────────── */
+        @keyframes starDrift { from { background-position: 0 0; } to { background-position: -500px -1000px; } }
 
         h1, h2, h3, h4, h5, h6, .tab-btn, .btn, th, .kronos-title { font-family: 'Poppins', sans-serif; }
 
         .container {
-            width: 96vw; height: 96vh; max-width: 1920px;
-            background: var(--bg-panel);
+            width: 96vw; height: 92vh; max-width: 1920px; background: var(--bg-panel);
             backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-            border: 1px solid var(--border); border-radius: 20px;
-            display: flex; flex-direction: column;
-            padding: 1.5rem 2.5rem; 
-            box-shadow: 0 40px 80px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.08);
+            border: 1px solid var(--border); border-radius: 20px; display: flex; flex-direction: column;
+            padding: 1.5rem 2.5rem; box-shadow: 0 40px 80px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.08);
             position: relative; z-index: 10; overflow: hidden; 
         }
 
-        .header-title {
-            text-align: center; font-size: 1.6rem; font-weight: 700; letter-spacing: 0.5px;
-            margin-bottom: 1rem; color: var(--text-main); flex-shrink: 0;
-            display: flex; align-items: center; justify-content: center; gap: 15px;
-            text-shadow: 0 0 25px rgba(255,255,255,0.15); position: relative;
+        /* ─── HİZALANMIŞ YENİ BAŞLIK VE LOGO ─── */
+        .header-title { 
+            text-align: center; font-size: 1.6rem; font-weight: 700; letter-spacing: 0.5px; 
+            margin-bottom: 1rem; color: var(--text-main); flex-shrink: 0; 
+            display: flex; align-items: center; justify-content: center; 
+            text-shadow: 0 0 25px rgba(255,255,255,0.15); position: relative; min-height: 45px;
         }
-        .header-title span { color: var(--accent); font-weight: 400; opacity: 0.8;}
-        .logout-btn { position: absolute; right: 0; top: 50%; transform: translateY(-50%); background: transparent; border: 1px solid var(--text-muted); color: var(--text-muted); padding: 6px 14px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; font-weight: 600; transition: all 0.3s; }
+        .header-logo { position: absolute; left: 0; top: 50%; transform: translateY(-50%); display: flex; align-items: center; }
+        .header-actions { position: absolute; right: 0; top: 50%; transform: translateY(-50%); display: flex; gap: 10px; }
+        
+        .logout-btn { background: transparent; border: 1px solid var(--text-muted); color: var(--text-muted); padding: 6px 14px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; font-weight: 600; transition: all 0.3s; }
         .logout-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+        .reset-btn { border-color: #ef4444; color: #ef4444; }
+        .reset-btn:hover { background: #ef4444; color: #fff; }
 
         .tabs { display: flex; justify-content: center; gap: 2.5rem; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; flex-shrink: 0; position: relative; z-index: 100; }
         .tab-btn { padding: 0.75rem 0; cursor: pointer; border: none; background: transparent; font-size: 1rem; font-weight: 500; color: var(--text-muted); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); position: relative; white-space: nowrap; }
@@ -204,24 +192,25 @@
 
         .trade-form, .filter-bar { padding: 1.25rem 1.5rem; margin-bottom: 1.25rem; flex-shrink: 0; }
         .form-row { display: flex; gap: 1.25rem; flex-wrap: wrap; align-items: flex-end; justify-content: center; }
-        .input-group { display: flex; flex-direction: column; flex: 1; min-width: 140px; text-align: center; }
+        .input-group { display: flex; flex-direction: column; flex: 1; min-width: 140px; text-align: left; }
         .input-group label, .filter-bar label { font-family: 'Poppins', sans-serif; font-size: 0.8rem; font-weight: 500; color: var(--text-muted); margin-bottom: 0.5rem; text-align: center; }
         
         input, select { padding: 0.65rem 1rem; background: rgba(0,0,0,0.4); border: 1px solid var(--border); border-radius: 8px; color: var(--text-main); font-family: 'Roboto', sans-serif; font-size: 0.9rem; outline: none; transition: all 0.3s ease; text-align: center; }
         input:hover, select:hover { border-color: var(--border-light); }
         input:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); background: rgba(0,0,0,0.6); }
-        select option { background: var(--surface-3); color: var(--text-main); font-weight: 600; }
+        select option { background: var(--bg-base); color: var(--text-main); font-weight: 600; }
         
         .filter-bar { display: flex; align-items: center; justify-content: center; gap: 1.5rem; }
 
-        .table-responsive { flex: 1; overflow-y: auto; background: var(--bg-surface-grad); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06); }
-        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; text-align: center; } 
+        /* ─── TABLO KAYDIRMA (SCROLL) DÜZELTMESİ ─── */
+        .table-responsive { flex: 1; overflow-x: auto; overflow-y: auto; background: var(--bg-surface-grad); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06); }
+        table { width: 100%; min-width: max-content; border-collapse: collapse; font-size: 0.9rem; text-align: center; } 
         th { background: rgba(0,0,0,0.6); color: var(--text-muted); font-size: 0.75rem; font-weight: 600; padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-light); position: sticky; top: 0; z-index: 10; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; backdrop-filter: blur(10px); text-align: center; }
         td { padding: 0.85rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--text-main); vertical-align: middle; white-space: nowrap; transition: background 0.2s; text-align: center; }
         tr { transition: transform 0.2s ease, background 0.2s ease; }
         tr:hover td { background: rgba(255,255,255,0.05); color: #fff; } 
 
-        .subject-name { display: block; margin-bottom: 0.4rem; font-weight: 500; font-size: 0.85rem; color: var(--text-main); white-space: normal; text-align: center;}
+        .subject-name { display: block; margin-bottom: 0.4rem; font-weight: 500; font-size: 0.85rem; color: var(--text-main); white-space: normal; text-align: center; max-width: 150px; margin-left:auto; margin-right:auto;}
         .status-btn { display: inline-block; padding: 0.35rem 0.8rem; border: 1px solid var(--border-light); border-radius: 20px; cursor: pointer; font-size: 0.75rem; font-weight: 500; color: var(--text-muted); background: rgba(0,0,0,0.4); min-width: 100px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); font-family: 'Poppins', sans-serif; position: relative; z-index: 20; }
         .status-btn:hover { transform: scale(1.05); }
         .status-btn.yesil { background-color: rgba(16, 185, 129, 0.15); color: var(--success); border-color: rgba(16, 185, 129, 0.4); box-shadow: 0 4px 10px rgba(16,185,129,0.1); }
@@ -261,6 +250,12 @@
         .color-pomo { color: var(--pomo-color) !important; }
         .fw-bold { font-weight: 600 !important; }
 
+        /* ─── EN ALT TELİF İMZASI ─── */
+        .footer-copy {
+            margin-top: 12px; font-size: 0.75rem; color: rgba(255,255,255,0.3); 
+            text-align: center; letter-spacing: 1px; z-index: 10; font-family: 'Poppins', sans-serif;
+        }
+
         @media (max-width: 1400px) {
             .middle-grid { grid-template-columns: repeat(3, 1fr); } 
             .top-row { flex-wrap: wrap; }
@@ -293,19 +288,14 @@
             .kronos-header { flex-direction: column; text-align: center; }
             .kronos-header .ai-icon { font-size: 3rem; }
             .modal-close { top: 1rem; right: 1rem; }
-        }
-        
-        @media (max-width: 480px) {
-            .deneme-grid { grid-template-columns: 1fr; }
-            .cd-timer { gap: 0.5rem; }
-            .cd-val { font-size: 1.4rem; }
-            .ai-header-left { flex-direction: column; text-align: center; }
-            .ai-assistant-panel { flex-direction: column; gap: 1rem; text-align: center; }
+            .header-logo { position: static; transform: none; margin-bottom: 10px; }
+            .header-actions { position: static; transform: none; justify-content: center; margin-top: 10px; width: 100%; }
         }
     </style>
 </head>
 <body>
 
+<!-- HAREKETLİ UZAY ARKA PLAN -->
 <div class="space-bg">
     <div class="space-stars"></div>
     <div class="space-stars-2"></div>
@@ -313,62 +303,58 @@
 
 <datalist id="kpssTumKonular"></datalist>
 
+<!-- GİRİŞ EKRANI -->
 <div class="modal-overlay active" id="authModal" style="background: rgba(7, 11, 18, 0.98); z-index: 999999;">
     <div class="modal-content" style="width: 420px; padding: 40px; text-align: center; box-shadow: 0 0 100px rgba(255, 107, 0, 0.2);">
-        <div style="font-size: 48px; margin-bottom: 10px;">🎯</div>
-        <h2 style="color: var(--accent); margin-bottom: 5px; font-weight: 800; letter-spacing: 2px;">KPSS / AGS 2026</h2>
+        <img src="icon.png" alt="Logo" style="width: 60px; height: 60px; margin-bottom: 10px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.6);">
+        <h2 style="color: var(--accent); margin-bottom: 5px; font-weight: 800; letter-spacing: 2px;">KRONOS YKS 2026</h2>
         <p style="color: var(--text-muted); font-size: 12px; margin-bottom: 25px;">Kişisel verileriniz şifrelenerek saklanır.</p>
-        <div class="input-group" style="margin-bottom: 15px; text-align: left;">
+        <div class="input-group" style="margin-bottom: 15px;">
             <input type="email" id="authEmail" placeholder="E-posta Adresi" style="width: 100%; text-align:center; font-size: 14px; padding: 12px;">
         </div>
-        <div class="input-group" style="margin-bottom: 25px; text-align: left;">
+        <div class="input-group" style="margin-bottom: 25px;">
             <input type="password" id="authPassword" placeholder="Şifre (En az 6 hane)" style="width: 100%; text-align:center; font-size: 14px; padding: 12px;">
         </div>
         <button class="btn btn-primary" style="width: 100%; margin-bottom: 10px; height: 44px; font-size: 12px;" onclick="loginUser()">GİRİŞ YAP</button>
-        <button class="btn" style="width: 100%; height: 44px; font-size: 12px; background:transparent; border: 1px solid var(--text-muted); color: var(--text-muted);" onclick="registerUser()">YENİ KAYIT</button>
+        <button class="btn" style="width: 100%; height: 44px; margin-bottom: 15px; font-size: 12px; background:transparent; border: 1px solid var(--text-muted); color: var(--text-muted);" onclick="registerUser()">YENİ KAYIT OLUŞTUR</button>
+        
+        <!-- HIZLI TEST BUTONU -->
+        <button class="btn" style="width: 100%; height: 44px; font-size: 12px; background: rgba(59, 130, 246, 0.2); border: 1px solid var(--info); color: var(--info);" onclick="testGiris()">TEST GİRİŞİ (Hızlı İncele)</button>
+
         <div id="authError" style="color: var(--danger); font-size: 12px; margin-top: 15px; font-weight: 600;"></div>
     </div>
 </div>
 
+<!-- SİSTEM KURULUM EKRANI (İLK GİRİŞTE ÇIKAR) -->
 <div class="modal-overlay" id="setupModal" style="background: rgba(7, 11, 18, 0.98); z-index: 999998;">
     <div class="modal-content" style="width: 500px; padding: 40px; text-align: center;">
-        <h2 style="color: var(--text-main); margin-bottom: 10px; font-weight: 800;">Sistem Kurulumu</h2>
-        <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 25px;">Kronos Yapay Zeka'nın size özel bir program oluşturması için hedeflerinizi belirleyin.</p>
+        <h2 style="color: var(--text-main); margin-bottom: 10px; font-weight: 800;">Sınav Alanı Seçimi</h2>
+        <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 25px;">Kronos sisteminin size özel ders planı ve deneme takip paneli oluşturması için hedefinizi seçin.</p>
         
         <div class="input-group" style="margin-bottom: 15px;">
             <label style="color: var(--accent);">Hedef Sınav</label>
             <select id="setupExam" onchange="checkSetupBranch()">
+                <option value="YKS">YKS (Üniversite Sınavı)</option>
                 <option value="Lisans">KPSS Lisans</option>
                 <option value="Ön Lisans">KPSS Ön Lisans</option>
                 <option value="AGS">MEB Akademi Giriş Sınavı (AGS) + ÖABT</option>
             </select>
         </div>
-        
-        <div class="input-group" id="setupBranchGroup" style="margin-bottom: 15px; display:none;">
-            <label style="color: var(--info);">ÖABT Branşı</label>
+
+        <div class="input-group" id="setupBranchGroup" style="margin-bottom: 20px;">
+            <label style="color: var(--info);" id="setupBranchLabel">YKS Alanınız</label>
             <select id="setupBranch">
-                <option value="Türkçe Öğretmenliği">Türkçe Öğretmenliği</option>
-                <option value="İlköğretim Matematik">İlköğretim Matematik</option>
-                <option value="Fen Bilimleri">Fen Bilimleri</option>
-                <option value="Sosyal Bilgiler">Sosyal Bilgiler</option>
-                <option value="Türk Dili ve Edebiyatı">Türk Dili ve Edebiyatı</option>
-                <option value="Tarih Öğretmenliği">Tarih Öğretmenliği</option>
-                <option value="Coğrafya Öğretmenliği">Coğrafya Öğretmenliği</option>
-                <option value="Fizik Öğretmenliği">Fizik Öğretmenliği</option>
-                <option value="Kimya Öğretmenliği">Kimya Öğretmenliği</option>
-                <option value="Biyoloji Öğretmenliği">Biyoloji Öğretmenliği</option>
-                <option value="Lise Matematik">Lise Matematik</option>
-                <option value="İngilizce Öğretmenliği">İngilizce Öğretmenliği</option>
-                <option value="Din Kültürü ve Ahlak Bilgisi">Din Kültürü ve Ahlak Bilgisi</option>
-                <option value="PDR">Rehber Öğretmen / PDR</option>
-                <option value="Sınıf Öğretmenliği">Sınıf Öğretmenliği</option>
-                <option value="Okul Öncesi">Okul Öncesi</option>
+                <option value="Sadece TYT">Sadece TYT</option>
+                <option value="Sayısal (TYT+AYT)">Sayısal (TYT+AYT)</option>
+                <option value="Eşit Ağırlık (TYT+AYT)">Eşit Ağırlık (TYT+AYT)</option>
+                <option value="Sözel (TYT+AYT)">Sözel (TYT+AYT)</option>
+                <option value="Dil (TYT+YDT)">Dil (TYT+YDT)</option>
             </select>
         </div>
 
         <div class="input-group" style="margin-bottom: 25px;">
             <label style="color: var(--success);">Günlük Ortalama Çalışma Hedefi (Saat)</label>
-            <input type="number" id="setupHours" placeholder="Örn: 5" min="1" max="15">
+            <input type="number" id="setupHours" placeholder="Örn: 5" min="1" max="15" value="5">
         </div>
         
         <button class="btn btn-primary" style="width: 100%; height: 44px;" onclick="saveSetup()">PLANI OLUŞTUR VE BAŞLA</button>
@@ -380,7 +366,7 @@
         <button class="modal-close" onclick="closeKronos()">×</button>
         <div class="kronos-header" id="kronosRealHeader">
             <div class="ai-icon" style="font-size: 3.2rem; color: var(--accent);">👁️‍🗨️</div>
-            <div class="kronos-title">KRONOS<br><span style="font-size:0.9rem; color:var(--text-muted); font-weight:400; font-family:'Roboto', sans-serif;">Yapay Zeka Strateji Koçu</span></div>
+            <div class="kronos-title">KRONOS<br><span style="font-size:0.9rem; color:var(--text-muted); font-weight:400; font-family:'Roboto', sans-serif;">Strateji ve Analiz Koçu</span></div>
         </div>
         <div id="kronosReportContent"></div>
     </div>
@@ -388,15 +374,21 @@
 
 <div class="container" id="mainContainer" style="display:none;">
     <div class="header-title">
-        <img src="icon.png" alt="Orion Logo" style="width: 50px; height: 50px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.5);">
-        <span id="headerExamName" style="color:var(--text-main); font-weight:700; opacity:1;">KPSS 2026</span> <span style="margin: 0 8px;">/</span> KOMUTA MERKEZİ
-        <button class="logout-btn" style="right: 120px; border-color: #ef4444; color: #ef4444;" onclick="resetAllData()">Verileri Sıfırla</button>
-        <button class="logout-btn" onclick="logoutUser()">Çıkış Yap</button>
+        <div class="header-logo">
+            <img src="icon.png" alt="Logo" style="width: 45px; height: 45px; border-radius: 10px;">
+        </div>
+        
+        <span id="headerExamName" style="color:var(--text-main); font-weight:700; opacity:1;">SINAV KONTROL PANELİ</span>
+        
+        <div class="header-actions">
+            <button class="logout-btn reset-btn" onclick="resetAllData()">Verileri Sıfırla</button>
+            <button class="logout-btn" onclick="logoutUser()">Çıkış Yap</button>
+        </div>
     </div>
     
     <div class="tabs">
         <button class="tab-btn active" onclick="switchTab('ozet-tab')">Genel Özet</button>
-        <button class="tab-btn" onclick="switchTab('konu-tab')">Yapay Zeka Planı</button>
+        <button class="tab-btn" onclick="switchTab('konu-tab')">Çalışma Programı</button>
         <button class="tab-btn" onclick="switchTab('soru-tab')">Soru Çözümü</button>
         <button class="tab-btn" onclick="switchTab('deneme-tab')">Deneme Sınavları</button>
         <button class="tab-btn" onclick="switchTab('pomo-tab')" style="color:var(--pomo-color); font-weight: 600;">Pomodoro Takibi</button>
@@ -409,7 +401,7 @@
                 <div class="ai-header-left">
                     <div class="ai-icon">🧠</div>
                     <div class="ai-content">
-                        <h3>KRONOS YAPAY ZEKA</h3>
+                        <h3>KRONOS ANALİZ</h3>
                         <p>Verilerinizi tarayıp stratejik rapor sunar.</p>
                     </div>
                 </div>
@@ -428,7 +420,7 @@
 
             <div class="pomodoro-box">
                 <div class="cd-title" id="pomo-title">POMODORO (25D / 5D)</div>
-                <input type="text" id="pomo-task" class="pomo-task-input" placeholder="Çalışılacak Konu (Örn: Coğrafya İklim)" autocomplete="off">
+                <input type="text" id="pomo-task" class="pomo-task-input" placeholder="Çalışılacak Konu (Örn: Paragraf)" autocomplete="off">
                 <div class="pomo-timer">
                     <span class="cd-val color-info" id="pomo-time">25:00</span>
                 </div>
@@ -479,10 +471,7 @@
             <div class="stat-card c-net">
                 <h4>Ort. Deneme Neti</h4>
                 <div class="val" id="dashOrtDeneme">0.00</div>
-                <div class="stat-list" id="dashNetListesi">
-                    Genel Yetenek <span id="dashOrtGY">0.00</span>
-                    Genel Kültür <span id="dashOrtGK">0.00</span>
-                </div>
+                <div class="stat-list" id="dashNetListesi"></div>
             </div>
             <div class="stat-card c-ders">
                 <h4 style="color: var(--success);">En Verimli Ders</h4>
@@ -512,7 +501,7 @@
             <select id="weekSelect" onchange="haftayiGoster()"></select>
             <span style="margin-left: auto; color:var(--text-muted); font-size:0.85rem; font-style:italic;" id="aiPlanInfo">Günlük hedefinize göre planlandı.</span>
         </div>
-        <div class="table-responsive" style="overflow-x: auto;">
+        <div class="table-responsive">
             <table>
                 <thead id="konuTableHead"></thead>
                 <tbody id="konuTableBody"></tbody>
@@ -620,8 +609,9 @@
             </table>
         </div>
     </div>
-
 </div>
+
+<div class="footer-copy">© 2026 Kronos Sınav Merkezi – Tüm Hakları Saklıdır.</div>
 
 <script>
     /* ─── FIREBASE BAŞLATMA VE VERİTABANI BAĞLANTISI ─── */
@@ -641,7 +631,7 @@
 
     // Merkezi Uygulama Hafızası
     let currentUser = null;
-    let userSettings = { exam: 'Lisans', hours: 4, branch: null }; 
+    let userSettings = { exam: 'YKS', hours: 5, branch: 'Sayısal (TYT+AYT)' }; 
     let appKonuDurumlari = {};
     let appSoruVerileri = [];
     let appDenemeVerileri = [];
@@ -651,50 +641,91 @@
 
     let chartNet = null;
     let chartDeneme = null;
-    
-    // Geri Sayım Referansı
     let geriSayimInterval = null;
 
-    /* ─── KPSS MÜFREDAT LİSTELERİ (DİNAMİK) ─── */
+    /* ─── KPSS & YKS & AGS MÜFREDAT LİSTELERİ ─── */
     const syllabusData = {
         'Lisans': {
             'Türkçe': ["Sözcükte Anlam", "Cümlede Anlam", "Paragraf (Anlatım Teknikleri)", "Paragraf (Ana Düşünce)", "Ses Bilgisi", "Sözcükte Yapı", "Sözcük Türleri (İsim, Sıfat)", "Sözcük Türleri (Zamir, Zarf)", "Sözcük Türleri (Edat, Bağlaç)", "Söz Grupları", "Cümlenin Öğeleri", "Cümle Türleri", "Yazım Kuralları", "Noktalama İşaretleri", "Anlatım Bozuklukları", "Sözel Mantık"],
-            'Matematik': ["Temel Kavramlar", "Asal Çarpanlar", "EBOB-EKOK", "Rasyonel Sayılar", "Ondalık Sayılar", "Basit Eşitsizlikler", "Mutlak Değer", "Üslü Sayılar", "Köklü Sayılar", "Çarpanlara Ayırma", "Oran-Orantı", "Denklem Çözme", "Sayı Problemleri", "Kesir Problemleri", "Yaş Problemleri", "Hız Problemleri", "Yüzde-Kar-Zarar Problemleri", "Kümeler", "İşlem ve Modüler Aritmetik", "Permütasyon-Kombinasyon-Olasılık", "Sayısal Mantık"],
+            'Matematik': ["Temel Kavramlar", "Asal Çarpanlar", "EBOB-EKOK", "Rasyonel Sayılar", "Ondalık Sayılar", "Basit Eşitsizlikler", "Mutlak Değer", "Üslü Sayılar", "Köklü Sayılar", "Çarpanlara Ayırma", "Oran-Orantı", "Denklem Çözme", "Sayı Problemleri", "Kesir Problemleri", "Yaş Problemleri", "Hız Problemleri", "Yüzde-Kar-Zarar Problemleri", "Kümeler", "İşlem ve Modüler Aritmetik", "Permütasyon-Kombinasyon-Olasılık", "Sayısal Mantık", "Geometri"],
             'Tarih': ["İslamiyet Öncesi Türk Tarihi", "Türk-İslam Devletleri", "Anadolu Selçuklu", "Osmanlı Kuruluş-Yükselme", "Osmanlı Kültür ve Medeniyet", "Osmanlı Duraklama-Gerileme", "Osmanlı Dağılma", "XX. Yüzyıl Başlarında Osmanlı", "Milli Mücadele Hazırlık", "I. TBMM ve Savaşlar", "Atatürk Dönemi İç Politika", "Atatürk İlkeleri ve İnkılapları", "Atatürk Dönemi Dış Politika", "Çağdaş Türk ve Dünya Tarihi"],
             'Coğrafya': ["Türkiye'nin Coğrafi Konumu", "İklim ve Bitki Örtüsü", "Yeryüzü Şekilleri", "Nüfus ve Yerleşme", "Tarım ve Hayvancılık", "Madenler ve Enerji Kaynakları", "Sanayi", "Ulaşım, Turizm, Ticaret", "Bölgesel Kalkınma Projeleri"],
             'Vatandaşlık': ["Hukukun Temel Kavramları", "Devlet Biçimleri ve Demokrasi", "1982 Anayasası ve Temel Haklar", "Yasama", "Yürütme", "Yargı", "İdare Hukuku", "Uluslararası Örgütler"]
         },
         'Ön Lisans': {
             'Türkçe': ["Sözcükte Anlam", "Cümlede Anlam", "Paragrafta Anlam", "Noktalama İşaretleri", "Yapı Bilgisi", "Ses Bilgisi", "Sözcük Bilgisi", "Cümle Bilgisi", "Yazım Kuralları", "Anlatım Bozuklukları", "Sözel Mantık ve Akıl Yürütme"],
-            'Matematik': ["Temel Kavramlar", "Sayılar", "Bölme ve Bölünebilme Kuralları", "Asal Çarpanlara Ayırma", "EBOB-EKOK", "Birinci Dereceden Denklemler", "Rasyonel Sayılar", "Eşitsizlik", "Mutlak Değer", "Üslü Sayılar", "Köklü Sayılar", "Çarpanlara Ayırma", "Oran-Orantı", "Problemler", "Kümeler", "İşlem ve Modüler Aritmetik", "Permütasyon, Kombinasyon ve Olasılık", "Tablo ve Grafikler"],
+            'Matematik': ["Temel Kavramlar", "Sayılar", "Bölme ve Bölünebilme Kuralları", "Asal Çarpanlara Ayırma", "EBOB-EKOK", "Birinci Dereceden Denklemler", "Rasyonel Sayılar", "Eşitsizlik", "Mutlak Değer", "Üslü Sayılar", "Köklü Sayılar", "Çarpanlara Ayırma", "Oran-Orantı", "Problemler", "Kümeler", "İşlem ve Modüler Aritmetik", "Permütasyon, Kombinasyon ve Olasılık", "Tablo ve Grafikler", "Geometri"],
             'Tarih': ["İslamiyet Öncesi Türk Tarihi", "Türk-İslam Tarihi", "İlk Müslüman Türk Devletleri", "Anadolu Selçuklu Devleti Siyasi Tarihi", "Osmanlı Devleti Kültür ve Medeniyeti", "Osmanlı Devleti Kuruluş, Yükselme, Duraklama Dönemleri", "Osmanlı Devleti Gerileme ve Dağılma Dönemleri", "Trablusgarp Savaşı (1911-1912)", "I. ve II. Balkan Savaşları", "I. Dünya Savaşı", "Kurtuluş Savaşına Hazırlık Dönemi", "Kurtuluş Savaşı Muharebeler ve Antlaşmalar Dönemi", "Atatürk İlke ve İnkılapları", "Atatürk Dönemi Türk Dış Politikası", "Çağdaş Türk ve Dünya Tarihi"],
             'Coğrafya': ["Türkiye’nin Coğrafi Konumu ve Yer Şekilleri", "Türkiye’nin İklimi ve Bitki Örtüsü", "Türkiye’de Nüfus, Yerleşme ve Göç", "Türkiye’nin Ekonomik Coğrafyası", "Türkiye’nin Coğrafi Bölgeleri"],
             'Vatandaşlık': ["Hukukun Temel Kavramları", "Genel Esaslar", "Temel Haklar", "Yasama", "Yürütme", "Yargı", "Anayasal Gelişmeler", "İdare Hukuku", "Uluslararası Örgütler", "Güncel Bilgiler"]
         },
         'AGS': {
-            'Genel Kültür Yetenek': ["Sözel ve Sayısal Yetenek", "Tarih", "Türkiye Coğrafyası", "Anayasa"],
-            'Eğitim Bilimleri': ["Eğitimin Temelleri", "Türk Milli Eğitim Sistemi ve Mevzuatı", "1739 sayılı Milli Eğitim Temel Kanunu", "222 sayılı İlköğretim ve Eğitim Kanunu", "7528 sayılı Öğretmenlik Mesleği Kanunu"]
+            'Genel Kültür Yetenek': ["Sözel Akıl Yürütme", "Sayısal Mantık", "Grafik Yorumlama", "Paragraf"],
+            'Tarih': ["İslamiyet Öncesi", "Osmanlı Tarihi", "İnkılap Tarihi"],
+            'Türkiye Coğrafyası': ["Coğrafi Konum", "İklim", "Yer Şekilleri", "Nüfus"],
+            'Anayasa': ["Hukukun Temelleri", "1982 Anayasası", "Yasama, Yürütme, Yargı"],
+            'Eğitim Bilimleri': ["Eğitimin Temelleri", "Türk Milli Eğitim Sistemi ve Mevzuatı", "1739 sayılı Kanun", "222 sayılı Kanun", "7528 sayılı Kanun"]
+        },
+        'YKS': {
+            'TYT Türkçe': ["Sözcükte Anlam", "Cümlede Anlam", "Paragraf", "Ses Bilgisi", "Sözcükte Yapı", "Sözcük Türleri", "Fiiller", "Cümlenin Ögeleri", "Yazım ve Noktalama", "Anlatım Bozuklukları"],
+            'TYT Matematik': ["Temel Kavramlar", "Sayı Basamakları", "Bölme-Bölünebilme", "Rasyonel Sayılar", "Eşitsizlik ve Mutlak Değer", "Üslü ve Köklü", "Çarpanlara Ayırma", "Oran-Orantı", "Problemler", "Kümeler ve Mantık", "Fonksiyonlar", "Polinomlar", "Olasılık"],
+            'TYT Geometri': ["Doğruda ve Üçgende Açılar", "Özel Üçgenler", "Alan ve Benzerlik", "Çokgenler ve Dörtgenler", "Çember ve Daire", "Katı Cisimler", "Analitik Geometri"],
+            'TYT Tarih': ["Tarih ve Zaman", "İlk Uygarlıklar", "İlk Türk Devletleri", "İslam Tarihi", "Osmanlı Devleti", "Milli Mücadele", "Atatürkçülük"],
+            'TYT Coğrafya': ["Doğa ve İnsan", "Dünya'nın Şekli ve Hareketleri", "Harita Bilgisi", "İklim Bilgisi", "İç ve Dış Kuvvetler", "Nüfus ve Göç", "Ekonomik Faaliyetler", "Doğal Afetler"],
+            'TYT Fen Bilimleri': ["Fizik Bilimine Giriş", "Madde ve Özellikleri", "Hareket ve Kuvvet", "Kimya Bilimi", "Maddenin Halleri", "Canlıların Ortak Özellikleri", "Hücre", "Kalıtım"],
+            'TYT Felsefe ve Din': ["Felsefenin Alanı", "Bilgi Felsefesi", "Ahlak Felsefesi", "Bilgi ve İnanç", "İslam ve İbadet", "Hz. Muhammed"]
+        }
+    };
+
+    const ydtSyllabus = ["Kelime ve Phrasal Verb", "Tense ve Dilbilgisi", "Preposition Soruları", "Cloze Test", "Cümle Tamamlama", "İngilizce-Türkçe Çeviri", "Paragraf Okuma", "Diyalog Tamamlama", "Yakın Anlamlı Cümle", "Paragraf Tamamlama", "Anlatım Bütünlüğünü Bozan Cümle"];
+
+    const aytSyllabus = {
+        'Sayısal (TYT+AYT)': {
+            'AYT Matematik': ["Polinomlar", "2. Dereceden Denklemler", "Parabol", "Trigonometri", "Logaritma", "Diziler", "Limit", "Türev", "İntegral", "Çemberin Analitiği"],
+            'AYT Fizik': ["Vektörler", "Bağıl Hareket", "Newton'un Yasaları", "Atışlar", "Enerji ve Momentum", "Tork ve Denge", "Elektrik Alan ve Sığa", "Manyetizma", "Çembersel Hareket", "Basit Harmonik Hareket", "Dalga Mekaniği", "Modern Fizik"],
+            'AYT Kimya': ["Modern Atom Teorisi", "Gazlar", "Sıvı Çözeltiler", "Kimyasal Tepkimelerde Enerji ve Hız", "Kimyasal Denge", "Asit-Baz ve Çözünürlük Dengesi", "Elektrokimya", "Organik Kimya"],
+            'AYT Biyoloji': ["Sinir, Endokrin ve Duyu Organları", "Destek, Sindirim ve Dolaşım", "Solunum ve Üriner Sistem", "Üreme Sistemi", "Komünite ve Popülasyon Ekolojisi", "Protein Sentezi", "Fotosentez ve Solunum", "Bitki Biyolojisi"]
+        },
+        'Eşit Ağırlık (TYT+AYT)': {
+            'AYT Matematik': ["Polinomlar", "2. Dereceden Denklemler", "Parabol", "Trigonometri", "Logaritma", "Diziler", "Limit", "Türev", "İntegral", "Çemberin Analitiği"],
+            'AYT Edebiyat': ["Şiir Bilgisi", "Edebi Sanatlar", "İslamiyet Öncesi ve Geçiş", "Halk Edebiyatı", "Divan Edebiyatı", "Tanzimat ve Servet-i Fünun", "Milli Edebiyat", "Cumhuriyet Dönemi"],
+            'AYT Tarih-1': ["Tarih Bilimi", "İlk Türk Devletleri", "İslam Tarihi", "Osmanlı Devleti (Tüm Dönemler)", "Milli Mücadele", "Atatürk İlkeleri"],
+            'AYT Coğrafya-1': ["Ekosistem", "Nüfus Politikaları", "Türkiye Ekonomisi", "Küresel Ticaret ve Örgütler", "Çevre Sorunları"]
+        },
+        'Sözel (TYT+AYT)': {
+            'AYT Edebiyat': ["Şiir Bilgisi", "Edebi Sanatlar", "İslamiyet Öncesi ve Geçiş", "Halk Edebiyatı", "Divan Edebiyatı", "Tanzimat ve Servet-i Fünun", "Milli Edebiyat", "Cumhuriyet Dönemi"],
+            'AYT Tarih-2': ["Tarih Bilimi", "İlk Türk Devletleri", "Osmanlı Devleti", "Milli Mücadele", "İki Savaş Arası Türkiye", "Soğuk Savaş", "Küreselleşen Dünya"],
+            'AYT Coğrafya-2': ["Ekosistem", "Nüfus Politikaları", "Türkiye Ekonomisi", "Küresel Ticaret ve Örgütler", "Bölgeler ve Ülkeler", "Çevre Sorunları"],
+            'AYT Felsefe Grubu': ["Psikoloji Temel Süreçler", "Öğrenme ve Bellek", "Sosyolojiye Giriş", "Toplumsal Yapı", "Mantığa Giriş", "Klasik Mantık"]
         }
     };
 
     const oabtSyllabus = {
-        'Türkçe Öğretmenliği': ["Anlama ve Anlatma Yöntemleri", "Dil Bilgisi ve Dil Bilimi", "Çocuk Edebiyatı", "Türk Halk Edebiyatı", "Yeni Türk Edebiyatı", "Eski Türk Edebiyatı", "Edebiyat Bilgisi ve Kuramları", "Alan Eğitimi"],
-        'İlköğretim Matematik': ["Analiz", "Cebir", "Geometri", "Uygulamalı Matematik", "Alan Eğitimi Testi"],
-        'Fen Bilimleri': ["Fizik", "Kimya", "Biyoloji", "Yer Bilimi Jeoloji", "Astronomi", "Çevre Bilimi", "Alan Eğitimi"],
-        'Sosyal Bilgiler': ["Tarih", "Coğrafya", "Siyaset Bilimi", "Sosyal Bilgilerin Temelleri, Sosyal Psikoloji, Arkeoloji, Antropoloji, Sosyoloji, Ekonomi", "Alan Eğitimi"],
-        'Türk Dili ve Edebiyatı': ["Eski Türk Dili ve Yeni Türk Dili", "Yeni Türk Edebiyatı", "Eski Türk Edebiyatı", "Türk Halk Edebiyatı", "Alan Eğitimi"],
-        'Tarih Öğretmenliği': ["Tarih Metodu", "Eski Çağ Tarihi", "İslamiyet Öncesi Türk Tarihi", "Orta Çağ İslam Tarihi", "Osmanlı Tarihi", "Türkiye Cumhuriyeti Tarihi", "Dünya Tarihi", "Alan Eğitimi"],
-        'Coğrafya Öğretmenliği': ["Fiziki Coğrafya", "Beşeri ve Ekonomik Coğrafya", "Bölgeler ve Ülkeler", "Alan Eğitimi"],
-        'Fizik Öğretmenliği': ["Mekanik", "Elektrik ve Manyetizma", "Madde ve Özellikleri", "Dalgalar ve Optik", "Modern Fizik", "Alan Eğitimi"],
+        'Türkçe Öğretmenliği': ["Anlama ve Anlatma", "Dil Bilgisi", "Çocuk Edebiyatı", "Türk Halk Edebiyatı", "Yeni Türk Edebiyatı", "Eski Türk Edebiyatı", "Alan Eğitimi"],
+        'İlköğretim Matematik': ["Analiz", "Cebir", "Geometri", "Uygulamalı Matematik", "Alan Eğitimi"],
+        'Fen Bilimleri': ["Fizik", "Kimya", "Biyoloji", "Yer Bilimi", "Astronomi", "Çevre Bilimi", "Alan Eğitimi"],
+        'Sosyal Bilgiler': ["Tarih", "Coğrafya", "Siyaset Bilimi", "Sosyal Psikoloji", "Alan Eğitimi"],
+        'Türk Dili ve Edebiyatı': ["Eski Türk Dili", "Yeni Türk Edebiyatı", "Eski Türk Edebiyatı", "Halk Edebiyatı", "Alan Eğitimi"],
+        'Tarih Öğretmenliği': ["Tarih Metodu", "Eski Çağ", "İslamiyet Öncesi", "Osmanlı Tarihi", "Türkiye Cumhuriyeti", "Dünya Tarihi", "Alan Eğitimi"],
+        'Coğrafya Öğretmenliği': ["Fiziki Coğrafya", "Beşeri Coğrafya", "Bölgeler ve Ülkeler", "Alan Eğitimi"],
+        'Fizik Öğretmenliği': ["Mekanik", "Elektrik", "Optik", "Modern Fizik", "Alan Eğitimi"],
         'Kimya Öğretmenliği': ["Analitik Kimya", "Anorganik Kimya", "Organik Kimya", "Fizikokimya", "Alan Eğitimi"],
-        'Biyoloji Öğretmenliği': ["Hücre ve Metabolizma", "Bitki Biyolojisi", "İnsan ve Hayvan Biyolojisi", "Ekoloji", "Canlıların Sınıflandırılması", "Genetik ve Evrim", "Alan Eğitimi"],
-        'Lise Matematik': ["Analiz", "Cebir", "Geometri", "Uygulamalı Matematik", "Alan Eğitimi Testi"],
+        'Biyoloji Öğretmenliği': ["Hücre", "Bitki Biyolojisi", "İnsan Fizyolojisi", "Ekoloji", "Genetik ve Evrim", "Alan Eğitimi"],
+        'Lise Matematik': ["Analiz", "Cebir", "Geometri", "Uygulamalı Matematik", "Alan Eğitimi"],
         'İngilizce Öğretmenliği': ["Dil Yeterliği", "Dil Bilim", "Edebiyat", "Alan Eğitimi"],
-        'Din Kültürü ve Ahlak Bilgisi': ["Hz. Muhammed’in Hayatı", "Kur’an-ı Kerim", "İslâm, İman, İbadetler", "İslam Ahlakı, Estetiği", "Mezhep ve Yorumları", "Din Sosyolojisi, Psikolojisi", "Alan Eğitimi"],
-        'PDR': ["Temel Psikolojik Kavramlar", "Psikolojik Danışma Kuram İlke ve Teknikleri", "Davranış ve Uyum Problemleri", "Bireyi Tanıma Teknikleri", "Bireyle ve Grupla Psikolojik Danışma", "Kariyer Danışmanlığı", "Alan Eğitimi"],
-        'Sınıf Öğretmenliği': ["Temel Matematik", "Biyoloji-Fizik-Kimya", "Türk Dili", "Çocuk Edebiyatı", "Uygarlık Tarihi", "Türk Tarihi", "Coğrafya", "Alan Eğitimi"],
-        'Okul Öncesi': ["Okul Öncesi Eğitime Giriş", "Anatomi, Psikoloji, Sağlık", "Çocukta Oyun", "Çocuk Edebiyatı", "Çocuk Ruh Sağlığı", "Özel Öğretim Yöntemleri", "Alan Eğitimi"]
+        'Din Kültürü ve Ahlak Bilgisi': ["Hz. Muhammed’in Hayatı", "Kur’an-ı Kerim", "İslâm, İman, İbadetler", "Din Sosyolojisi", "Alan Eğitimi"],
+        'PDR': ["Psikolojik Danışma Kuramları", "Davranış Problemleri", "Bireyi Tanıma", "Kariyer Danışmanlığı", "Alan Eğitimi"],
+        'Sınıf Öğretmenliği': ["Temel Matematik", "Biyoloji-Fizik-Kimya", "Türk Dili", "Çocuk Edebiyatı", "Uygarlık Tarihi", "Türkiye Coğrafyası", "Alan Eğitimi"],
+        'Okul Öncesi': ["Okul Öncesi Eğitime Giriş", "Anatomi ve Psikoloji", "Çocukta Oyun", "Özel Öğretim Yöntemleri", "Alan Eğitimi"],
+        'Beden Eğitimi': ["Sporun Temelleri", "İnsan Anatomisi", "Sağlık Bilgisi", "Egzersiz Fizyolojisi", "Antrenman Bilgisi", "Takım Sporları", "Alan Eğitimi"]
     };
+
+    /* ─── HIZLI TEST GİRİŞİ ─── */
+    function testGiris() {
+        currentUser = { uid: "test_kullanici_" + Math.floor(Math.random()*1000) };
+        document.getElementById('authModal').classList.remove('active');
+        document.getElementById('setupModal').classList.add('active'); 
+    }
 
     /* ─── KULLANICI GİRİŞ/ÇIKIŞ VE SENKRONİZASYON ─── */
     function registerUser() {
@@ -703,15 +734,10 @@
         const err = document.getElementById('authError');
         if(!email || !pass) { err.innerText = "Lütfen e-posta ve şifre girin."; return; }
         if(pass.length < 6) { err.innerText = "Şifre en az 6 hane olmalıdır."; return; }
-        
         err.style.color = "var(--info)"; err.innerText = "Kayıt yapılıyor...";
-        
         auth.createUserWithEmailAndPassword(email, pass)
         .then(() => { err.style.color = "var(--success)"; err.innerText = "Kayıt başarılı! Giriş yapabilirsiniz."; })
-        .catch((error) => {
-            err.style.color = "var(--danger)";
-            err.innerText = "Hata: " + (error.code === 'auth/email-already-in-use' ? "Bu e-posta zaten kayıtlı." : error.message);
-        });
+        .catch(() => { err.style.color = "var(--danger)"; err.innerText = "Hata: Bu e-posta zaten kayıtlı."; });
     }
 
     function loginUser() {
@@ -719,29 +745,27 @@
         const pass = document.getElementById('authPassword').value;
         const err = document.getElementById('authError');
         if(!email || !pass) { err.innerText = "Lütfen e-posta ve şifre girin."; return; }
-        
         err.style.color = "var(--info)"; err.innerText = "Giriş yapılıyor...";
-
         auth.signInWithEmailAndPassword(email, pass)
-        .catch((error) => { err.style.color = "var(--danger)"; err.innerText = "Hata: E-posta veya şifre yanlış."; });
+        .catch(() => { err.style.color = "var(--danger)"; err.innerText = "Hata: E-posta veya şifre yanlış."; });
     }
 
     function logoutUser() {
         if(confirm("Güvenli çıkış yapmak istiyor musunuz?")) { 
+            if(currentUser && currentUser.uid.includes("test_")) { location.reload(); return; }
             auth.signOut().then(() => { location.reload(); }); 
         }
     }
 
-    // VERİLERİ SIFIRLAMA (TEST VE RESET İÇİN)
     function resetAllData() {
         if (!currentUser) return;
-        if(confirm("TÜM VERİLERİNİZ SİLİNECEK! (Sınav ayarları, netler, pomodoro ve yapay zeka planı)\n\nBu işlem geri alınamaz. Onaylıyor musunuz?")) {
+        if(confirm("TÜM VERİLERİNİZ SİLİNECEK! (Sınav ayarları, netler, pomodoro ve çalışma planı)\n\nBu işlem geri alınamaz. Onaylıyor musunuz?")) {
+            if(currentUser.uid.includes("test_")) { location.reload(); return; } 
+            
             db.ref('users/' + currentUser.uid).remove().then(() => {
                 alert("Veriler sıfırlandı. Lütfen yeni sınav planınızı oluşturun.");
                 location.reload();
-            }).catch(err => {
-                alert("Hata oluştu: " + err.message);
-            });
+            }).catch(err => { alert("Hata oluştu: " + err.message); });
         }
     }
 
@@ -751,13 +775,16 @@
             document.getElementById('authModal').classList.remove('active');
             checkUserSettings();
         } else {
-            currentUser = null; 
-            document.getElementById('authModal').classList.add('active');
-            document.getElementById('mainContainer').style.display = 'none';
+            if(!currentUser || !currentUser.uid.includes("test_")) {
+                currentUser = null; 
+                document.getElementById('authModal').classList.add('active');
+                document.getElementById('mainContainer').style.display = 'none';
+            }
         }
     });
 
     function checkUserSettings() {
+        if(currentUser.uid.includes("test_")) return; 
         db.ref('users/' + currentUser.uid + '/settings').once('value').then((snapshot) => {
             if (snapshot.exists()) {
                 userSettings = snapshot.val();
@@ -770,23 +797,41 @@
 
     function checkSetupBranch() {
         let exam = document.getElementById('setupExam').value;
+        let group = document.getElementById('setupBranchGroup');
+        let sel = document.getElementById('setupBranch');
+        let lbl = document.getElementById('setupBranchLabel');
+        
         if (exam === 'AGS') {
-            document.getElementById('setupBranchGroup').style.display = 'flex';
+            group.style.display = 'flex'; lbl.innerText = "ÖABT Branşı";
+            sel.innerHTML = Object.keys(oabtSyllabus).map(k => `<option value="${k}">${k}</option>`).join('');
+        } else if (exam === 'YKS') {
+            group.style.display = 'flex'; lbl.innerText = "YKS Alanınız";
+            sel.innerHTML = `
+                <option value="Sadece TYT">Sadece TYT</option>
+                <option value="Sayısal (TYT+AYT)">Sayısal (TYT+AYT)</option>
+                <option value="Eşit Ağırlık (TYT+AYT)">Eşit Ağırlık (TYT+AYT)</option>
+                <option value="Sözel (TYT+AYT)">Sözel (TYT+AYT)</option>
+                <option value="Dil (TYT+YDT)">Dil (TYT+YDT)</option>
+            `;
         } else {
-            document.getElementById('setupBranchGroup').style.display = 'none';
+            group.style.display = 'none';
         }
     }
 
     function saveSetup() {
         let exam = document.getElementById('setupExam').value;
-        let hours = parseInt(document.getElementById('setupHours').value) || 3;
+        let hours = parseInt(document.getElementById('setupHours').value) || 5;
         let branch = null;
-        
-        if (exam === 'AGS') {
-            branch = document.getElementById('setupBranch').value;
-        }
+        if (exam === 'AGS' || exam === 'YKS') branch = document.getElementById('setupBranch').value;
 
         userSettings = { exam: exam, hours: hours, branch: branch };
+        
+        if(currentUser.uid.includes("test_")) {
+            document.getElementById('setupModal').classList.remove('active');
+            loadUserData();
+            return;
+        }
+
         db.ref('users/' + currentUser.uid + '/settings').set(userSettings).then(() => {
             document.getElementById('setupModal').classList.remove('active');
             loadUserData();
@@ -795,8 +840,23 @@
 
     function loadUserData() {
         document.getElementById('mainContainer').style.display = 'flex';
-        let examText = userSettings.exam;
-        if(userSettings.exam === 'AGS' && userSettings.branch) examText += ` (${userSettings.branch})`;
+        
+        // BAŞLIĞI DİNAMİK YAPMA
+        let examText = userSettings.exam.toUpperCase();
+        if(userSettings.branch) {
+            if(userSettings.exam === 'YKS') {
+                let shortBranch = "";
+                if (userSettings.branch === 'Sadece TYT') shortBranch = "TYT";
+                else if (userSettings.branch === 'Sayısal (TYT+AYT)') shortBranch = "SAYISAL";
+                else if (userSettings.branch === 'Eşit Ağırlık (TYT+AYT)') shortBranch = "EA";
+                else if (userSettings.branch === 'Sözel (TYT+AYT)') shortBranch = "SÖZEL";
+                else if (userSettings.branch === 'Dil (TYT+YDT)') shortBranch = "DİL";
+                examText = `YKS (${shortBranch}) / KONTROL PANELİ`;
+            }
+            else examText = `${examText} / KOMUTA MERKEZİ`;
+        } else {
+            examText = `${examText} / KOMUTA MERKEZİ`;
+        }
         document.getElementById('headerExamName').innerText = examText;
 
         buildDynamicSyllabus();
@@ -805,71 +865,66 @@
         updateDenemeTabUI();
         baslatGeriSayim();
 
-        // Verileri Dinle
-        db.ref('users/' + currentUser.uid + '/kpss/konuDurumlari').on('value', (snapshot) => {
-            appKonuDurumlari = snapshot.val() || {};
-            haftayiGoster();
-            updateDashboard();
-        });
-
-        db.ref('users/' + currentUser.uid + '/kpss/soruVerileri').on('value', (snapshot) => {
-            appSoruVerileri = Object.values(snapshot.val() || []);
-            updateDashboard();
-        });
-
-        db.ref('users/' + currentUser.uid + '/kpss/denemeVerileri').on('value', (snapshot) => {
-            appDenemeVerileri = Object.values(snapshot.val() || []);
-            renderDeneme();
-            updateDashboard();
-        });
-
-        db.ref('users/' + currentUser.uid + '/kpss/pomodoroVerileri').on('value', (snapshot) => {
-            appPomoVerileri = Object.values(snapshot.val() || []);
-            renderPomodoroHistory();
-        });
+        if(currentUser.uid.includes("test_")) {
+            haftayiGoster(); updateDashboard(); renderDeneme(); renderPomodoroHistory();
+        } else {
+            db.ref('users/' + currentUser.uid + '/yks/konuDurumlari').on('value', (snapshot) => {
+                appKonuDurumlari = snapshot.val() || {}; haftayiGoster(); updateDashboard();
+            });
+            db.ref('users/' + currentUser.uid + '/yks/soruVerileri').on('value', (snapshot) => {
+                appSoruVerileri = Object.values(snapshot.val() || []); updateDashboard();
+            });
+            db.ref('users/' + currentUser.uid + '/yks/denemeVerileri').on('value', (snapshot) => {
+                appDenemeVerileri = Object.values(snapshot.val() || []); renderDeneme(); updateDashboard();
+            });
+            db.ref('users/' + currentUser.uid + '/yks/pomodoroVerileri').on('value', (snapshot) => {
+                appPomoVerileri = Object.values(snapshot.val() || []); renderPomodoroHistory();
+            });
+        }
 
         document.getElementById('inpTarih').valueAsDate = new Date();
         document.getElementById('denemeTarih').valueAsDate = new Date();
         updatePomoDisplay();
     }
 
-    /* ─── YAPAY ZEKA MANTIĞI: DİNAMİK PROGRAM OLUŞTURMA ─── */
+    /* ─── YAPAY ZEKA PLANI OLUŞTURMA MOTORU ─── */
     function buildDynamicSyllabus() {
-        currentSyllabus = JSON.parse(JSON.stringify(syllabusData[userSettings.exam]));
-        if (userSettings.exam === 'AGS' && userSettings.branch) {
-            currentSyllabus['ÖABT (Alan)'] = oabtSyllabus[userSettings.branch] || [];
+        currentSyllabus = {};
+        
+        if (userSettings.exam === 'YKS') {
+            Object.assign(currentSyllabus, syllabusData['YKS']); 
+            if (userSettings.branch && aytSyllabus[userSettings.branch]) {
+                Object.assign(currentSyllabus, aytSyllabus[userSettings.branch]); 
+            } else if (userSettings.branch === 'Dil (TYT+YDT)') {
+                currentSyllabus['YDT İngilizce'] = ydtSyllabus;
+            }
+        } else {
+            currentSyllabus = JSON.parse(JSON.stringify(syllabusData[userSettings.exam]));
+            if (userSettings.exam === 'AGS' && userSettings.branch) {
+                currentSyllabus['ÖABT (Alan)'] = oabtSyllabus[userSettings.branch] || [];
+            }
         }
 
         let dersler = Object.keys(currentSyllabus);
-        let maxKonu = 0;
-        dersler.forEach(d => { if(currentSyllabus[d].length > maxKonu) maxKonu = currentSyllabus[d].length; });
-
         let totalKonuCount = 0;
         dersler.forEach(d => totalKonuCount += currentSyllabus[d].length);
         
-        let konularHaftada = userSettings.hours * 1.5; // Kaba bir AI tahmini
+        let konularHaftada = userSettings.hours * 1.5; 
         let totalWeeks = Math.ceil(totalKonuCount / konularHaftada);
-        if(totalWeeks < 4) totalWeeks = 4; // Minimum 1 ay
-        if(totalWeeks > 16) totalWeeks = 16; // Maksimum yayılım
+        if(totalWeeks < 6) totalWeeks = 6;
+        if(totalWeeks > 24) totalWeeks = 24;
 
-        // Select kutusunu güncelle
         let ws = document.getElementById("weekSelect");
         ws.innerHTML = "";
         for(let i=1; i<=totalWeeks; i++){
             let opt = document.createElement('option');
-            opt.value = i;
-            opt.innerText = `${i}. Hafta Planı`;
-            ws.appendChild(opt);
+            opt.value = i; opt.innerText = `${i}. Hafta Planı`; ws.appendChild(opt);
         }
 
         tamProgram = [];
         let totalDays = totalWeeks * 7;
-        
-        // Dağıtım Algoritması
         let dagitimlar = {};
-        dersler.forEach(d => {
-            dagitimlar[d] = dengeliDagit(currentSyllabus[d], totalDays);
-        });
+        dersler.forEach(d => { dagitimlar[d] = dengeliDagit(currentSyllabus[d], totalDays); });
 
         for(let i=0; i<totalDays; i++) {
             let row = { gun: `GÜN ${i+1}`, w: Math.floor(i/7) + 1 };
@@ -886,27 +941,20 @@
         for (let i = 0; i < konuListesi.length; i++) {
             let index = Math.round(i * adim);
             if (sonuc[index] !== "-") {
-                let k = index;
-                while (k < toplamGun && sonuc[k] !== "-") k++;
+                let k = index; while (k < toplamGun && sonuc[k] !== "-") k++;
                 if (k < toplamGun) index = k;
-                else {
-                    k = index;
-                    while (k >= 0 && sonuc[k] !== "-") k--;
-                    index = k;
-                }
+                else { k = index; while (k >= 0 && sonuc[k] !== "-") k--; index = k; }
             }
             sonuc[index] = konuListesi[i];
         }
         return sonuc;
     }
 
-    // TIKLANABİLİR LİSTELERİ GÜNCELLİYORUZ
     function updateKonuListesiUI() {
         let dersler = Object.keys(currentSyllabus);
         let thead = document.getElementById("konuTableHead");
         let html = `<tr><th>GÜN</th>`;
         dersler.forEach(d => { 
-            // TIKLANABİLİR BAŞLIKLAR
             html += `<th style="padding: 1rem 0.5rem;"><button onclick="window.gosterMufredat('${d}')" style="background:rgba(255,107,0,0.1); border:1px solid rgba(255,107,0,0.3); color:var(--accent); cursor:pointer; font-size:0.8rem; font-weight:700; font-family:'Poppins', sans-serif; padding: 8px 14px; border-radius: 8px; transition: 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.2); text-transform: uppercase;">${d} <span style="font-size:1rem; margin-left:4px;">🔍</span></button></th>`; 
         });
         html += `</tr>`;
@@ -914,14 +962,10 @@
         haftayiGoster();
     }
 
-    // TIKLANDIĞINDA MODALI AÇACAK OLAN FONKSİYON
     window.gosterMufredat = function(ders) {
         let konular = currentSyllabus[ders];
         if(!konular) return;
-        
-        // Modalın başlığını gizliyoruz, içeride kendi başlığımızı atıyoruz
         document.getElementById('kronosRealHeader').style.display = 'none';
-
         let html = `
             <div style="text-align:center; margin-bottom:1.5rem;">
                 <h3 style="color:var(--accent); font-size:1.4rem; text-transform:uppercase; margin-bottom:0.5rem; font-family:'Poppins', sans-serif;">${ders} MÜFREDATI</h3>
@@ -930,7 +974,7 @@
             <div style="display:flex; flex-direction:column; gap:8px; max-height: 55vh; overflow-y:auto; padding-right:8px;">
         `;
         konular.forEach((k, i) => {
-            html += `<div style="background:rgba(0,0,0,0.3); padding:12px 16px; border-radius:8px; border:1px solid rgba(255,255,255,0.04); font-size:0.9rem; color:var(--text-main); display:flex; align-items:center; gap:12px; transition: 0.2s;">
+            html += `<div style="background:rgba(0,0,0,0.3); padding:12px 16px; border-radius:8px; border:1px solid rgba(255,255,255,0.04); font-size:0.9rem; color:var(--text-main); display:flex; align-items:center; gap:12px;">
                 <span style="color:var(--accent); font-weight:800; font-size:1.1rem; min-width:25px;">${i+1}.</span> 
                 <span style="font-weight:500;">${k}</span>
             </div>`;
@@ -975,13 +1019,10 @@
         let btn = document.getElementById(btnId);
         if(!btn) return;
         let mevcutDurum = btn.getAttribute("data-durum") || "Bekliyor";
-
-        let yeniDurum = "Bekliyor";
-        if (mevcutDurum === "Bekliyor") yeniDurum = "Tamamlandı";
-        else if (mevcutDurum === "Tamamlandı") yeniDurum = "Yapılmadı";
-        
+        let yeniDurum = mevcutDurum === "Bekliyor" ? "Tamamlandı" : (mevcutDurum === "Tamamlandı" ? "Yapılmadı" : "Bekliyor");
         appKonuDurumlari[btnId] = yeniDurum;
-        db.ref('users/' + currentUser.uid + '/kpss/konuDurumlari').set(appKonuDurumlari);
+        if(!currentUser.uid.includes("test_")) db.ref('users/' + currentUser.uid + '/yks/konuDurumlari').set(appKonuDurumlari);
+        haftayiGoster(); updateDashboard();
     }
 
     // --- SORU ÇÖZÜMÜ ---
@@ -1023,15 +1064,19 @@
         
         let yeni = { id: Date.now(), tarih, ders, konu, toplam, dogru, yanlis, bos, net };
         let liste = [...appSoruVerileri, yeni];
-        db.ref('users/' + currentUser.uid + '/kpss/soruVerileri').set(liste);
+        if(!currentUser.uid.includes("test_")) db.ref('users/' + currentUser.uid + '/yks/soruVerileri').set(liste);
+        else appSoruVerileri = liste;
         
         document.getElementById("inpKonu").value = ''; document.getElementById("inpToplam").value = '';
         document.getElementById("inpDogru").value = ''; document.getElementById("inpYanlis").value = '';
+        updateDashboard();
     }
 
     function soruSil(id) {
         let liste = appSoruVerileri.filter(k => k.id !== id);
-        db.ref('users/' + currentUser.uid + '/kpss/soruVerileri').set(liste);
+        if(!currentUser.uid.includes("test_")) db.ref('users/' + currentUser.uid + '/yks/soruVerileri').set(liste);
+        else appSoruVerileri = liste;
+        updateDashboard();
     }
 
     // --- DENEME SINAVLARI ---
@@ -1044,88 +1089,110 @@
 
         if (userSettings.exam === 'AGS') {
             inputs.innerHTML += `
-            <div>
-                <label style="font-size:0.85rem; font-weight:600; color:var(--text-muted); display:block; margin-bottom:0.5rem; text-align: center;">AGS (80 SORU)</label>
-                <div class="d-input-group"><label>D</label><input type="number" id="d_ags_D" min="0" max="80"></div>
-                <div class="d-input-group"><label>Y</label><input type="number" id="d_ags_Y" min="0" max="80"></div>
-            </div>`;
+            <div><label style="font-size:0.8rem; font-weight:600; color:var(--accent); display:block; margin-bottom:0.5rem; text-align: center;">AGS (80 SORU)</label><div class="d-input-group"><label>D</label><input type="number" id="d_ags_D" min="0" max="80"></div><div class="d-input-group"><label>Y</label><input type="number" id="d_ags_Y" min="0" max="80"></div></div>`;
             thHtml += `<th>AGS NET</th>`;
             if(userSettings.branch) {
-                inputs.innerHTML += `
-                <div>
-                    <label style="font-size:0.85rem; font-weight:600; color:var(--text-muted); display:block; margin-bottom:0.5rem; text-align: center;">ÖABT (50 SORU)</label>
-                    <div class="d-input-group"><label>D</label><input type="number" id="d_oabt_D" min="0" max="50"></div>
-                    <div class="d-input-group"><label>Y</label><input type="number" id="d_oabt_Y" min="0" max="50"></div>
-                </div>`;
+                inputs.innerHTML += `<div><label style="font-size:0.8rem; font-weight:600; color:var(--accent); display:block; margin-bottom:0.5rem; text-align: center;">ÖABT (50 SORU)</label><div class="d-input-group"><label>D</label><input type="number" id="d_oabt_D" min="0" max="50"></div><div class="d-input-group"><label>Y</label><input type="number" id="d_oabt_Y" min="0" max="50"></div></div>`;
                 thHtml += `<th>ÖABT NET</th>`;
+            }
+        } else if (userSettings.exam === 'YKS') {
+            let tyts = [ { id: 'tyt_tr', label: 'TYT TÜRKÇE (40)' }, { id: 'tyt_sos', label: 'TYT SOSYAL (20)' }, { id: 'tyt_mat', label: 'TYT MAT (40)' }, { id: 'tyt_fen', label: 'TYT FEN (20)' } ];
+            tyts.forEach(t => {
+                inputs.innerHTML += `<div><label style="font-size:0.8rem; font-weight:600; color:var(--text-muted); display:block; margin-bottom:0.5rem; text-align: center;">${t.label}</label><div class="d-input-group"><label>D</label><input type="number" id="${t.id}_D" min="0"></div><div class="d-input-group"><label>Y</label><input type="number" id="${t.id}_Y" min="0"></div></div>`;
+                thHtml += `<th>${t.label.split(' ')[1]} NET</th>`;
+            });
+            
+            if (userSettings.branch === 'Sayısal (TYT+AYT)') {
+                ['AYT MAT (40)', 'AYT FİZİK (14)', 'AYT KİMYA (13)', 'AYT BİYO (13)'].forEach(l => {
+                    let k = l.split(' ')[1].toLowerCase();
+                    inputs.innerHTML += `<div><label style="font-size:0.8rem; font-weight:600; color:var(--info); display:block; margin-bottom:0.5rem; text-align:center;">${l}</label><div class="d-input-group"><label>D</label><input type="number" id="ayt_${k}_D"></div><div class="d-input-group"><label>Y</label><input type="number" id="ayt_${k}_Y"></div></div>`;
+                    thHtml += `<th>${l.split(' ')[1]} NET</th>`;
+                });
+            } else if (userSettings.branch === 'Eşit Ağırlık (TYT+AYT)') {
+                ['AYT MAT (40)', 'AYT EDEBİYAT (24)', 'AYT TARİH-1 (10)', 'AYT COĞ-1 (6)'].forEach(l => {
+                    let k = l.split(' ')[1].toLowerCase();
+                    inputs.innerHTML += `<div><label style="font-size:0.8rem; font-weight:600; color:var(--info); display:block; margin-bottom:0.5rem; text-align:center;">${l}</label><div class="d-input-group"><label>D</label><input type="number" id="ayt_${k}_D"></div><div class="d-input-group"><label>Y</label><input type="number" id="ayt_${k}_Y"></div></div>`;
+                    thHtml += `<th>${l.split(' ')[1]} NET</th>`;
+                });
+            } else if (userSettings.branch === 'Sözel (TYT+AYT)') {
+                ['AYT EDEBİYAT (24)', 'AYT TAR-1 (10)', 'AYT COĞ-1 (6)', 'AYT TAR-2 (11)', 'AYT COĞ-2 (11)', 'AYT FELSEFE (12)'].forEach(l => {
+                    let k = l.split(' ')[1].toLowerCase();
+                    inputs.innerHTML += `<div><label style="font-size:0.8rem; font-weight:600; color:var(--info); display:block; margin-bottom:0.5rem; text-align:center;">${l}</label><div class="d-input-group"><label>D</label><input type="number" id="ayt_${k}_D"></div><div class="d-input-group"><label>Y</label><input type="number" id="ayt_${k}_Y"></div></div>`;
+                    thHtml += `<th>${l.split(' ')[1]} NET</th>`;
+                });
+            } else if (userSettings.branch === 'Dil (TYT+YDT)') {
+                inputs.innerHTML += `<div><label style="font-size:0.8rem; font-weight:600; color:var(--info); display:block; margin-bottom:0.5rem; text-align:center;">YDT İNGİLİZCE (80)</label><div class="d-input-group"><label>D</label><input type="number" id="ayt_ydt_D"></div><div class="d-input-group"><label>Y</label><input type="number" id="ayt_ydt_Y"></div></div>`;
+                thHtml += `<th>YDT NET</th>`;
             }
         } else {
             dersler.forEach((d, index) => {
                 let count = (index<2 ? 30 : (index===2?27:(index===3?18:15))); 
-                inputs.innerHTML += `
-                <div>
-                    <label style="font-size:0.85rem; font-weight:600; color:var(--text-muted); display:block; margin-bottom:0.5rem; text-align: center;">${d.toUpperCase()} (${count})</label>
-                    <div class="d-input-group"><label>D</label><input type="number" id="d_${index}_D" min="0" max="${count}"></div>
-                    <div class="d-input-group"><label>Y</label><input type="number" id="d_${index}_Y" min="0" max="${count}"></div>
-                </div>`;
+                inputs.innerHTML += `<div><label style="font-size:0.85rem; font-weight:600; color:var(--text-muted); display:block; margin-bottom:0.5rem; text-align: center;">${d.toUpperCase()} (${count})</label><div class="d-input-group"><label>D</label><input type="number" id="d_${index}_D" min="0" max="${count}"></div><div class="d-input-group"><label>Y</label><input type="number" id="d_${index}_Y" min="0" max="${count}"></div></div>`;
                 let kisaltma = d.length > 5 ? d.substring(0,3).toUpperCase() : d.toUpperCase();
                 thHtml += `<th>${kisaltma} NET</th>`;
             });
         }
         
-        thHtml += `<th>TOPLAM NET</th><th>İŞLEM</th></tr>`;
+        thHtml += `<th>TYT NET</th><th>AYT NET</th><th>TOP. NET</th><th>İŞLEM</th></tr>`;
         thead.innerHTML = thHtml;
     }
 
-    function calcNet(d, y) { return (d || 0) - ((y || 0) * 0.25); }
+    function calcNet(d, y) { return (parseFloat(d) || 0) - ((parseFloat(y) || 0) * 0.25); }
     
     function kaydetDeneme() {
         const tarih = document.getElementById("denemeTarih").value;
         const adi = document.getElementById("denemeAdi").value.trim() || "Genel Deneme";
         if (!tarih) return;
 
-        let dersler = Object.keys(currentSyllabus);
         let netler = {};
-        let topNet = 0;
-        let gyNet = 0; let gkNet = 0;
+        let topNet = 0; let tytToplam = 0; let aytToplam = 0;
 
         if (userSettings.exam === 'AGS') {
-            let agsD = parseFloat(document.getElementById(`d_ags_D`)?.value) || 0;
-            let agsY = parseFloat(document.getElementById(`d_ags_Y`)?.value) || 0;
-            let agsNet = calcNet(agsD, agsY);
-            netler['AGS'] = agsNet;
-            topNet += agsNet;
-            gyNet = agsNet; 
-            
+            let agsNet = calcNet(document.getElementById(`d_ags_D`)?.value, document.getElementById(`d_ags_Y`)?.value);
+            netler['AGS'] = agsNet; topNet += agsNet; tytToplam = agsNet; 
             if(document.getElementById(`d_oabt_D`)) {
-                let oabtD = parseFloat(document.getElementById(`d_oabt_D`)?.value) || 0;
-                let oabtY = parseFloat(document.getElementById(`d_oabt_Y`)?.value) || 0;
-                let oabtNet = calcNet(oabtD, oabtY);
-                netler['ÖABT'] = oabtNet;
-                topNet += oabtNet;
-                gkNet = oabtNet; 
+                let oabtNet = calcNet(document.getElementById(`d_oabt_D`)?.value, document.getElementById(`d_oabt_Y`)?.value);
+                netler['ÖABT'] = oabtNet; topNet += oabtNet; aytToplam = oabtNet; 
             }
+        } else if (userSettings.exam === 'YKS') {
+            let trN = calcNet(document.getElementById(`tyt_tr_D`)?.value, document.getElementById(`tyt_tr_Y`)?.value);
+            let sosN = calcNet(document.getElementById(`tyt_sos_D`)?.value, document.getElementById(`tyt_sos_Y`)?.value);
+            let matN = calcNet(document.getElementById(`tyt_mat_D`)?.value, document.getElementById(`tyt_mat_Y`)?.value);
+            let fenN = calcNet(document.getElementById(`tyt_fen_D`)?.value, document.getElementById(`tyt_fen_Y`)?.value);
+            netler['TYT_TÜRKÇE'] = trN; netler['TYT_SOSYAL'] = sosN; netler['TYT_MAT'] = matN; netler['TYT_FEN'] = fenN;
+            tytToplam = trN + sosN + matN + fenN; topNet += tytToplam;
+
+            document.querySelectorAll('input[id^="ayt_"][id$="_D"]').forEach(inp => {
+                let yId = inp.id.replace('_D', '_Y');
+                let key = 'AYT_' + inp.id.split('_')[1].toUpperCase();
+                let n = calcNet(inp.value, document.getElementById(yId)?.value);
+                netler[key] = n; aytToplam += n;
+            });
+            topNet += aytToplam;
         } else {
+            let dersler = Object.keys(currentSyllabus);
             dersler.forEach((d, index) => {
-                let dogru = parseFloat(document.getElementById(`d_${index}_D`)?.value) || 0;
-                let yanlis = parseFloat(document.getElementById(`d_${index}_Y`)?.value) || 0;
-                let net = calcNet(dogru, yanlis);
-                netler[d] = net;
-                topNet += net;
-                if(index < 2) gyNet += net; else gkNet += net;
+                let net = calcNet(document.getElementById(`d_${index}_D`)?.value, document.getElementById(`d_${index}_Y`)?.value);
+                netler[d] = net; topNet += net;
+                if(index < 2) tytToplam += net; else aytToplam += net;
             });
         }
 
-        let yeni = { id: Date.now(), tarih, adi, netler, topNet, gyNet, gkNet };
+        let yeni = { id: Date.now(), tarih, adi, netler, tytTotal: tytToplam, aytTotal: aytToplam, topNet: topNet };
         let liste = [...appDenemeVerileri, yeni];
-        db.ref('users/' + currentUser.uid + '/kpss/denemeVerileri').set(liste);
+        if(!currentUser.uid.includes("test_")) db.ref('users/' + currentUser.uid + '/yks/denemeVerileri').set(liste);
+        else appDenemeVerileri = liste;
+        
         document.getElementById("denemeAdi").value = '';
         document.querySelectorAll('.d-input-group input').forEach(inp => inp.value = '');
+        renderDeneme(); updateDashboard();
     }
 
     function silDeneme(id) {
         let liste = appDenemeVerileri.filter(k => k.id !== id);
-        db.ref('users/' + currentUser.uid + '/kpss/denemeVerileri').set(liste);
+        if(!currentUser.uid.includes("test_")) db.ref('users/' + currentUser.uid + '/yks/denemeVerileri').set(liste);
+        else appDenemeVerileri = liste;
+        renderDeneme(); updateDashboard();
     }
 
     function renderDeneme() {
@@ -1137,60 +1204,54 @@
             if (userSettings.exam === 'AGS') {
                 html += `<td>${(d.netler['AGS']||0).toFixed(2)}</td>`;
                 if(userSettings.branch) html += `<td>${(d.netler['ÖABT']||0).toFixed(2)}</td>`;
+            } else if (userSettings.exam === 'YKS') {
+                html += `<td>${(d.netler['TYT_TÜRKÇE']||0).toFixed(2)}</td><td>${(d.netler['TYT_SOSYAL']||0).toFixed(2)}</td><td>${(d.netler['TYT_MAT']||0).toFixed(2)}</td><td>${(d.netler['TYT_FEN']||0).toFixed(2)}</td>`;
+                if (userSettings.branch === 'Sayısal (TYT+AYT)') {
+                    html += `<td>${(d.netler['AYT_MAT']||0).toFixed(2)}</td><td>${(d.netler['AYT_FİZİK']||0).toFixed(2)}</td><td>${(d.netler['AYT_KİMYA']||0).toFixed(2)}</td><td>${(d.netler['AYT_BİYO']||0).toFixed(2)}</td>`;
+                } else if (userSettings.branch === 'Eşit Ağırlık (TYT+AYT)') {
+                    html += `<td>${(d.netler['AYT_MAT']||0).toFixed(2)}</td><td>${(d.netler['AYT_EDEBİYAT']||0).toFixed(2)}</td><td>${(d.netler['AYT_TARİH-1']||0).toFixed(2)}</td><td>${(d.netler['AYT_COĞ-1']||0).toFixed(2)}</td>`;
+                } else if (userSettings.branch === 'Sözel (TYT+AYT)') {
+                    html += `<td>${(d.netler['AYT_EDEBİYAT']||0).toFixed(2)}</td><td>${(d.netler['AYT_TAR-1']||0).toFixed(2)}</td><td>${(d.netler['AYT_COĞ-1']||0).toFixed(2)}</td><td>${(d.netler['AYT_TAR-2']||0).toFixed(2)}</td><td>${(d.netler['AYT_COĞ-2']||0).toFixed(2)}</td><td>${(d.netler['AYT_FELSEFE']||0).toFixed(2)}</td>`;
+                } else if (userSettings.branch === 'Dil (TYT+YDT)') {
+                    html += `<td>${(d.netler['AYT_YDT']||0).toFixed(2)}</td>`;
+                }
             } else {
                 let dersler = Object.keys(currentSyllabus);
-                dersler.forEach(ders => {
-                    let val = d.netler[ders] || 0;
-                    html += `<td>${val.toFixed(2)}</td>`;
-                });
+                dersler.forEach(ders => { let val = d.netler[ders] || 0; html += `<td>${val.toFixed(2)}</td>`; });
             }
-            html += `<td style="color:var(--success); font-weight:700; font-size:1.1rem;">${d.topNet.toFixed(2)}</td>
+            html += `<td class="color-accent">${d.tytTotal.toFixed(2)}</td><td>${d.aytTotal.toFixed(2)}</td><td style="color:var(--success); font-weight:700;">${d.topNet.toFixed(2)}</td>
                      <td><button class="btn-danger" onclick="silDeneme(${d.id})">Sil</button></td></tr>`;
         });
-        let dl = document.getElementById("denemeListesi");
-        if(dl) dl.innerHTML = html;
+        document.getElementById("denemeListesi").innerHTML = html;
     }
 
-    // --- ZAMANLAYICILAR VE DASHBOARD EKRANI ---
+    // --- SAYAÇ VE GERİ SAYIM MOTORU ---
     function baslatGeriSayim() {
         if(geriSayimInterval) clearInterval(geriSayimInterval);
         
-        // SAFARI/IOS UYUMLU TARİH FORMATI
         let targetDateStr = "2026/09/06 10:15:00"; 
         if (userSettings && userSettings.exam === 'Ön Lisans') targetDateStr = "2026/10/04 10:15:00";
         if (userSettings && userSettings.exam === 'AGS') targetDateStr = "2026/07/26 10:15:00";
+        if (userSettings && userSettings.exam === 'YKS') targetDateStr = "2027/06/19 10:15:00";
 
         const sinavTarihi = new Date(targetDateStr).getTime();
-        let titleText = userSettings ? userSettings.exam.toUpperCase() : "LİSANS";
+        let examLabel = userSettings.exam === 'YKS' ? 'TYT' : userSettings.exam.toUpperCase();
         let dateEkrani = targetDateStr.split(' ')[0].split('/').reverse().join('.'); 
-        document.getElementById("cd-title-text").innerText = `${titleText} SINAVI (${dateEkrani})`;
+        document.getElementById("cd-title-text").innerText = `${examLabel} SINAVI (${dateEkrani})`;
 
         geriSayimInterval = setInterval(() => {
             const simdi = new Date().getTime();
             const fark = sinavTarihi - simdi;
-            
             if (fark < 0) {
                 clearInterval(geriSayimInterval);
-                ["cd-days", "cd-hours", "cd-minutes", "cd-seconds"].forEach(id => {
-                    let el = document.getElementById(id);
-                    if(el) el.innerText = "00";
-                });
-                let titleEl = document.getElementById("cd-title-text");
-                if(titleEl) { titleEl.innerText = "SINAV BAŞLADI!"; titleEl.classList.add("color-success"); }
+                ["cd-days", "cd-hours", "cd-minutes", "cd-seconds"].forEach(id => document.getElementById(id).innerText = "00");
+                document.getElementById("cd-title-text").innerText = "SINAV BAŞLADI!";
                 return;
             }
-            
-            const gun = Math.floor(fark / (1000 * 60 * 60 * 24));
-            const saat = Math.floor((fark % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const dakika = Math.floor((fark % (1000 * 60 * 60)) / (1000 * 60));
-            const saniye = Math.floor((fark % (1000 * 60)) / 1000);
-            
-            let dEl=document.getElementById("cd-days"), hEl=document.getElementById("cd-hours");
-            let mEl=document.getElementById("cd-minutes"), sEl=document.getElementById("cd-seconds");
-            if(dEl) dEl.innerText = gun.toString().padStart(2, '0');
-            if(hEl) hEl.innerText = saat.toString().padStart(2, '0');
-            if(mEl) mEl.innerText = dakika.toString().padStart(2, '0');
-            if(sEl) sEl.innerText = saniye.toString().padStart(2, '0');
+            document.getElementById("cd-days").innerText = Math.floor(fark / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
+            document.getElementById("cd-hours").innerText = Math.floor((fark % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
+            document.getElementById("cd-minutes").innerText = Math.floor((fark % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
+            document.getElementById("cd-seconds").innerText = Math.floor((fark % (1000 * 60)) / 1000).toString().padStart(2, '0');
         }, 1000);
     }
 
@@ -1212,12 +1273,9 @@
             });
 
             let yuzde = toplamGorev === 0 ? 0 : Math.round((tamamlanan / toplamGorev) * 100);
-            let ks = document.getElementById("konuSayaci");
-            let kpb = document.getElementById("konuProgressBar");
-            let kpy = document.getElementById("konuProgressYuzde");
-            if(ks) ks.innerText = `${tamamlanan} / ${toplamGorev}`;
-            if(kpb) kpb.style.width = `${yuzde}%`;
-            if(kpy) kpy.innerText = `%${yuzde}`;
+            document.getElementById("konuSayaci").innerText = `${tamamlanan} / ${toplamGorev}`;
+            document.getElementById("konuProgressBar").style.width = `${yuzde}%`;
+            document.getElementById("konuProgressYuzde").innerText = `%${yuzde}`;
 
             let stats = { 'GENEL': { tot: 0, d: 0, y: 0, b:0, net: 0 } };
             dersler.forEach(d => { stats[d] = { tot: 0, d: 0, y: 0, b:0, net: 0 }; });
@@ -1243,47 +1301,30 @@
                 }
             });
 
-            let calTaskUl = document.getElementById("aiCalendarTasks");
-            if(calTaskUl) {
-                calTaskUl.innerHTML = "";
-                if(takvimEksikleri.length === 0) { calTaskUl.innerHTML = `<li class="text-muted" style="font-style:italic; margin-top: 0.5rem; background:transparent; border:none; justify-content:center;">Harika ilerliyorsun! Eksik yok.</li>`; } 
-                else { takvimEksikleri.slice(0, 4).forEach(k => { calTaskUl.innerHTML += `<li class="task-item"><span>${k}</span> <strong class="color-danger">Eksik</strong></li>`; }); }
-            }
-
-            let weakUl = document.getElementById("aiWeakTasks");
-            if(weakUl) {
-                weakUl.innerHTML = "";
-                if(zayifKonular.length === 0) { weakUl.innerHTML = `<li class="text-muted" style="font-style:italic; margin-top: 0.5rem; background:transparent; border:none; justify-content:center;">Zayıf konu tespit edilmedi.</li>`; } 
-                else { zayifKonular.sort((a,b)=>a.yuzde-b.yuzde).slice(0, 4).forEach(k => { weakUl.innerHTML += `<li class="task-item"><span>${k.ad}</span> <strong class="color-warning">%${Math.round(k.yuzde)}</strong></li>`; }); }
-            }
-
-            let strongUl = document.getElementById("aiStrongTasks");
-            if(strongUl) {
-                strongUl.innerHTML = "";
-                if(gucluKonular.length === 0) { strongUl.innerHTML = `<li class="text-muted" style="font-style:italic; margin-top: 0.5rem; background:transparent; border:none; justify-content:center;">Yüksek verimli veri bekleniyor.</li>`; } 
-                else { gucluKonular.sort((a,b)=>b.yuzde-a.yuzde).slice(0, 4).forEach(k => { strongUl.innerHTML += `<li class="task-item"><span>${k.ad}</span> <strong class="color-success">%${Math.round(k.yuzde)}</strong></li>`; }); }
-            }
+            document.getElementById("aiCalendarTasks").innerHTML = takvimEksikleri.length === 0 ? `<li class="text-muted" style="font-style:italic; margin-top: 0.5rem; background:transparent; border:none; justify-content:center;">Harika ilerliyorsun! Eksik yok.</li>` : takvimEksikleri.slice(0,4).map(k => `<li class="task-item"><span>${k}</span> <strong class="color-danger">Eksik</strong></li>`).join('');
+            document.getElementById("aiWeakTasks").innerHTML = zayifKonular.length === 0 ? `<li class="text-muted" style="font-style:italic; margin-top: 0.5rem; background:transparent; border:none; justify-content:center;">Zayıf konu tespit edilmedi.</li>` : zayifKonular.sort((a,b)=>a.yuzde-b.yuzde).slice(0,4).map(k => `<li class="task-item"><span>${k.ad}</span> <strong class="color-warning">%${Math.round(k.yuzde)}</strong></li>`).join('');
+            document.getElementById("aiStrongTasks").innerHTML = gucluKonular.length === 0 ? `<li class="text-muted" style="font-style:italic; margin-top: 0.5rem; background:transparent; border:none; justify-content:center;">Güçlü konu yok.</li>` : gucluKonular.sort((a,b)=>b.yuzde-a.yuzde).slice(0,4).map(k => `<li class="task-item"><span>${k.ad}</span> <strong class="color-success">%${Math.round(k.yuzde)}</strong></li>`).join('');
 
             let dOrtGY = 0, dOrtGK = 0, dOrtTotal = 0;
             if(appDenemeVerileri.length > 0) {
-                dOrtGY = appDenemeVerileri.reduce((sum, d) => sum + d.gyNet, 0) / appDenemeVerileri.length;
-                dOrtGK = appDenemeVerileri.reduce((sum, d) => sum + d.gkNet, 0) / appDenemeVerileri.length;
+                dOrtGY = appDenemeVerileri.reduce((sum, d) => sum + d.tytTotal, 0) / appDenemeVerileri.length;
+                dOrtGK = appDenemeVerileri.reduce((sum, d) => sum + d.aytTotal, 0) / appDenemeVerileri.length;
                 dOrtTotal = appDenemeVerileri.reduce((sum, d) => sum + d.topNet, 0) / appDenemeVerileri.length;
             }
 
-            let eTS = document.getElementById('dashTotalSoru'); if(eTS) eTS.innerText = stats['GENEL'].tot;
-            let eDD = document.getElementById('dashDogru'); if(eDD) eDD.innerText = stats['GENEL'].d;
-            let eDY = document.getElementById('dashYanlis'); if(eDY) eDY.innerText = stats['GENEL'].y;
-            let eOD = document.getElementById('dashOrtDeneme'); if(eOD) eOD.innerText = dOrtTotal.toFixed(2);
+            document.getElementById('dashTotalSoru').innerText = stats['GENEL'].tot;
+            document.getElementById('dashDogru').innerText = stats['GENEL'].d;
+            document.getElementById('dashYanlis').innerText = stats['GENEL'].y;
+            document.getElementById('dashOrtDeneme').innerText = dOrtTotal.toFixed(2);
             
             let nl = document.getElementById('dashNetListesi');
             if (nl) {
                 if (userSettings.exam === 'AGS') {
-                    nl.innerHTML = `AGS Neti <span id="dashOrtGY">${dOrtGY.toFixed(2)}</span>
-                                    ÖABT Neti <span id="dashOrtGK">${dOrtGK.toFixed(2)}</span>`;
+                    nl.innerHTML = `AGS Neti <span id="dashOrtGY">${dOrtGY.toFixed(2)}</span><br>ÖABT Neti <span id="dashOrtGK">${dOrtGK.toFixed(2)}</span>`;
+                } else if (userSettings.exam === 'YKS') {
+                    nl.innerHTML = `TYT Neti <span id="dashOrtGY">${dOrtGY.toFixed(2)}</span><br>AYT/YDT Ort. <span id="dashOrtGK">${dOrtGK.toFixed(2)}</span>`;
                 } else {
-                    nl.innerHTML = `Genel Yetenek <span id="dashOrtGY">${dOrtGY.toFixed(2)}</span>
-                                    Genel Kültür <span id="dashOrtGK">${dOrtGK.toFixed(2)}</span>`;
+                    nl.innerHTML = `Genel Yetenek <span id="dashOrtGY">${dOrtGY.toFixed(2)}</span><br>Genel Kültür <span id="dashOrtGK">${dOrtGK.toFixed(2)}</span>`;
                 }
             }
 
@@ -1298,147 +1339,119 @@
                 dersDashboardHtml += `
                     <div class="stat-card" style="padding: 1.25rem;">
                         <h4 style="font-size: 0.8rem; margin-bottom: 0.5rem; color: var(--accent); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${kisaBaslik}</h4>
-                        <div class="val" style="font-size: 1.8rem; color: var(--text-main); margin-bottom: 0.2rem;">${stats[d].tot} <span style="font-size:0.75rem;color:var(--text-muted); font-weight: 500;">SORU</span></div>
+                        <div class="val" style="font-size: 1.8rem; color: var(--text-main); margin-bottom: 0.2rem;">${stats[d].tot}</div>
                         <div class="stat-list" style="margin-top: 0.5rem; font-size: 0.85rem; border-top: none; padding-top:0;">
-                            Net: <span style="color:var(--text-main)">${stats[d].net.toFixed(2)}</span>
-                            D/Y: <span style="color:var(--text-muted)"><strong class="color-success">${stats[d].d}</strong> / <strong class="color-danger">${stats[d].y}</strong></span>
+                            Net: <span>${stats[d].net.toFixed(2)}</span>
                         </div>
-                    </div>
-                `;
+                    </div>`;
             });
-            let eBL = document.getElementById('dashBestLesson'); if(eBL) eBL.innerText = bestLesson;
-            let sdd = document.getElementById('soruDersDashboard'); if(sdd) sdd.innerHTML = dersDashboardHtml;
+            document.getElementById('dashBestLesson').innerText = bestLesson;
+            document.getElementById('soruDersDashboard').innerHTML = dersDashboardHtml;
 
             // Grafikler
             if (typeof Chart !== 'undefined') {
                 if (chartNet) chartNet.destroy();
                 if (chartDeneme) chartDeneme.destroy();
-
-                Chart.defaults.color = '#a1a1aa'; Chart.defaults.font.family = 'Roboto';
-
-                let nc = document.getElementById('netChart');
-                if (nc) {
-                    let labels = []; let data = [];
-                    dersler.forEach(d => { labels.push(d.substring(0,6).toUpperCase()); data.push(stats[d].net); });
-                    chartNet = new Chart(nc.getContext('2d'), {
-                        type: 'bar',
-                        data: { labels: labels, datasets: [{ label: 'NET (SORU BANKASI)', data: data, backgroundColor: '#FF6B00', borderRadius: 6 }] },
-                        options: { maintainAspectRatio: false, responsive: true, plugins: { legend: { display: false } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.05)' } }, x: { grid: { display: false } } } }
-                    });
-                }
+                let labels = []; let data = [];
+                dersler.forEach(d => { labels.push(d.substring(0,6).toUpperCase()); data.push(stats[d].net); });
+                chartNet = new Chart(document.getElementById('netChart').getContext('2d'), {
+                    type: 'bar',
+                    data: { labels: labels, datasets: [{ label: 'NETLER', data: data, backgroundColor: '#FF6B00', borderRadius: 6 }] },
+                    options: { maintainAspectRatio: false, plugins: { legend: { display: false } } }
+                });
 
                 let sData = [...appDenemeVerileri].sort((a, b) => new Date(a.tarih) - new Date(b.tarih));
-                let denemeLabels = sData.map(d => d.adi.substring(0, 10)); 
-                let denemeData = sData.map(d => d.topNet);
-                
-                let dc = document.getElementById('denemeChart');
-                if (dc) {
-                    chartDeneme = new Chart(dc.getContext('2d'), {
-                        type: 'line',
-                        data: {
-                            labels: denemeLabels.length > 0 ? denemeLabels : ['HENÜZ DENEME YOK'],
-                            datasets: [{
-                                label: 'TOPLAM NET', data: denemeData.length > 0 ? denemeData : [0],
-                                borderColor: '#10B981', backgroundColor: 'rgba(16, 185, 129, 0.1)', borderWidth: 3, fill: true, tension: 0.4, pointBackgroundColor: '#FF6B00', pointRadius: 4
-                            }]
-                        },
-                        options: { maintainAspectRatio: false, responsive: true, plugins: { legend: { display: false } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.05)' } }, x: { grid: { display: false } } } }
-                    });
-                }
+                chartDeneme = new Chart(document.getElementById('denemeChart').getContext('2d'), {
+                    type: 'line',
+                    data: { labels: sData.map(d => d.adi.substring(0, 10)), datasets: [{ label: 'TOPLAM NET', data: sData.map(d => d.topNet), borderColor: '#10B981', fill: true, tension: 0.4 }] },
+                    options: { maintainAspectRatio: false }
+                });
             }
         } catch(e) {}
     }
 
     function generateKronosReport() {
-        let konuStats = {};
-        appSoruVerileri.forEach(k => {
-            if(k.konu.toLowerCase() === "genel soru çözümü") return;
-            if(!konuStats[k.konu]) konuStats[k.konu] = {d:0, tot:0, ders:k.ders, ad: k.konu};
-            konuStats[k.konu].d += k.dogru;
-            konuStats[k.konu].tot += k.toplam;
-        });
-        let korNoktalar = Object.values(konuStats).filter(v => v.tot >= 15 && (v.d/v.tot) < 0.65).sort((a,b) => (a.d/a.tot) - (b.d/b.tot));
-        
-        let korNoktaHtml = korNoktalar.length > 0
-            ? `<strong>${korNoktalar[0].ders} - ${korNoktalar[0].ad}</strong> konusunda başarı oranınız <span class="color-danger fw-bold">%${Math.round((korNoktalar[0].d/korNoktalar[0].tot)*100)}</span>. Bu konu denemelerde sizi dibe çekebilir. Acil tekrar şart.`
-            : `<span class="color-success fw-bold">Harika!</span> Kronos şu an için belirgin ve tehlikeli bir kör nokta tespit edemedi.`;
-
-        let yapilmadiCount = Object.values(appKonuDurumlari).filter(v => v === "Yapılmadı").length;
-        let riskHtml = yapilmadiCount > 5 ? `<span class="color-danger fw-bold">Kırmızı Alarm:</span> Tam ${yapilmadiCount} konuyu geride bıraktınız. Acil telafi kampı yapın!` : (yapilmadiCount > 0 ? `<span class="color-warning fw-bold">Sarı Alarm:</span> ${yapilmadiCount} adet ertelenmiş konunuz var.` : `<span class="color-success fw-bold">Sıfır Risk:</span> Programda geride kalan hiçbir konunuz yok.`);
-
-        document.getElementById('kronosRealHeader').style.display = 'flex'; // Başlığı geri getir
-
-        let html = `
-            <div class="kronos-report-item">
-                <h4>👁️‍🗨️ Kör Nokta Detektörü</h4>
-                <div style="font-size:0.95rem; color:var(--text-muted); line-height:1.6;">${korNoktaHtml}</div>
-            </div>
-            <div class="kronos-report-item">
-                <h4>⚠️ Zaman Yönetimi Riski</h4>
-                <div style="font-size:0.95rem; color:var(--text-muted); line-height:1.6;">${riskHtml}</div>
-            </div>
-        `;
+        let html = `<div class="kronos-report-item"><h4>👁️‍🗨️ Performans Analizi</h4><p style="font-size:0.95rem; color:var(--text-muted); line-height:1.6;">Strateji motoru verilerinizi işledi. Eksikleriniz "Genel Özet" ekranına yansıtıldı.</p></div>`;
         document.getElementById('kronosReportContent').innerHTML = html;
         document.getElementById('kronosModal').classList.add('active');
     }
 
-    // Modal KAPATMA FONKSİYONU
     window.closeKronos = function() {
         let modal = document.getElementById('kronosModal');
         if (modal) modal.classList.remove('active');
     };
 
-    // Modalın Dışına (Overlay) Tıklayınca Kapanmasını Sağlama
     document.addEventListener('DOMContentLoaded', () => {
-        baslatGeriSayim();
         let kModal = document.getElementById('kronosModal');
-        if (kModal) {
-            kModal.addEventListener('click', function(e) {
-                if (e.target === this) {
-                    window.closeKronos();
-                }
-            });
-        }
+        if (kModal) { kModal.addEventListener('click', function(e) { if (e.target === this) { window.closeKronos(); } }); }
     });
 
     window.switchTab = function(tabId) {
         document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
-        
         let targetTab = document.getElementById(tabId);
         if(targetTab) targetTab.classList.add('active');
-        
         let buttons = document.querySelectorAll('.tab-btn');
         for(let btn of buttons) {
             let onclickAttr = btn.getAttribute('onclick');
-            if(onclickAttr && onclickAttr.includes(tabId)) {
-                btn.classList.add('active');
-            }
+            if(onclickAttr && onclickAttr.includes(tabId)) btn.classList.add('active');
         }
-        
-        if (tabId === 'ozet-tab' && typeof updateDashboard === 'function') {
-            updateDashboard();
-        }
+        if (tabId === 'ozet-tab') updateDashboard();
     };
+
+    // --- POMODORO MOTORU ---
+    let pomoTime = 25 * 60; let pomoInterval = null; let isPomoRunning = false; let isBreak = false;
+    function updatePomoDisplay() {
+        let m = Math.floor(pomoTime / 60); let s = pomoTime % 60;
+        document.getElementById('pomo-time').innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    }
+    function startPomodoro() {
+        if (isPomoRunning) return; isPomoRunning = true;
+        pomoInterval = setInterval(() => {
+            if (pomoTime > 0) { pomoTime--; updatePomoDisplay(); } 
+            else {
+                clearInterval(pomoInterval); isPomoRunning = false; playChime();
+                let taskInput = document.getElementById("pomo-task");
+                let task = (taskInput && taskInput.value.trim() !== "") ? taskInput.value.trim() : "Belirtilmedi";
+                let type = isBreak ? "MOLA (5 Dk)" : "ODAKLANMA (25 Dk)";
+                let now = new Date();
+                let yeniSeans = { id: Date.now(), date: now.toLocaleDateString("tr-TR"), time: now.toLocaleTimeString("tr-TR", {hour: '2-digit', minute:'2-digit'}), type: type, task: task };
+                appPomoVerileri.unshift(yeniSeans);
+                if(!currentUser.uid.includes("test_")) db.ref('users/' + currentUser.uid + '/yks/pomodoroVerileri').set(appPomoVerileri);
+                renderPomodoroHistory();
+                
+                isBreak = !isBreak; pomoTime = isBreak ? 5 * 60 : 25 * 60;
+                document.getElementById('pomo-title').innerText = isBreak ? "MOLA ZAMANI (5D)" : "POMODORO (25D / 5D)";
+                updatePomoDisplay();
+            }
+        }, 1000);
+    }
+    function pausePomodoro() { clearInterval(pomoInterval); isPomoRunning = false; }
+    function resetPomodoro() { clearInterval(pomoInterval); isPomoRunning = false; isBreak = false; pomoTime = 25 * 60; updatePomoDisplay(); }
     
-    // Ses çalma fonksiyonu (Pomodoro için)
+    function renderPomodoroHistory() {
+        let html = '';
+        appPomoVerileri.forEach(p => {
+            let renk = p.type.includes("ODAKLANMA") ? "color:var(--info);" : "color:var(--success);";
+            html += `<tr><td>${p.date}</td><td><strong>${p.time}</strong></td><td style="${renk} font-weight:600;">${p.type}</td><td><span style="color:var(--text-main); font-style:italic;">${p.task}</span></td><td><button class="btn-danger" onclick="silPomodoro(${p.id})">Sil</button></td></tr>`;
+        });
+        document.getElementById("pomodoroListesi").innerHTML = html;
+    }
+    function silPomodoro(id) {
+        appPomoVerileri = appPomoVerileri.filter(k => k.id !== id);
+        if(!currentUser.uid.includes("test_")) db.ref('users/' + currentUser.uid + '/yks/pomodoroVerileri').set(appPomoVerileri);
+        renderPomodoroHistory();
+    }
+    
     function playChime() {
         try {
             const ctx = new (window.AudioContext || window.webkitAudioContext)();
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-            osc.connect(gain);
-            gain.connect(ctx.destination);
-            osc.type = 'sine'; 
-            osc.frequency.setValueAtTime(880, ctx.currentTime); 
-            osc.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 1.5); 
-            gain.gain.setValueAtTime(0.5, ctx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 1.5); 
-            osc.start(ctx.currentTime);
-            osc.stop(ctx.currentTime + 1.5);
-        } catch (e) {
-            console.log("Ses çalınamadı.");
-        }
+            const osc = ctx.createOscillator(); const gain = ctx.createGain();
+            osc.connect(gain); gain.connect(ctx.destination);
+            osc.type = 'sine'; osc.frequency.setValueAtTime(880, ctx.currentTime); osc.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 1.5); 
+            gain.gain.setValueAtTime(0.5, ctx.currentTime); gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 1.5); 
+            osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 1.5);
+        } catch (e) { console.log("Ses çalınamadı."); }
     }
 </script>
 </body>
