@@ -834,11 +834,12 @@
                 </select>
                 <span style="color:var(--text-muted); font-size:0.8rem; margin-left:auto;" id="koclukSayac"></span>
             </div>
-            <!-- Davet Kodu ile Ogretmen Bul -->
-            <div style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:10px;padding:0.75rem 1rem;display:flex;align-items:center;gap:0.75rem;flex-shrink:0;flex-wrap:wrap;">
-                <span style="color:#f59e0b;font-size:0.82rem;font-weight:600;">&#128273; Davet Kodu ile Ogretmen Bul:</span>
-                <input id="davetKoduGiris" type="text" placeholder="KRS-XXXX-XXXX" style="background:rgba(0,0,0,0.3);border:1px solid rgba(245,158,11,0.35);color:var(--text);border-radius:8px;padding:0.35rem 0.75rem;font-size:0.82rem;font-family:Poppins,sans-serif;width:180px;" maxlength="14">
-                <button onclick="davetKoduileOgretmenEkle()" style="background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.4);color:#f59e0b;padding:0.35rem 0.875rem;border-radius:8px;cursor:pointer;font-size:0.78rem;font-family:Poppins,sans-serif;font-weight:600;">Ogretmeni Listele</button>
+            <!-- Email ile Ogretmen Bul -->
+            <div style="background:rgba(167,139,250,0.08);border:1px solid rgba(167,139,250,0.25);border-radius:10px;padding:0.75rem 1rem;display:flex;align-items:center;gap:0.75rem;flex-shrink:0;flex-wrap:wrap;">
+                <span style="color:#a78bfa;font-size:0.82rem;font-weight:600;">&#128269; E-posta ile &#214;&#287;retmen Bul:</span>
+                <input id="ogretmenEmailAra" type="email" placeholder="ogretmen@email.com" style="background:rgba(0,0,0,0.3);border:1px solid rgba(167,139,250,0.35);color:var(--text);border-radius:8px;padding:0.35rem 0.75rem;font-size:0.82rem;font-family:Poppins,sans-serif;width:220px;" autocomplete="off">
+                <button onclick="emailileOgretmenBul()" style="background:rgba(167,139,250,0.15);border:1px solid rgba(167,139,250,0.4);color:#a78bfa;padding:0.35rem 0.875rem;border-radius:8px;cursor:pointer;font-size:0.78rem;font-family:Poppins,sans-serif;font-weight:600;">&#214;&#287;retmeni Listele</button>
+                <span id="emailAramaMsg" style="font-size:0.75rem;color:var(--text-muted);"></span>
             </div>
             <!-- Öğretmen kartları (Firebase'den yüklenir) -->
             <div id="koclukKartlari" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:1rem; overflow-y:auto; padding-right:4px;"></div>
@@ -957,7 +958,7 @@
 
     <!-- OGRETMEN: OGRENCI DETAY MODAL (tam ekran yatay) -->
     <div class="modal-overlay" id="ogrenciDetayModal" style="z-index:9999;">
-        <div class="modal-content" style="max-width:1100px;width:96vw;padding:0;background:#0a0a0f;border:1px solid rgba(16,185,129,0.3);border-radius:16px;overflow:hidden;max-height:90vh;display:flex;flex-direction:column;">
+        <div class="modal-content" style="max-width:1400px;width:98vw;padding:0;background:#0a0a0f;border:1px solid rgba(16,185,129,0.3);border-radius:16px;overflow:hidden;max-height:96vh;display:flex;flex-direction:column;">
             <!-- Header -->
             <div style="background:linear-gradient(135deg,rgba(16,185,129,0.2),rgba(5,150,105,0.1));padding:0.875rem 1.5rem;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;border-bottom:1px solid rgba(16,185,129,0.2);">
                 <div style="display:flex;align-items:center;gap:0.875rem;">
@@ -1014,18 +1015,19 @@
                 <div style="padding:1rem;overflow-y:auto;display:flex;flex-direction:column;gap:0.75rem;">
                     <div style="font-size:0.78rem;font-weight:700;color:#a855f7;text-transform:uppercase;letter-spacing:0.05em;border-bottom:1px solid rgba(168,85,247,0.2);padding-bottom:0.4rem;">&#128197; Calisma Programi</div>
                     <!-- Form -->
-                    <div style="background:rgba(0,0,0,0.25);border-radius:10px;padding:0.6rem;display:flex;flex-direction:column;gap:0.4rem;">
-                        <div style="display:flex;gap:0.4rem;">
-                            <select id="detPlanGun" style="flex:1;font-size:0.72rem;padding:0.3rem 0.4rem;background:var(--input-bg);border:1px solid var(--border);color:var(--text);border-radius:6px;">
+                    <div style="background:rgba(0,0,0,0.25);border-radius:10px;padding:0.75rem;display:flex;flex-direction:column;gap:0.5rem;">
+                        <div style="display:flex;gap:0.4rem;flex-wrap:wrap;">
+                            <select id="detPlanGun" style="flex:1;min-width:100px;font-size:0.8rem;padding:0.38rem 0.5rem;background:var(--input-bg);border:1px solid var(--border);color:var(--text);border-radius:6px;">
                                 <option>Pazartesi</option><option>Sali</option><option>Carsamba</option><option>Persembe</option><option>Cuma</option><option>Cumartesi</option><option>Pazar</option>
                             </select>
-                            <input type="text" id="detPlanDers" placeholder="Ders" style="flex:1;font-size:0.75rem;padding:0.3rem 0.5rem;background:var(--input-bg);border:1px solid var(--border);color:var(--text);border-radius:6px;">
+                            <input type="time" id="detPlanSaat" value="09:00" style="flex:1;min-width:80px;font-size:0.8rem;padding:0.38rem 0.5rem;background:var(--input-bg);border:1px solid var(--border);color:var(--text);border-radius:6px;">
                         </div>
-                        <input type="text" id="detPlanKonu" placeholder="Konu / Gorev" style="font-size:0.75rem;padding:0.3rem 0.5rem;background:var(--input-bg);border:1px solid var(--border);color:var(--text);border-radius:6px;">
                         <div style="display:flex;gap:0.4rem;">
-                            <input type="number" id="detPlanSure" placeholder="Sure (dk)" min="0" style="flex:1;font-size:0.75rem;padding:0.3rem 0.5rem;background:var(--input-bg);border:1px solid var(--border);color:var(--text);border-radius:6px;">
-                            <button onclick="detPlanKaydet()" style="flex:2;background:linear-gradient(135deg,#7c3aed,#a855f7);border:none;color:#fff;padding:0.32rem;border-radius:6px;cursor:pointer;font-size:0.75rem;font-family:Poppins,sans-serif;font-weight:600;">+ Plan Ekle</button>
+                            <input type="text" id="detPlanDers" placeholder="Ders (Matematik)" style="flex:1;font-size:0.8rem;padding:0.38rem 0.5rem;background:var(--input-bg);border:1px solid var(--border);color:var(--text);border-radius:6px;">
+                            <input type="number" id="detPlanSure" placeholder="Sure (dk)" min="0" style="flex:1;min-width:70px;font-size:0.8rem;padding:0.38rem 0.5rem;background:var(--input-bg);border:1px solid var(--border);color:var(--text);border-radius:6px;">
                         </div>
+                        <input type="text" id="detPlanKonu" placeholder="Konu / Gorev (Turevler - 40 soru)" style="font-size:0.8rem;padding:0.38rem 0.5rem;background:var(--input-bg);border:1px solid var(--border);color:var(--text);border-radius:6px;">
+                        <button onclick="detPlanKaydet()" style="background:linear-gradient(135deg,#7c3aed,#a855f7);border:none;color:#fff;padding:0.4rem;border-radius:6px;cursor:pointer;font-size:0.8rem;font-family:Poppins,sans-serif;font-weight:600;">+ Plan Ekle</button>
                     </div>
                     <div id="detPlanListesi" style="display:flex;flex-direction:column;gap:0.25rem;"></div>
                     <!-- AI Analiz -->
@@ -2576,6 +2578,11 @@ function loadOgretmenPanel(profil) {
     ogretmenDashboardOlustur(p);
 
     if (currentUser && !currentUser.uid.includes('test_')) {
+        // Email'i publik_ogretmenler'e yaz - email bazli arama icin gerekli
+        if (currentUser.email) {
+            db.ref('ogretmenler/' + currentUser.uid + '/email').set(currentUser.email);
+            db.ref('publik_ogretmenler/' + currentUser.uid + '/email').set(currentUser.email);
+        }
         ogretmenIstekleriniDinle();
         ogretmenOgrenciVerileriniYukle();
     }
@@ -2629,6 +2636,8 @@ function ogretmenDashboardOlustur(profil) {
         + '<h3 class="color-success">&#128200; Ogrenci Analiz Ozeti</h3>'
         + '<div id="ogretmenAnalizOzeti" style="color:var(--text-muted);font-size:0.82rem;font-style:italic;padding:0.5rem;">Ogrenci verisi yukleniyor...</div>'
         + '</div>';
+    // Grafik kutularini ogretmen panelinde gizle
+    if (chartsContainer) chartsContainer.style.display = 'none';
     // Ogrenci kartlarini localStorage'dan yukle
     setTimeout(function(){ if(typeof ogretmenOgrenciKartlariniYukle==='function') ogretmenOgrenciKartlariniYukle(); }, 100);
 }
@@ -2689,13 +2698,30 @@ function _ogretmenTalepIstatistikGuncelle(talepler) {
 }
 
 function talepKabulEt(talepKey) {
-    if (!currentUser) return;
-    db.ref('talepler/' + talepKey).update({ durum: 'Kabul Edildi' }).then(function() {
-        // Jitsi odasini otomatik ac
-        jitsiAc('kronos-talep-' + talepKey.substring(0,6), 'Gorusme');
-        ogretmenOgrenciVerileriniYukle();
-    }).catch(function(e) {
-        alert('Talep guncellenemedi: ' + (e.message||e));
+    if (!currentUser || !talepKey) return;
+    var odaAdi = 'kronos-talep-' + talepKey.substring(0,6);
+    // Yeni path: gorusme_talepleri/{ogretmenUid}/{talepKey}
+    db.ref('gorusme_talepleri/' + currentUser.uid + '/' + talepKey).once('value').then(function(snap) {
+        var t = snap.val() || {};
+        var updates = {};
+        updates['gorusme_talepleri/' + currentUser.uid + '/' + talepKey + '/durum'] = 'Kabul Edildi';
+        updates['gorusme_talepleri/' + currentUser.uid + '/' + talepKey + '/oda'] = odaAdi;
+        if (t.ogrenciId) {
+            updates['ogrenci_talepleri/' + t.ogrenciId + '/' + talepKey + '/durum'] = 'Kabul Edildi';
+            updates['ogrenci_talepleri/' + t.ogrenciId + '/' + talepKey + '/oda'] = odaAdi;
+        }
+        return db.ref().update(updates).then(function() {
+            jitsiAc(odaAdi, (t.ogrenciIsim || t.ogrenciEmail || 'Ogrenci') + ' ile Gorusme');
+            ogretmenOgrenciVerileriniYukle();
+        });
+    }).catch(function() {
+        // Fallback: eski path
+        db.ref('talepler/' + talepKey).update({ durum: 'Kabul Edildi', oda: odaAdi }).then(function() {
+            jitsiAc(odaAdi, 'Gorusme');
+            ogretmenOgrenciVerileriniYukle();
+        }).catch(function(e) {
+            alert('Talep guncellenemedi: ' + (e.message || e));
+        });
     });
 }
 
@@ -2717,7 +2743,8 @@ function musaitlikToggleGuncelle(musait) {
 
 function ogretmenIstekleriniDinle() {
     if (!currentUser) return;
-    db.ref('talepler').orderByChild('ogretmenId').equalTo(currentUser.uid).on('value', function(snap) {
+    // Yeni path: gorusme_talepleri/{ogretmenUid}
+    db.ref('gorusme_talepleri/' + currentUser.uid).on('value', function(snap) {
         var talepler = [];
         snap.forEach(function(ch) { var t = ch.val(); t._key = ch.key; talepler.push(t); });
         talepler.sort(function(a,b){ return (b.zaman||0)-(a.zaman||0); });
@@ -2728,7 +2755,41 @@ function ogretmenIstekleriniDinle() {
             if (bekleyen > 0) { sayiEl.innerText = bekleyen; sayiEl.style.display = 'inline'; }
             else { sayiEl.style.display = 'none'; }
         }
+        // Bekleyen talep varsa Jitsi butonu goster
+        _bekleyenTalepButonGuncelle(talepler);
+    }).on('cancel', function() {
+        // Fallback: eski path
+        db.ref('talepler').orderByChild('ogretmenId').equalTo(currentUser.uid).on('value', function(snap) {
+            var talepler = [];
+            snap.forEach(function(ch) { var t = ch.val(); t._key = ch.key; talepler.push(t); });
+            talepler.sort(function(a,b){ return (b.zaman||0)-(a.zaman||0); });
+            ogretmenIstekleriniRender(talepler);
+            _bekleyenTalepButonGuncelle(talepler);
+        });
     });
+}
+
+function _bekleyenTalepButonGuncelle(talepler) {
+    var bekleyenler = talepler.filter(function(t){ return t.durum === 'Bekliyor'; });
+    var panel = document.getElementById('koclukOgretmenPanel');
+    var existingBtn = document.getElementById('bekleyenTalepJitsiBtn');
+    if (bekleyenler.length > 0 && panel) {
+        if (!existingBtn) {
+            var btn = document.createElement('div');
+            btn.id = 'bekleyenTalepJitsiBtn';
+            btn.style.cssText = 'position:fixed;bottom:1.5rem;right:1.5rem;z-index:9998;background:linear-gradient(135deg,#7c3aed,#a78bfa);border-radius:14px;padding:0.75rem 1.25rem;cursor:pointer;box-shadow:0 4px 20px rgba(124,58,237,0.4);display:flex;align-items:center;gap:0.6rem;';
+            btn.innerHTML = '<span style="font-size:1.2rem;">&#127909;</span><div><div style="font-weight:700;color:#fff;font-family:Poppins,sans-serif;font-size:0.85rem;">' + bekleyenler.length + ' Bekleyen Talep</div><div style="font-size:0.7rem;color:rgba(255,255,255,0.8);">Toplantiya Katil</div></div>';
+            btn.onclick = function() {
+                var t = bekleyenler[0];
+                jitsiAc('kronos-talep-' + (t._key||'').substring(0,6), (t.ogrenciIsim||t.ogrenciEmail||'Ogrenci') + ' ile Gorusme');
+            };
+            document.body.appendChild(btn);
+        } else {
+            existingBtn.querySelector('div > div').innerText = bekleyenler.length + ' Bekleyen Talep';
+        }
+    } else if (existingBtn) {
+        existingBtn.remove();
+    }
 }
 
 function ogretmenIstekleriniRender(talepler) {
@@ -2758,20 +2819,39 @@ function ogretmenIstekleriniRender(talepler) {
 }
 
 function talepKabul(key) {
-    if (!key) return;
-    var odaAdi = 'kronos-kocluk-' + currentUser.uid.substring(0,6) + '-' + key.substring(0,6);
-    var jitsiLink = 'https://meet.jit.si/' + odaAdi;
-    db.ref('talepler/' + key).update({ durum: 'Kabul Edildi', link: jitsiLink, oda: odaAdi });
-    db.ref('talepler/' + key).once('value').then(function(snap) {
+    if (!key || !currentUser) return;
+    var odaAdi = 'kronos-talep-' + key.substring(0,6);
+    // Yeni path: gorusme_talepleri/{ogretmenUid}/{key}
+    db.ref('gorusme_talepleri/' + currentUser.uid + '/' + key).once('value').then(function(snap) {
         var t = snap.val() || {};
-        var bilgi = (t.ogrenciIsim || 'Ogrenci') + ' ile gorusme - ' + (t.konu || '');
-        jitsiAc(odaAdi, bilgi);
+        var updates = {};
+        updates['gorusme_talepleri/' + currentUser.uid + '/' + key + '/durum'] = 'Kabul Edildi';
+        updates['gorusme_talepleri/' + currentUser.uid + '/' + key + '/oda'] = odaAdi;
+        if (t.ogrenciId) {
+            updates['ogrenci_talepleri/' + t.ogrenciId + '/' + key + '/durum'] = 'Kabul Edildi';
+            updates['ogrenci_talepleri/' + t.ogrenciId + '/' + key + '/oda'] = odaAdi;
+        }
+        return db.ref().update(updates).then(function() {
+            var bilgi = (t.ogrenciIsim || t.ogrenciEmail || 'Ogrenci') + ' ile Gorusme - ' + (t.konu || '');
+            jitsiAc(odaAdi, bilgi);
+        });
+    }).catch(function() {
+        // Fallback: eski path
+        var jitsiLink = 'https://meet.jit.si/' + odaAdi;
+        db.ref('talepler/' + key).update({ durum: 'Kabul Edildi', link: jitsiLink, oda: odaAdi }).then(function() {
+            jitsiAc(odaAdi, 'Gorusme');
+        });
     });
 }
 
 function talepReddet(key) {
-    if (!key) return;
-    db.ref('talepler/' + key).update({ durum: 'Reddedildi' });
+    if (!key || !currentUser) return;
+    var updates = {};
+    updates['gorusme_talepleri/' + currentUser.uid + '/' + key + '/durum'] = 'Reddedildi';
+    db.ref().update(updates).catch(function() {
+        // Fallback: eski path
+        db.ref('talepler/' + key).update({ durum: 'Reddedildi' });
+    });
 }
 
 function musaitlikDegistir() {
@@ -2805,7 +2885,14 @@ function ogretmenProfilKaydet() {
     var uzmanlik = (document.getElementById('profilUzmanlik') || {}).value || '';
     var saatler = (document.getElementById('profilSaatler') || {}).value || '';
     if (!isim.trim()) { alert('Ad Soyad zorunludur!'); return; }
-    var guncelleme = { isim: isim.trim(), brans: brans, uzmanlik: uzmanlik, saatler: saatler };
+    // Email her zaman dahil edilmeli - email bazli arama icin
+    var guncelleme = {
+        isim: isim.trim(),
+        brans: brans,
+        uzmanlik: uzmanlik,
+        saatler: saatler,
+        email: currentUser.email || ''
+    };
     if (!currentUser.uid.includes('test_')) {
         db.ref('users/' + currentUser.uid + '/profil').update(guncelleme);
         db.ref('ogretmenler/' + currentUser.uid).update(guncelleme);
@@ -2909,6 +2996,7 @@ function talepOnay() {
         ogretmenBrans: hoca ? (hoca.brans || '') : '',
         ogrenciId: currentUser ? currentUser.uid : 'test',
         ogrenciEmail: currentUser ? (currentUser.email || 'Ogrenci') : 'Test Kullanici',
+        ogrenciIsim: currentUser ? (currentUser.displayName || currentUser.email || 'Ogrenci') : 'Test',
         konu: konu,
         tarih: tarih,
         saat: saat,
@@ -2919,9 +3007,22 @@ function talepOnay() {
     };
     document.getElementById('koclukTalepModal').classList.remove('active');
     if (currentUser && !currentUser.uid.includes('test_')) {
-        db.ref('talepler').push(talep).then(function() {
+        // Hem ogretmenin path'ine hem ogrencinin path'ine yaz (her ikisi kendi verisini okuyabilir)
+        var talepKey = 'talep_' + Date.now();
+        var updates = {};
+        updates['gorusme_talepleri/' + ogretmenUid + '/' + talepKey] = talep;
+        updates['ogrenci_talepleri/' + currentUser.uid + '/' + talepKey] = talep;
+        db.ref().update(updates).then(function() {
             gonderimSonucGoster(talep);
             ogrenciTalepleriniYukle();
+        }).catch(function(e) {
+            // Fallback: eski path
+            db.ref('talepler').push(talep).then(function() {
+                gonderimSonucGoster(talep);
+                ogrenciTalepleriniYukle();
+            }).catch(function() {
+                gonderimSonucGoster(talep);
+            });
         });
     } else {
         gonderimSonucGoster(talep);
@@ -2947,9 +3048,7 @@ function gonderimSonucGoster(talep) {
 
 function ogrenciTalepleriniYukle() {
     if (!currentUser || currentUser.uid.includes('test_')) return;
-    db.ref('talepler').orderByChild('ogrenciId').equalTo(currentUser.uid).once('value', function(snap) {
-        var talepler = [];
-        snap.forEach(function(ch) { var t = ch.val(); t._key = ch.key; talepler.push(t); });
+    var _renderTalepler = function(talepler) {
         talepler.sort(function(a,b) { return (b.zaman||0)-(a.zaman||0); });
         var div = document.getElementById('ogrenciTalepListesi');
         if (!div) return;
@@ -2959,15 +3058,40 @@ function ogrenciTalepleriniYukle() {
         }
         div.innerHTML = talepler.map(function(t) {
             var renk = t.durum === 'Kabul Edildi' ? 'var(--success)' : t.durum === 'Reddedildi' ? 'var(--danger)' : 'var(--warning)';
-            var tOda = t.oda || '';
-            var tLink = t.link || '';
-            var linkHtml = (t.durum === 'Kabul Edildi' && tLink)
-            ? ('<button class="kocluk-join" data-oda="' + tOda + '" data-link="' + tLink + '" style="display:inline-block;margin-top:0.4rem;background:linear-gradient(135deg,#7c3aed,#a78bfa);border:none;color:#fff;padding:0.35rem 0.875rem;border-radius:8px;font-size:0.78rem;font-weight:600;cursor:pointer;font-family:Poppins,sans-serif;">&#127909; Gorusmeye Katil</button>') : '';
-            return '<div style="background:rgba(0,0,0,0.3);border:1px solid var(--border);border-radius:8px;padding:0.6rem 0.875rem;display:flex;justify-content:space-between;align-items:flex-start;gap:0.5rem;">'
+            var odaAdi = 'kronos-talep-' + (t._key||'').substring(0,6);
+            var katilBtn = (t.durum === 'Kabul Edildi')
+                ? '<button onclick="jitsiAc(\'' + odaAdi + '\',\'' + (t.ogretmenIsim||'Ogretmen') + ' ile Gorusme\')" style="display:inline-flex;align-items:center;gap:0.3rem;margin-top:0.4rem;background:linear-gradient(135deg,#7c3aed,#a78bfa);border:none;color:#fff;padding:0.35rem 0.875rem;border-radius:8px;font-size:0.78rem;font-weight:600;cursor:pointer;font-family:Poppins,sans-serif;">&#127909; Toplantiya Katil</button>'
+                : '';
+            return '<div style="background:rgba(0,0,0,0.3);border:1px solid var(--border);border-radius:8px;padding:0.6rem 0.875rem;">'
+                + '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:0.5rem;">'
                 + '<div style="font-size:0.82rem;flex:1;"><strong style="color:var(--accent);">' + (t.ogretmenIsim||'Ogretmen') + '</strong> — ' + t.konu + '<br>'
-                + '<span style="color:var(--text-muted);">' + t.tarih + ' ' + t.saat + ' (' + t.sure + ' dk)</span>' + linkHtml + '</div>'
-                + '<span style="font-weight:700;font-size:0.75rem;white-space:nowrap;color:' + renk + ';">● ' + t.durum + '</span></div>';
+                + '<span style="color:var(--text-muted);font-size:0.75rem;">' + (t.tarih||'') + ' ' + (t.saat||'') + (t.sure ? ' (' + t.sure + ' dk)' : '') + '</span></div>'
+                + '<span style="font-weight:700;font-size:0.75rem;white-space:nowrap;color:' + renk + ';">● ' + (t.durum||'Bekliyor') + '</span>'
+                + '</div>'
+                + katilBtn
+                + '</div>';
         }).join('');
+    };
+    // Yeni path dene
+    db.ref('ogrenci_talepleri/' + currentUser.uid).once('value', function(snap) {
+        var talepler = [];
+        snap.forEach(function(ch) { var t = ch.val(); t._key = ch.key; talepler.push(t); });
+        if (talepler.length > 0) {
+            _renderTalepler(talepler);
+        } else {
+            // Eski path fallback
+            db.ref('talepler').orderByChild('ogrenciId').equalTo(currentUser.uid).once('value', function(snap2) {
+                var talepler2 = [];
+                snap2.forEach(function(ch) { var t = ch.val(); t._key = ch.key; talepler2.push(t); });
+                _renderTalepler(talepler2);
+            }).catch(function(){ _renderTalepler([]); });
+        }
+    }).catch(function() {
+        db.ref('talepler').orderByChild('ogrenciId').equalTo(currentUser.uid).once('value', function(snap2) {
+            var talepler2 = [];
+            snap2.forEach(function(ch) { var t = ch.val(); t._key = ch.key; talepler2.push(t); });
+            _renderTalepler(talepler2);
+        }).catch(function(){ _renderTalepler([]); });
     });
 }
 
@@ -3181,45 +3305,46 @@ function davetKoduUret() {
     alert('Davet kodunuz: ' + kod + '\nOgrencilerinize bu kodu paylasin.');
 }
 
-function davetKoduileOgretmenEkle() {
-    var kodEl = document.getElementById('davetKoduGiris');
-    var kod = kodEl ? kodEl.value.trim().toUpperCase() : '';
-    if (!kod) { alert('Lutfen davet kodu girin!'); return; }
-    // Once davetKodlari/{kod} dene; basarisiz olursa ogretmenler.orderByChild ile ara
-    var _araFn = function(k, el) {
-        var _tryPath = function(path) {
-            db.ref(path).orderByChild('davetKodu').equalTo(k).once('value').then(function(s2) {
-                if (!s2.exists()) {
-                    if (path === 'ogretmenler') { _tryPath('publik_ogretmenler'); return; }
-                    alert('Gecersiz davet kodu! Ogretmeninizden yeni kod isteyin.'); return;
-                }
-                s2.forEach(function(ch) {
-                    var o = ch.val(); o._uid = ch.key;
-                    if (!ogretmenlerListesi.some(function(h){ return h._uid === ch.key; })) ogretmenlerListesi.push(o);
-                    koclukKartlariniFiltreleveRender('', '');
-                    if (el) el.value = '';
-                    alert('Ogretmen listelendi: ' + (o.isim || ch.key));
-                });
-            }).catch(function() { if (path === 'ogretmenler') _tryPath('publik_ogretmenler'); else alert('Baglanti hatasi.'); });
-        };
-        _tryPath('ogretmenler');
+function emailileOgretmenBul() {
+    var emailEl = document.getElementById('ogretmenEmailAra');
+    var msgEl = document.getElementById('emailAramaMsg');
+    var email = emailEl ? emailEl.value.trim().toLowerCase() : '';
+    if (!email || !email.includes('@')) {
+        if (msgEl) msgEl.innerText = 'Gecerli bir e-posta adresi girin.';
+        return;
+    }
+    if (msgEl) { msgEl.innerText = 'Aranıyor...'; msgEl.style.color = 'var(--text-muted)'; }
+    var _bulunamadi = function() {
+        if (msgEl) { msgEl.innerText = 'Bu e-posta ile kayitli ogretmen bulunamadi.'; msgEl.style.color = 'var(--danger)'; }
     };
-    db.ref('davetKodlari/' + kod).once('value').then(function(snap) {
-        if (!snap.exists()) { _araFn(kod, kodEl); return; }
-        var ogretmenUid = snap.val().uid;
-        db.ref('ogretmenler/' + ogretmenUid).once('value').then(function(oSnap) {
-            var ogretmen = oSnap.val();
-            if (!ogretmen) { _araFn(kod, kodEl); return; }
-            if (!ogretmenlerListesi.some(function(h){ return h._uid === ogretmenUid; })) {
-                ogretmen._uid = ogretmenUid;
-                ogretmenlerListesi.push(ogretmen);
+    var _basari = function(o, uid) {
+        if (!ogretmenlerListesi.some(function(h){ return h._uid === uid; })) {
+            o._uid = uid;
+            ogretmenlerListesi.push(o);
+        }
+        koclukKartlariniFiltreleveRender('', '');
+        if (emailEl) emailEl.value = '';
+        if (msgEl) { msgEl.innerText = (o.isim || uid) + ' listelendi!'; msgEl.style.color = 'var(--success)'; }
+    };
+    var _araPath = function(path) {
+        db.ref(path).orderByChild('email').equalTo(email).once('value').then(function(snap) {
+            if (snap.exists()) {
+                snap.forEach(function(ch) { _basari(ch.val(), ch.key); });
+            } else if (path === 'ogretmenler') {
+                _araPath('publik_ogretmenler');
+            } else {
+                _bulunamadi();
             }
-            koclukKartlariniFiltreleveRender('', '');
-            if (kodEl) kodEl.value = '';
-            alert('Ogretmen listelendi: ' + (ogretmen.isim || ogretmenUid));
-        }).catch(function(){ _araFn(kod, kodEl); });
-    }).catch(function(){ _araFn(kod, kodEl); });
+        }).catch(function() {
+            if (path === 'ogretmenler') { _araPath('publik_ogretmenler'); }
+            else { _bulunamadi(); }
+        });
+    };
+    _araPath('ogretmenler');
 }
+
+// Eski davet kodu fonksiyonu - geriye donuk uyumluluk icin
+function davetKoduileOgretmenEkle() { emailileOgretmenBul(); }
 
 
 function ogretmenGorusmeBaslat() {
@@ -3712,22 +3837,47 @@ function detVerileriYukle(key) {
             }).join('');
         }
     }
-    // --- Plan listesi ---
+    // --- Plan listesi (haftalik tablo) ---
     var planEl = document.getElementById('detPlanListesi');
     if (planEl) {
+        var gunSirasi = ['Pazartesi','Sali','Carsamba','Persembe','Cuma','Cumartesi','Pazar'];
         var planlar = Object.keys(ogr.planlar||{}).map(function(k){ var p=ogr.planlar[k]; p._key=k; return p; })
-            .sort(function(a,b){ var gs=['Pazartesi','Sali','Carsamba','Persembe','Cuma','Cumartesi','Pazar']; return gs.indexOf(a.gun||'')-gs.indexOf(b.gun||''); });
+            .sort(function(a,b){
+                var gi = gunSirasi.indexOf(a.gun||''); var gj = gunSirasi.indexOf(b.gun||'');
+                if (gi !== gj) return gi - gj;
+                return (a.saat||'00:00').localeCompare(b.saat||'00:00');
+            });
         if (planlar.length===0) {
             planEl.innerHTML = '<div style="color:var(--text-muted);font-size:0.75rem;font-style:italic;padding:0.4rem;">Henuz plan girilmedi.</div>';
         } else {
-            planEl.innerHTML = planlar.map(function(p) {
-                return '<div style="background:rgba(0,0,0,0.28);border:1px solid var(--border);border-radius:7px;padding:0.28rem 0.5rem;font-size:0.72rem;display:flex;justify-content:space-between;align-items:center;">'
-                    + '<span><strong style="color:#a855f7;">' + (p.gun||'-') + '</strong> <span style="color:var(--accent);">' + (p.ders||'-') + '</span>' + (p.konu?' <span style="color:var(--text-muted);">- '+p.konu+'</span>':'') + '</span>'
-                    + '<span style="display:flex;gap:0.4rem;align-items:center;color:var(--text-muted);">'
-                    + (p.sure ? '<span>'+p.sure+'dk</span>' : '')
-                    + '<button onclick="detPlanSil(\'' + key + '\',\'' + p._key + '\')" style="background:none;border:none;color:var(--danger);cursor:pointer;font-size:0.7rem;padding:0;">&#10005;</button>'
-                    + '</span></div>';
-            }).join('');
+            // Gunlere gore grupla
+            var gruplar = {};
+            planlar.forEach(function(p){ var g=p.gun||'Diger'; if(!gruplar[g]) gruplar[g]=[]; gruplar[g].push(p); });
+            var html = '<table style="width:100%;border-collapse:collapse;font-size:0.75rem;">'
+                + '<thead><tr style="border-bottom:1px solid rgba(168,85,247,0.3);">'
+                + '<th style="text-align:left;padding:0.25rem 0.4rem;color:#a855f7;font-weight:600;width:90px;">Gun</th>'
+                + '<th style="text-align:left;padding:0.25rem 0.4rem;color:var(--text-muted);font-weight:600;width:50px;">Saat</th>'
+                + '<th style="text-align:left;padding:0.25rem 0.4rem;color:var(--accent);font-weight:600;width:80px;">Ders</th>'
+                + '<th style="text-align:left;padding:0.25rem 0.4rem;color:var(--text-muted);font-weight:600;">Konu / Gorev</th>'
+                + '<th style="text-align:right;padding:0.25rem 0.4rem;color:var(--text-muted);font-weight:600;width:45px;">Sure</th>'
+                + '<th style="width:24px;"></th>'
+                + '</tr></thead><tbody>';
+            var oncekiGun = null;
+            planlar.forEach(function(p) {
+                var gunDegisti = p.gun !== oncekiGun;
+                oncekiGun = p.gun;
+                html += '<tr style="border-bottom:1px solid rgba(255,255,255,0.04);' + (gunDegisti && p.gun ? 'border-top:1px solid rgba(168,85,247,0.15);' : '') + '">'
+                    + '<td style="padding:0.28rem 0.4rem;color:#a855f7;font-weight:' + (gunDegisti ? '700' : '400') + ';">' + (gunDegisti ? (p.gun||'-') : '') + '</td>'
+                    + '<td style="padding:0.28rem 0.4rem;color:var(--text-muted);">' + (p.saat||'-') + '</td>'
+                    + '<td style="padding:0.28rem 0.4rem;color:var(--accent);font-weight:600;">' + (p.ders||'-') + '</td>'
+                    + '<td style="padding:0.28rem 0.4rem;color:var(--text);">' + (p.konu||'') + '</td>'
+                    + '<td style="padding:0.28rem 0.4rem;color:var(--text-muted);text-align:right;">' + (p.sure ? p.sure+'dk' : '') + '</td>'
+                    + '<td style="padding:0.28rem 0.2rem;text-align:center;">'
+                    + '<button onclick="detPlanSil(\'' + key + '\',\'' + p._key + '\')" style="background:none;border:none;color:var(--danger);cursor:pointer;font-size:0.72rem;padding:0 2px;">&#10005;</button>'
+                    + '</td></tr>';
+            });
+            html += '</tbody></table>';
+            planEl.innerHTML = html;
         }
     }
 }
@@ -3773,6 +3923,7 @@ function detDenemeKaydet() {
 function detPlanKaydet() {
     if (!_aktifDetayKey) return;
     var gun=(document.getElementById('detPlanGun')||{}).value||'Pazartesi';
+    var saat=(document.getElementById('detPlanSaat')||{}).value||'09:00';
     var ders=(document.getElementById('detPlanDers')||{}).value||'';
     var konu=(document.getElementById('detPlanKonu')||{}).value||'';
     var sure=parseInt((document.getElementById('detPlanSure')||{}).value||0);
@@ -3780,7 +3931,7 @@ function detPlanKaydet() {
     var veri=_takipVeriOku();
     if (!veri.ogrenciler||!veri.ogrenciler[_aktifDetayKey]) return;
     if (!veri.ogrenciler[_aktifDetayKey].planlar) veri.ogrenciler[_aktifDetayKey].planlar={};
-    veri.ogrenciler[_aktifDetayKey].planlar[Date.now().toString()]={gun:gun,ders:ders,konu:konu,sure:sure,zaman:Date.now()};
+    veri.ogrenciler[_aktifDetayKey].planlar[Date.now().toString()]={gun:gun,saat:saat,ders:ders,konu:konu,sure:sure,zaman:Date.now()};
     _takipVeriYaz(veri);
     ['detPlanDers','detPlanKonu','detPlanSure'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});
     detVerileriYukle(_aktifDetayKey);
