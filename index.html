@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
@@ -87,10 +87,10 @@
         h1, h2, h3, h4, h5, h6, .tab-btn, .btn, th, .kronos-title { font-family: 'Poppins', sans-serif; }
 
         .container {
-            width: 96vw; height: 92vh; max-width: 1920px; background: var(--bg-panel);
-            backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-            border: 1px solid var(--border); border-radius: 20px; display: flex; flex-direction: column;
-            padding: 1.5rem 2.5rem; box-shadow: 0 40px 80px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.08);
+            width: 99vw; height: 97vh; max-width: 1920px; background: rgba(8,8,12,0.45);
+            backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+            border: 1px solid rgba(255,255,255,0.10); border-radius: 24px; display: flex; flex-direction: column;
+            padding: 1.5rem 2.5rem; box-shadow: 0 0 60px rgba(255,107,0,0.07), 0 40px 80px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.10);
             position: relative; z-index: 10; overflow: hidden; 
         }
 
@@ -330,23 +330,87 @@
 
 <!-- GİRİŞ EKRANI -->
 <div class="modal-overlay active" id="authModal" style="background: rgba(7, 11, 18, 0.98); z-index: 999999;">
-    <div class="modal-content" style="width: 420px; padding: 40px; text-align: center; box-shadow: 0 0 100px rgba(255, 107, 0, 0.2);">
-        <img src="icon.png" alt="Logo" style="width: 60px; height: 60px; margin-bottom: 10px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.6);">
-        <h2 style="color: var(--accent); margin-bottom: 5px; font-weight: 800; letter-spacing: 2px;">KRONOS YKS 2026</h2>
-        <p style="color: var(--text-muted); font-size: 12px; margin-bottom: 25px;">Kişisel verileriniz şifrelenerek saklanır.</p>
-        <div class="input-group" style="margin-bottom: 15px;">
-            <input type="email" id="authEmail" placeholder="E-posta Adresi" style="width: 100%; text-align:center; font-size: 14px; padding: 12px;">
-        </div>
-        <div class="input-group" style="margin-bottom: 25px;">
-            <input type="password" id="authPassword" placeholder="Şifre (En az 6 hane)" style="width: 100%; text-align:center; font-size: 14px; padding: 12px;">
-        </div>
-        <button class="btn btn-primary" style="width: 100%; margin-bottom: 10px; height: 44px; font-size: 12px;" onclick="loginUser()">GİRİŞ YAP</button>
-        <button class="btn" style="width: 100%; height: 44px; margin-bottom: 15px; font-size: 12px; background:transparent; border: 1px solid var(--text-muted); color: var(--text-muted);" onclick="registerUser()">YENİ KAYIT OLUŞTUR</button>
-        
-        <!-- HIZLI TEST BUTONU -->
-        <button class="btn" style="width: 100%; height: 44px; font-size: 12px; background: rgba(59, 130, 246, 0.2); border: 1px solid var(--info); color: var(--info);" onclick="testGiris()">TEST GİRİŞİ (Hızlı İncele)</button>
+    <div class="modal-content" style="width: 480px; padding: 36px 40px; text-align: center; box-shadow: 0 0 120px rgba(255,107,0,0.15), 0 40px 80px rgba(0,0,0,0.9);">
+        <img src="icon.png" alt="Logo" style="width: 56px; height: 56px; margin-bottom: 8px; border-radius: 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.7);">
+        <h2 style="color: var(--accent); margin-bottom: 4px; font-weight: 800; letter-spacing: 2px; font-size: 1.6rem;">KRONOS</h2>
+        <p style="color: var(--text-muted); font-size: 11px; margin-bottom: 22px; letter-spacing: 0.5px;">Kişisel Sınav ve Koçluk Merkezi</p>
 
-        <div id="authError" style="color: var(--danger); font-size: 12px; margin-top: 15px; font-weight: 600;"></div>
+        <!-- GİRİŞ / KAYIT SEKMELERİ -->
+        <div style="display:flex; background:rgba(0,0,0,0.4); border-radius:12px; padding:4px; margin-bottom:22px; border:1px solid var(--border);">
+            <button id="authTabGiris" onclick="authModGec('giris')" style="flex:1; padding:10px; border-radius:9px; border:none; background:var(--accent); color:#fff; font-weight:700; font-family:'Poppins',sans-serif; cursor:pointer; font-size:13px; transition:all 0.3s;">
+                Giriş Yap
+            </button>
+            <button id="authTabKayit" onclick="authModGec('kayit')" style="flex:1; padding:10px; border-radius:9px; border:none; background:transparent; color:var(--text-muted); font-weight:600; font-family:'Poppins',sans-serif; cursor:pointer; font-size:13px; transition:all 0.3s;">
+                Kayıt Ol
+            </button>
+        </div>
+
+        <!-- GİRİŞ FORMU -->
+        <div id="girisFormu">
+            <div class="input-group" style="margin-bottom: 12px;">
+                <input type="email" id="authEmail" placeholder="E-posta Adresi" style="width: 100%; text-align:center; font-size: 14px; padding: 12px;">
+            </div>
+            <div class="input-group" style="margin-bottom: 16px;">
+                <input type="password" id="authPassword" placeholder="Şifre" style="width: 100%; text-align:center; font-size: 14px; padding: 12px;">
+            </div>
+            <button class="btn btn-primary" style="width: 100%; margin-bottom: 10px; height: 46px; font-size: 13px; letter-spacing: 1px;" onclick="loginUser()">GİRİŞ YAP</button>
+            <button class="btn" style="width: 100%; height: 40px; font-size: 12px; background: rgba(59,130,246,0.15); border: 1px solid rgba(59,130,246,0.4); color: var(--info);" onclick="testGiris()">⚡ Test Girişi (Demo)</button>
+        </div>
+
+        <!-- KAYIT FORMU -->
+        <div id="kayitFormu" style="display:none;">
+            <!-- ROL SEÇİMİ -->
+            <div style="display:flex; gap:10px; margin-bottom:14px;">
+                <button id="rolOgrenci" onclick="rolSec('ogrenci')" style="flex:1; padding:11px 8px; border-radius:10px; border:2px solid var(--accent); background:rgba(255,107,0,0.15); color:var(--accent); font-weight:700; font-family:'Poppins',sans-serif; cursor:pointer; font-size:13px; transition:all 0.3s;">
+                    🎓 Öğrenci
+                </button>
+                <button id="rolOgretmen" onclick="rolSec('ogretmen')" style="flex:1; padding:11px 8px; border-radius:10px; border:2px solid var(--border); background:transparent; color:var(--text-muted); font-weight:700; font-family:'Poppins',sans-serif; cursor:pointer; font-size:13px; transition:all 0.3s;">
+                    👨‍🏫 Öğretmen
+                </button>
+            </div>
+            <!-- ORTAK ALANLAR -->
+            <div class="input-group" style="margin-bottom: 10px;">
+                <input type="text" id="kayitAdSoyad" placeholder="Ad Soyad" style="width: 100%; text-align:center; font-size: 14px; padding: 12px;">
+            </div>
+            <div class="input-group" style="margin-bottom: 10px;">
+                <input type="email" id="authEmailKayit" placeholder="E-posta Adresi" style="width: 100%; text-align:center; font-size: 14px; padding: 12px;">
+            </div>
+            <div class="input-group" style="margin-bottom: 10px;">
+                <input type="password" id="authPasswordKayit" placeholder="Şifre (En az 6 hane)" style="width: 100%; text-align:center; font-size: 14px; padding: 12px;">
+            </div>
+            <!-- ÖĞRENCİ EK ALAN -->
+            <div id="ogrenciKayitAlanlari" style="margin-bottom:10px;">
+                <select id="kayitSinav" style="width:100%; font-size:13px; padding:12px; text-align:center;">
+                    <option value="YKS">YKS (Üniversite Sınavı)</option>
+                    <option value="Lisans">KPSS Lisans</option>
+                    <option value="On Lisans">KPSS Ön Lisans</option>
+                    <option value="AGS">MEB AGS + ÖABT</option>
+                </select>
+            </div>
+            <!-- ÖĞRETMEN EK ALANLAR -->
+            <div id="ogretmenKayitAlanlari" style="display:none; flex-direction:column; gap:8px; margin-bottom:10px;">
+                <select id="ogretmenBrans" style="width:100%; font-size:13px; padding:12px; text-align:center;">
+                    <option value="">-- Branş Seçin --</option>
+                    <option value="Matematik">Matematik</option>
+                    <option value="Türkçe">Türkçe / Edebiyat</option>
+                    <option value="Fizik">Fizik</option>
+                    <option value="Kimya">Kimya</option>
+                    <option value="Biyoloji">Biyoloji</option>
+                    <option value="Tarih">Tarih</option>
+                    <option value="Coğrafya">Coğrafya</option>
+                    <option value="Felsefe">Felsefe / Psikoloji</option>
+                    <option value="İngilizce">İngilizce</option>
+                    <option value="KPSS">KPSS Genel</option>
+                    <option value="Geometri">Geometri</option>
+                    <option value="Din Kültürü">Din Kültürü</option>
+                </select>
+                <input type="text" id="ogretmenUzmanlik" placeholder="Uzmanlık alanı (örn: TYT/AYT Mat, Türev)" style="width:100%; text-align:center; font-size:13px; padding:12px;">
+                <input type="text" id="ogretmenSaatler" placeholder="Uygun saatler (örn: 19:00-22:00)" style="width:100%; text-align:center; font-size:13px; padding:12px;">
+            </div>
+            <button class="btn btn-primary" style="width: 100%; height: 46px; font-size: 13px; letter-spacing: 1px; background:linear-gradient(135deg,#7c3aed,#a78bfa); box-shadow:0 4px 20px rgba(124,58,237,0.4);" onclick="registerUser()">KAYIT OL</button>
+        </div>
+
+        <div id="authError" style="color: var(--danger); font-size: 12px; margin-top: 14px; font-weight: 600; min-height:18px;"></div>
     </div>
 </div>
 
@@ -694,21 +758,18 @@
 
     <!-- KOÇLUK MERKEZİ TAB -->
     <div id="kocluk-tab" class="tab-content">
-        <div style="display:flex; flex-direction:column; flex:1; min-height:0; gap:1rem;">
-            <!-- Üst bilgi -->
+
+        <!-- ÖĞRENCİ GÖRÜNÜMÜ -->
+        <div id="koclukOgrenciPanel" style="display:flex; flex-direction:column; flex:1; min-height:0; gap:1rem;">
             <div style="background:linear-gradient(135deg,rgba(167,139,250,0.12),rgba(109,40,217,0.08)); border:1px solid rgba(167,139,250,0.25); border-radius:14px; padding:1.25rem 1.5rem; flex-shrink:0; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;">
                 <div style="display:flex; align-items:center; gap:1rem;">
                     <div style="font-size:2.5rem;">🎓</div>
                     <div>
                         <h3 style="color:#a78bfa; font-family:'Poppins',sans-serif; font-size:1.1rem; margin-bottom:0.2rem;">KOÇLUK MERKEZİ</h3>
-                        <p style="color:var(--text-muted); font-size:0.8rem;">Müsait öğretmenlerden biletli ders talebi oluşturun. Onay sonrası otomatik görüşme linki oluşturulur.</p>
+                        <p style="color:var(--text-muted); font-size:0.8rem;">Müsait öğretmenlerden ders talebi oluşturun. Öğretmen onayından sonra Jitsi görüşme linki aktif olur.</p>
                     </div>
                 </div>
-                <button class="btn" style="background:rgba(167,139,250,0.15); border:1px solid rgba(167,139,250,0.4); color:#a78bfa; font-size:0.85rem; padding:0.6rem 1.2rem;" onclick="koclukTalepGonder()">
-                    📩 Ders Talebi Gönder
-                </button>
             </div>
-
             <!-- Filtre -->
             <div style="display:flex; gap:1rem; flex-shrink:0; flex-wrap:wrap; align-items:center;">
                 <select id="koclukBransFilter" onchange="koclukListeyiFiltrele()" style="padding:0.5rem 1rem; font-size:0.85rem; min-width:180px;">
@@ -729,11 +790,45 @@
                     <option value="musait">Sadece Müsaitler</option>
                     <option value="mesgul">Meşgul</option>
                 </select>
-                <span style="color:var(--text-muted); font-size:0.8rem; margin-left:auto;" id="koclukSayac">6 öğretmen listeleniyor</span>
+                <span style="color:var(--text-muted); font-size:0.8rem; margin-left:auto;" id="koclukSayac"></span>
+            </div>
+            <!-- Öğretmen kartları (Firebase'den yüklenir) -->
+            <div id="koclukKartlari" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:1rem; overflow-y:auto; padding-right:4px;"></div>
+            <!-- Öğrencinin gönderdiği talepler -->
+            <div style="flex-shrink:0; margin-top:0.5rem;">
+                <h4 style="color:var(--text-muted); font-size:0.85rem; font-family:'Poppins',sans-serif; margin-bottom:0.75rem; padding-top:0.75rem; border-top:1px dashed var(--border);">📋 Gönderdiğim Talepler</h4>
+                <div id="ogrenciTalepListesi" style="display:flex; flex-direction:column; gap:0.5rem; max-height:200px; overflow-y:auto;"></div>
+            </div>
+        </div>
+
+        <!-- ÖĞRETMEN GÖRÜNÜMÜ -->
+        <div id="koclukOgretmenPanel" style="display:none; flex-direction:column; flex:1; min-height:0; gap:1rem;">
+            <!-- Üst profil + müsaitlik -->
+            <div style="background:linear-gradient(135deg,rgba(167,139,250,0.12),rgba(109,40,217,0.08)); border:1px solid rgba(167,139,250,0.25); border-radius:14px; padding:1.25rem 1.5rem; flex-shrink:0; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;">
+                <div style="display:flex; align-items:center; gap:1rem;">
+                    <div style="font-size:2.5rem; background:linear-gradient(135deg,#7c3aed,#a78bfa); border-radius:50%; width:56px; height:56px; display:flex; align-items:center; justify-content:center;">👨‍🏫</div>
+                    <div>
+                        <h3 style="color:#a78bfa; font-family:'Poppins',sans-serif; font-size:1.1rem; margin-bottom:0.2rem;" id="ogretmenProfilIsim">Öğretmen Paneli</h3>
+                        <p style="color:var(--text-muted); font-size:0.78rem;" id="ogretmenProfilBrans">Branş yükleniyor...</p>
+                    </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:1rem; flex-wrap:wrap;">
+                    <div style="display:flex; align-items:center; gap:0.5rem; background:rgba(0,0,0,0.3); padding:0.5rem 1rem; border-radius:10px; border:1px solid var(--border);">
+                        <span style="font-size:0.82rem; color:var(--text-muted);">Müsaitlik:</span>
+                        <button id="musaitlikToggle" onclick="musaitlikDegistir()" style="padding:0.35rem 0.875rem; border-radius:20px; border:none; cursor:pointer; font-size:0.78rem; font-weight:700; font-family:'Poppins',sans-serif; transition:all 0.3s;">MÜSAİT</button>
+                    </div>
+                    <button class="btn" style="background:rgba(255,107,0,0.1); border:1px solid rgba(255,107,0,0.3); color:var(--accent); font-size:0.82rem; padding:0.5rem 1rem;" onclick="ogretmenProfilDuzenle()">⚙️ Profil Düzenle</button>
+                </div>
             </div>
 
-            <!-- Öğretmen kartları -->
-            <div id="koclukKartlari" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:1rem; overflow-y:auto; padding-right:4px;"></div>
+            <!-- Bekleyen istekler -->
+            <div style="flex-shrink:0;">
+                <h4 style="color:#a78bfa; font-size:0.9rem; font-family:'Poppins',sans-serif; margin-bottom:0.75rem; display:flex; align-items:center; gap:0.5rem;">
+                    📩 Ders İstekleri
+                    <span id="bekleyenIstekSayisi" style="background:var(--danger); color:#fff; font-size:0.7rem; padding:2px 8px; border-radius:20px; display:none;"></span>
+                </h4>
+                <div id="ogretmenIstekListesi" style="display:flex; flex-direction:column; gap:0.75rem; max-height:calc(100% - 200px); overflow-y:auto;"></div>
+            </div>
         </div>
     </div>
 
@@ -779,8 +874,8 @@
     <div class="modal-overlay" id="koclukLinkModal">
         <div class="modal-content" style="max-width:480px; padding:2.5rem; text-align:center;">
             <button class="modal-close" onclick="document.getElementById('koclukLinkModal').classList.remove('active')">×</button>
-            <div style="font-size:3rem; margin-bottom:1rem;">✅</div>
-            <h3 style="color:#a78bfa; font-family:'Poppins',sans-serif; margin-bottom:0.75rem; font-size:1.2rem;">Talep Gönderildi!</h3>
+            <div style="font-size:3rem; margin-bottom:1rem;" id="koclukLinkEmoji">⏳</div>
+            <h3 style="color:#a78bfa; font-family:'Poppins',sans-serif; margin-bottom:0.75rem; font-size:1.2rem;" id="koclukLinkBaslik">Talep Gönderildi!</h3>
             <p style="color:var(--text-muted); font-size:0.875rem; margin-bottom:1.5rem; line-height:1.6;" id="koclukLinkBilgi">Öğretmen talebinizi onayladıktan sonra görüşme linki aktif hale gelecektir.</p>
             <div id="koclukLinkKutu" style="background:rgba(167,139,250,0.1); border:1px solid rgba(167,139,250,0.3); border-radius:10px; padding:1rem; margin-bottom:1rem; display:none;">
                 <p style="color:var(--text-muted); font-size:0.75rem; margin-bottom:0.5rem;">GÖRÜŞME LİNKİNİZ</p>
@@ -788,6 +883,46 @@
             </div>
             <button class="btn" id="koclukJoinBtn" style="background:linear-gradient(135deg,#7c3aed,#a78bfa); color:#fff; border:none; display:none; width:100%; margin-bottom:0.75rem;" onclick="koclukGorüsmeyeKatil()">🎥 Görüşmeye Katıl</button>
             <button class="btn" style="background:transparent; border:1px solid var(--border); color:var(--text-muted); width:100%;" onclick="document.getElementById('koclukLinkModal').classList.remove('active')">Kapat</button>
+        </div>
+    </div>
+
+    <!-- ÖĞRETMEN PROFİL DÜZENLEME MODAL -->
+    <div class="modal-overlay" id="ogretmenProfilModal">
+        <div class="modal-content" style="max-width:480px; padding:2rem;">
+            <button class="modal-close" onclick="document.getElementById('ogretmenProfilModal').classList.remove('active')">×</button>
+            <h3 style="color:#a78bfa; font-family:'Poppins',sans-serif; margin-bottom:1.5rem; font-size:1.2rem;">⚙️ Profil Ayarları</h3>
+            <div style="display:flex; flex-direction:column; gap:1rem;">
+                <div class="input-group">
+                    <label>Ad Soyad</label>
+                    <input type="text" id="profilAdi" placeholder="Adınız Soyadınız">
+                </div>
+                <div class="input-group">
+                    <label>Branş</label>
+                    <select id="profilBrans">
+                        <option value="Matematik">Matematik</option>
+                        <option value="Türkçe">Türkçe / Edebiyat</option>
+                        <option value="Fizik">Fizik</option>
+                        <option value="Kimya">Kimya</option>
+                        <option value="Biyoloji">Biyoloji</option>
+                        <option value="Tarih">Tarih</option>
+                        <option value="Coğrafya">Coğrafya</option>
+                        <option value="Felsefe">Felsefe / Psikoloji</option>
+                        <option value="İngilizce">İngilizce</option>
+                        <option value="KPSS">KPSS Genel</option>
+                        <option value="Geometri">Geometri</option>
+                        <option value="Din Kültürü">Din Kültürü</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Uzmanlık Alanı</label>
+                    <input type="text" id="profilUzmanlik" placeholder="Örn: TYT/AYT Matematik, Türev, İntegral">
+                </div>
+                <div class="input-group">
+                    <label>Uygun Saatler</label>
+                    <input type="text" id="profilSaatler" placeholder="Örn: 09:00-12:00, 19:00-22:00">
+                </div>
+                <button class="btn btn-primary" style="width:100%; background:linear-gradient(135deg,#7c3aed,#a78bfa);" onclick="ogretmenProfilKaydet()">Kaydet</button>
+            </div>
         </div>
     </div>
 </div>
@@ -812,7 +947,9 @@
 
     // Merkezi Uygulama Hafızası
     let currentUser = null;
-    let userSettings = { exam: 'YKS', hours: 5, branch: 'Sayısal (TYT+AYT)' }; 
+    let currentUserRole = 'ogrenci'; // 'ogrenci' veya 'ogretmen'
+    let seciliRol = 'ogrenci'; // kayıt sırasında seçilen rol
+    let userSettings = { exam: 'YKS', hours: 5, branch: 'Sayısal (TYT+AYT)' };
     let appKonuDurumlari = {};
     let appSoruVerileri = [];
     let appDenemeVerileri = [];
@@ -823,6 +960,57 @@
     let chartNet = null;
     let chartDeneme = null;
     let geriSayimInterval = null;
+
+
+    /* ─── AUTH MOD GEÇİŞİ (GİRİŞ / KAYIT) ─── */
+    function authModGec(mod) {
+        var girisFormu = document.getElementById('girisFormu');
+        var kayitFormu = document.getElementById('kayitFormu');
+        var tabGiris = document.getElementById('authTabGiris');
+        var tabKayit = document.getElementById('authTabKayit');
+        if (mod === 'giris') {
+            girisFormu.style.display = 'block';
+            kayitFormu.style.display = 'none';
+            tabGiris.style.background = 'var(--accent)';
+            tabGiris.style.color = '#fff';
+            tabKayit.style.background = 'transparent';
+            tabKayit.style.color = 'var(--text-muted)';
+        } else {
+            girisFormu.style.display = 'none';
+            kayitFormu.style.display = 'block';
+            tabGiris.style.background = 'transparent';
+            tabGiris.style.color = 'var(--text-muted)';
+            tabKayit.style.background = 'var(--accent)';
+            tabKayit.style.color = '#fff';
+        }
+        var err = document.getElementById('authError');
+        if (err) err.innerText = '';
+    }
+
+    /* ─── ROL SEÇİMİ (GİRİŞ EKRANI) ─── */
+    function rolSec(rol) {
+        seciliRol = rol;
+        let btnOgrenci = document.getElementById('rolOgrenci');
+        let btnOgretmen = document.getElementById('rolOgretmen');
+        let ogretmenAlanlar = document.getElementById('ogretmenKayitAlanlari');
+        if (rol === 'ogrenci') {
+            btnOgrenci.style.borderColor = 'var(--accent)';
+            btnOgrenci.style.background = 'rgba(255,107,0,0.15)';
+            btnOgrenci.style.color = 'var(--accent)';
+            btnOgretmen.style.borderColor = 'var(--border)';
+            btnOgretmen.style.background = 'transparent';
+            btnOgretmen.style.color = 'var(--text-muted)';
+            ogretmenAlanlar.style.display = 'none';
+        } else {
+            btnOgretmen.style.borderColor = '#a78bfa';
+            btnOgretmen.style.background = 'rgba(167,139,250,0.15)';
+            btnOgretmen.style.color = '#a78bfa';
+            btnOgrenci.style.borderColor = 'var(--border)';
+            btnOgrenci.style.background = 'transparent';
+            btnOgrenci.style.color = 'var(--text-muted)';
+            ogretmenAlanlar.style.display = 'flex';
+        }
+    }
 
     /* ─── KPSS & YKS & AGS MÜFREDAT LİSTELERİ ─── */
     const syllabusData = {
@@ -904,47 +1092,83 @@
     /* ─── HIZLI TEST GİRİŞİ ─── */
     function testGiris() {
         currentUser = { uid: "test_kullanici_" + Math.floor(Math.random()*1000) };
+        currentUserRole = seciliRol;
         document.getElementById('authModal').classList.remove('active');
-        document.getElementById('setupModal').classList.add('active'); 
+        if (currentUserRole === 'ogretmen') {
+            loadOgretmenPanel();
+        } else {
+            document.getElementById('setupModal').classList.add('active');
+        }
     }
 
     /* ─── KULLANICI GİRİŞ/ÇIKIŞ VE SENKRONİZASYON ─── */
     function registerUser() {
-        const email = document.getElementById('authEmail').value;
-        const pass = document.getElementById('authPassword').value;
-        const err = document.getElementById('authError');
-        if(!email || !pass) { err.innerText = "Lütfen e-posta ve şifre girin."; return; }
-        if(pass.length < 6) { err.innerText = "Şifre en az 6 hane olmalıdır."; return; }
+        var adSoyad = (document.getElementById('kayitAdSoyad') || {}).value || '';
+        var email = (document.getElementById('authEmailKayit') || {}).value || '';
+        var pass = (document.getElementById('authPasswordKayit') || {}).value || '';
+        var err = document.getElementById('authError');
+        if (!adSoyad.trim()) { err.innerText = "Ad Soyad zorunludur."; return; }
+        if (!email) { err.innerText = "E-posta adresi zorunludur."; return; }
+        if (!pass || pass.length < 6) { err.innerText = "Şifre en az 6 hane olmalıdır."; return; }
+
+        if (seciliRol === 'ogretmen') {
+            var brans = (document.getElementById('ogretmenBrans') || {}).value || '';
+            if (!brans) { err.innerText = "Branş seçimi zorunludur."; return; }
+        }
+
         err.style.color = "var(--info)"; err.innerText = "Kayıt yapılıyor...";
         auth.createUserWithEmailAndPassword(email, pass)
-        .then(() => { err.style.color = "var(--success)"; err.innerText = "Kayıt başarılı! Giriş yapabilirsiniz."; })
-        .catch(() => { err.style.color = "var(--danger)"; err.innerText = "Hata: Bu e-posta zaten kayıtlı."; });
+        .then(function(cred) {
+            var uid = cred.user.uid;
+            var rolVeri = { rol: seciliRol, email: email, isim: adSoyad.trim() };
+            if (seciliRol === 'ogretmen') {
+                rolVeri.brans = (document.getElementById('ogretmenBrans') || {}).value || '';
+                rolVeri.uzmanlik = ((document.getElementById('ogretmenUzmanlik') || {}).value || '').trim();
+                rolVeri.saatler = ((document.getElementById('ogretmenSaatler') || {}).value || '').trim();
+                rolVeri.musait = true;
+                rolVeri.puan = 0;
+                rolVeri.dersSayisi = 0;
+                db.ref('ogretmenler/' + uid).set(rolVeri);
+            } else {
+                var sinav = (document.getElementById('kayitSinav') || {}).value || 'YKS';
+                rolVeri.tercihSinav = sinav;
+            }
+            db.ref('users/' + uid + '/profil').set(rolVeri);
+            err.style.color = "var(--success)";
+            err.innerText = "Kayıt başarılı! Giriş sekmesinden giriş yapabilirsiniz.";
+            setTimeout(function(){ authModGec('giris'); }, 1500);
+        })
+        .catch(function(e) {
+            err.style.color = "var(--danger)";
+            err.innerText = e.code === 'auth/email-already-in-use' ? "Bu e-posta zaten kayıtlı." : "Kayıt hatası: " + e.message;
+        });
     }
 
     function loginUser() {
         const email = document.getElementById('authEmail').value;
         const pass = document.getElementById('authPassword').value;
         const err = document.getElementById('authError');
-        if(!email || !pass) { err.innerText = "Lütfen e-posta ve şifre girin."; return; }
+        if (!email || !pass) { err.innerText = "Lütfen e-posta ve şifre girin."; return; }
         err.style.color = "var(--info)"; err.innerText = "Giriş yapılıyor...";
         auth.signInWithEmailAndPassword(email, pass)
         .catch(() => { err.style.color = "var(--danger)"; err.innerText = "Hata: E-posta veya şifre yanlış."; });
     }
 
     function logoutUser() {
-        if(confirm("Güvenli çıkış yapmak istiyor musunuz?")) { 
-            if(currentUser && currentUser.uid.includes("test_")) { location.reload(); return; }
-            auth.signOut().then(() => { location.reload(); }); 
+        if (confirm("Güvenli çıkış yapmak istiyor musunuz?")) {
+            if (currentUser && currentUser.uid.includes("test_")) { location.reload(); return; }
+            auth.signOut().then(() => { location.reload(); });
         }
     }
 
     function resetAllData() {
         if (!currentUser) return;
-        if(confirm("TÜM VERİLERİNİZ SİLİNECEK! (Sınav ayarları, netler, pomodoro ve çalışma planı)\n\nBu işlem geri alınamaz. Onaylıyor musunuz?")) {
-            if(currentUser.uid.includes("test_")) { location.reload(); return; } 
-            
+        if (confirm("TÜM VERİLERİNİZ SİLİNECEK!\n\nBu işlem geri alınamaz. Onaylıyor musunuz?")) {
+            if (currentUser.uid.includes("test_")) { location.reload(); return; }
             db.ref('users/' + currentUser.uid).remove().then(() => {
-                alert("Veriler sıfırlandı. Lütfen yeni sınav planınızı oluşturun.");
+                // Öğretmense genel listeden de sil
+                if (currentUserRole === 'ogretmen') db.ref('ogretmenler/' + currentUser.uid).remove();
+                alert("Veriler sıfırlandı.");
                 location.reload();
             }).catch(err => { alert("Hata oluştu: " + err.message); });
         }
@@ -954,10 +1178,20 @@
         if (user) {
             currentUser = user;
             document.getElementById('authModal').classList.remove('active');
-            checkUserSettings();
+            // Rolü Firebase'den oku
+            db.ref('users/' + user.uid + '/profil').once('value').then(snap => {
+                let profil = snap.val();
+                if (profil && profil.rol === 'ogretmen') {
+                    currentUserRole = 'ogretmen';
+                    loadOgretmenPanel(profil);
+                } else {
+                    currentUserRole = 'ogrenci';
+                    checkUserSettings();
+                }
+            });
         } else {
-            if(!currentUser || !currentUser.uid.includes("test_")) {
-                currentUser = null; 
+            if (!currentUser || !currentUser.uid.includes("test_")) {
+                currentUser = null;
                 document.getElementById('authModal').classList.add('active');
                 document.getElementById('mainContainer').style.display = 'none';
             }
@@ -965,7 +1199,7 @@
     });
 
     function checkUserSettings() {
-        if(currentUser.uid.includes("test_")) return; 
+        if (currentUser.uid.includes("test_")) return;
         db.ref('users/' + currentUser.uid + '/settings').once('value').then((snapshot) => {
             if (snapshot.exists()) {
                 userSettings = snapshot.val();
@@ -1629,13 +1863,13 @@
     function baslatGeriSayim() {
         if(geriSayimInterval) clearInterval(geriSayimInterval);
 
-        // Tarihler ÖSYM 2026 takvimi (https://www.osym.gov.tr)
-        // KPSS Lisans: 6-7 Eylül 2026 | Ön Lisans: 4-5 Ekim 2026
-        // AGS (MEB Akademi): 26 Temmuz 2026 | YKS-TYT: 13 Haziran 2026
+        // Tarihler ÖSYM takvimi
+        // KPSS Lisans: 6 Eylül 2026 | Ön Lisans: 4 Ekim 2026
+        // AGS (MEB Akademi): 26 Temmuz 2026 | YKS-TYT: 19 Haziran 2027 | YKS-AYT: 20 Haziran 2027
         let targetDateStr = "2026/09/06 10:15:00"; // KPSS Lisans
         if (userSettings && userSettings.exam === 'Ön Lisans') targetDateStr = "2026/10/04 10:15:00";
         if (userSettings && userSettings.exam === 'AGS') targetDateStr = "2026/07/26 10:15:00";
-        if (userSettings && userSettings.exam === 'YKS') targetDateStr = "2026/06/13 10:15:00";
+        if (userSettings && userSettings.exam === 'YKS') targetDateStr = "2027/06/19 10:15:00";
 
         const sinavTarihi = new Date(targetDateStr).getTime();
         let examLabel = userSettings.exam === 'YKS' ? 'TYT' : userSettings.exam.toUpperCase();
@@ -1774,7 +2008,83 @@
     }
 
     function generateKronosReport() {
-        let html = `<div class="kronos-report-item"><h4>👁️‍🗨️ Performans Analizi</h4><p style="font-size:0.95rem; color:var(--text-muted); line-height:1.6;">Strateji motoru verilerinizi işledi. Eksikleriniz "Genel Özet" ekranına yansıtıldı.</p></div>`;
+        var dersler = Object.keys(currentSyllabus);
+        var toplamGorev = 0; var tamamlanan = 0; var yapilamadi = 0;
+        tamProgram.forEach(function(row) {
+            dersler.forEach(function(ders) {
+                if (row[ders] && row[ders] !== '-') {
+                    toplamGorev++;
+                    var bId = 'btn_' + row.gun.replace(/\s+/g,'') + '_' + ders.replace(/\s+/g,'') + '_' + row.w;
+                    var dur = appKonuDurumlari[bId] || 'Bekliyor';
+                    if (dur === 'Tamamland\u0131') tamamlanan++;
+                    if (dur === 'Yap\u0131lmad\u0131') yapilamadi++;
+                }
+            });
+        });
+        var yuzde = toplamGorev > 0 ? Math.round((tamamlanan/toplamGorev)*100) : 0;
+        var dOrt = appDenemeVerileri.length > 0 ? (appDenemeVerileri.reduce(function(s,d){return s+d.topNet;},0)/appDenemeVerileri.length).toFixed(2) : '0.00';
+        var dMax = appDenemeVerileri.length > 0 ? Math.max.apply(null, appDenemeVerileri.map(function(d){return d.topNet;})).toFixed(2) : '0.00';
+        var soruToplam = appSoruVerileri.reduce(function(s,k){return s+k.toplam;},0);
+        var dogruToplam = appSoruVerileri.reduce(function(s,k){return s+k.dogru;},0);
+        var basariOrani = soruToplam > 0 ? Math.round((dogruToplam/soruToplam)*100) : 0;
+        var pomoSayi = appPomoVerileri.filter(function(p){return p.type && p.type.includes('ODAKLANMA');}).length;
+        var pomoSure = pomoSayi * 25;
+        var konuStats = {};
+        appSoruVerileri.forEach(function(k){
+            if (!konuStats[k.ders]) konuStats[k.ders] = {d:0, tot:0};
+            konuStats[k.ders].d += k.dogru; konuStats[k.ders].tot += k.toplam;
+        });
+        var enIyiDers = '-'; var enKotuDers = '-'; var maxR = -1; var minR = 101;
+        Object.keys(konuStats).forEach(function(d){
+            var v = konuStats[d];
+            if (v.tot >= 10) {
+                var r = v.d / v.tot * 100;
+                if (r > maxR) { maxR = r; enIyiDers = d; }
+                if (r < minR) { minR = r; enKotuDers = d; }
+            }
+        });
+        var sinav = userSettings ? userSettings.exam : '?';
+        var now = new Date();
+        var tavsiye = yuzde < 30
+            ? 'Programa yeni başladınız. İlk 2 haftada temel konulara odaklanın.'
+            : yuzde < 60
+                ? 'İyi ilerliyorsunuz. Yapılmayan konuları geciktirmeden tamamlayın.'
+                : yuzde < 85
+                    ? 'Harika gidiyor! Zayıf konularınızı tekrar edin.'
+                    : 'Program neredeyse tamam. Son rötuşları yapın ve deneme sınavlarını artırın.';
+        if (appDenemeVerileri.length < 3) tavsiye += ' Deneme sınavı sayınız az — en az haftada 1 deneme hedefleyin.';
+        if (basariOrani < 50 && soruToplam > 20) tavsiye += ' Soru çözüm başarı oranınız düşük — yanlış konuları derinlemesine çalışın.';
+        var html = '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-bottom:1.5rem;">'
+            + '<div style="background:rgba(255,107,0,0.1);border:1px solid rgba(255,107,0,0.3);border-radius:14px;padding:1.25rem;text-align:center;">'
+            + '<div style="font-size:2rem;font-weight:800;color:var(--accent);line-height:1;">' + yuzde + '%</div>'
+            + '<div style="font-size:0.72rem;color:var(--text-muted);margin-top:6px;font-family:Poppins,sans-serif;text-transform:uppercase;letter-spacing:0.5px;">Program Tamamlama</div>'
+            + '<div style="font-size:0.7rem;color:var(--text-muted);margin-top:2px;">' + tamamlanan + '/' + toplamGorev + ' konu</div></div>'
+            + '<div style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:14px;padding:1.25rem;text-align:center;">'
+            + '<div style="font-size:2rem;font-weight:800;color:var(--success);line-height:1;">' + dOrt + '</div>'
+            + '<div style="font-size:0.72rem;color:var(--text-muted);margin-top:6px;font-family:Poppins,sans-serif;text-transform:uppercase;letter-spacing:0.5px;">Ort. Deneme Neti</div>'
+            + '<div style="font-size:0.7rem;color:var(--text-muted);margin-top:2px;">En yüksek: ' + dMax + '</div></div>'
+            + '<div style="background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.3);border-radius:14px;padding:1.25rem;text-align:center;">'
+            + '<div style="font-size:2rem;font-weight:800;color:var(--info);line-height:1;">' + soruToplam + '</div>'
+            + '<div style="font-size:0.72rem;color:var(--text-muted);margin-top:6px;font-family:Poppins,sans-serif;text-transform:uppercase;letter-spacing:0.5px;">Toplam Soru</div>'
+            + '<div style="font-size:0.7rem;color:var(--success);margin-top:2px;">%' + basariOrani + ' başarı</div></div>'
+            + '<div style="background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.3);border-radius:14px;padding:1.25rem;text-align:center;">'
+            + '<div style="font-size:2rem;font-weight:800;color:var(--pomo-color);line-height:1;">' + pomoSure + '</div>'
+            + '<div style="font-size:0.72rem;color:var(--text-muted);margin-top:6px;font-family:Poppins,sans-serif;text-transform:uppercase;letter-spacing:0.5px;">Çalışma (dk)</div>'
+            + '<div style="font-size:0.7rem;color:var(--text-muted);margin-top:2px;">' + pomoSayi + ' Pomodoro</div></div>'
+            + '</div>'
+            + '<div class="kronos-report-item"><h4>📊 ' + sinav + ' Performans Özeti</h4>'
+            + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem 1.5rem;font-size:0.87rem;color:var(--text-muted);line-height:2.2;">'
+            + '<div>✅ Tamamlanan</div><div style="color:var(--success);font-weight:700;">' + tamamlanan + ' konu</div>'
+            + '<div>❌ Yapılamayan</div><div style="color:var(--danger);font-weight:700;">' + yapilamadi + ' konu</div>'
+            + '<div>📝 Deneme Sayısı</div><div style="color:var(--info);font-weight:700;">' + appDenemeVerileri.length + '</div>'
+            + '<div>🏆 En İyi Ders</div><div style="color:var(--success);font-weight:700;">' + enIyiDers + '</div>'
+            + '<div>⚠️ Geliştirilecek</div><div style="color:var(--warning);font-weight:700;">' + enKotuDers + '</div>'
+            + '</div></div>'
+            + '<div class="kronos-report-item"><h4>🧠 KRONOS Stratejik Tavsiye</h4>'
+            + '<p style="font-size:0.87rem;color:var(--text-muted);line-height:1.9;">' + tavsiye + '</p>'
+            + '<p style="font-size:0.72rem;color:rgba(255,255,255,0.25);margin-top:0.75rem;text-align:right;">Rapor: '
+            + now.toLocaleDateString('tr-TR') + ' ' + now.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'}) + '</p></div>';
+        document.getElementById('kronosRealHeader').style.display = 'flex';
         document.getElementById('kronosReportContent').innerHTML = html;
         document.getElementById('kronosModal').classList.add('active');
     }
@@ -1864,140 +2174,409 @@
        Jitsi Meet ile ücretsiz video konferans entegrasyonu
        ═══════════════════════════════════════════════════ */
 
-    // Demo öğretmen veritabanı (gerçek sistemde Firebase'den gelir)
-    const koclukHocalari = [
-        { id: 1, isim: "Ayşe Kaya", brans: "Matematik", uzmanlik: "TYT/AYT Matematik, Türev, İntegral", puan: 4.9, dersSayisi: 312, musait: true, emoji: "👩‍🏫", saatler: "09:00-12:00, 19:00-22:00" },
-        { id: 2, isim: "Mehmet Demir", brans: "Türkçe", uzmanlik: "TYT Türkçe, Paragraf, Dil Bilgisi, KPSS", puan: 4.8, dersSayisi: 245, musait: true, emoji: "👨‍🏫", saatler: "14:00-17:00, 20:00-23:00" },
-        { id: 3, isim: "Elif Şahin", brans: "Fizik", uzmanlik: "AYT Fizik, Elektrik, Mekanik", puan: 4.7, dersSayisi: 189, musait: false, emoji: "👩‍🔬", saatler: "10:00-13:00" },
-        { id: 4, isim: "Can Yılmaz", brans: "KPSS", uzmanlik: "KPSS Lisans/Ön Lisans, Genel Yetenek, Genel Kültür", puan: 4.9, dersSayisi: 421, musait: true, emoji: "👨‍💼", saatler: "08:00-11:00, 18:00-21:00" },
-        { id: 5, isim: "Selin Arslan", brans: "Kimya", uzmanlik: "AYT Kimya, Organik Kimya, Denge", puan: 4.6, dersSayisi: 156, musait: true, emoji: "👩‍🔬", saatler: "15:00-18:00, 21:00-23:00" },
-        { id: 6, isim: "Burak Çelik", brans: "Tarih", uzmanlik: "TYT/AYT Tarih, KPSS Tarih, İnkılap Tarihi", puan: 4.8, dersSayisi: 278, musait: false, emoji: "👨‍🏫", saatler: "11:00-14:00" },
-        { id: 7, isim: "Zeynep Özkan", brans: "İngilizce", uzmanlik: "YDT İngilizce, Gramer, Okuma Teknikleri", puan: 4.9, dersSayisi: 367, musait: true, emoji: "👩‍💻", saatler: "09:00-12:00, 20:00-22:00" },
-        { id: 8, isim: "Emre Aydın", brans: "Biyoloji", uzmanlik: "AYT Biyoloji, Genetik, Hücre Biyolojisi", puan: 4.7, dersSayisi: 203, musait: true, emoji: "👨‍🔬", saatler: "13:00-16:00, 19:00-21:00" }
-    ];
 
-    let koclukTaleplerListesi = []; // Kullanıcının talepleri
+/* === FIREBASE KOCLUK SiSTEMi - YENi SURUM === */
+let ogretmenlerListesi = [];
+let aktifTalepDinleyici = null;
 
-    function koclukKartlariniRender(filtreBrans = '', filtreMusait = '') {
-        let konteyner = document.getElementById('koclukKartlari');
-        if (!konteyner) return;
+function loadOgretmenPanel(profil) {
+    var p = profil || {};
+    document.getElementById('mainContainer').style.display = 'flex';
+    document.getElementById('koclukOgrenciPanel').style.display = 'none';
+    document.getElementById('koclukOgretmenPanel').style.display = 'flex';
+    var isim = p.isim || 'Ogretmen';
+    var brans = p.brans || '-';
+    var uzmanlik = p.uzmanlik || '';
+    var saatler = p.saatler || '';
+    var musait = p.musait !== false;
+    var el = document.getElementById('ogretmenProfilIsim');
+    var elB = document.getElementById('ogretmenProfilBrans');
+    if (el) el.innerText = isim;
+    if (elB) elB.innerText = brans + (uzmanlik ? ' - ' + uzmanlik : '') + (saatler ? ' | ' + saatler : '');
+    musaitlikToggleGuncelle(musait);
 
-        let filtreli = koclukHocalari.filter(h => {
-            let bransUygun = !filtreBrans || h.brans === filtreBrans;
-            let musaitUygun = !filtreMusait ||
-                (filtreMusait === 'musait' && h.musait) ||
-                (filtreMusait === 'mesgul' && !h.musait);
-            return bransUygun && musaitUygun;
+    // Başlığı öğretmene özel yap
+    var headerEl = document.getElementById('headerExamName');
+    if (headerEl) headerEl.innerText = 'ÖĞRETMEN PANELİ — ' + isim.toUpperCase();
+
+    // Sekme başlıklarını öğretmene özel değiştir
+    var tabBtns = document.querySelectorAll('.tab-btn');
+    var ogretmenTabLabels = ['Genel Bakış', 'Ders Programı', 'Soru Analizi', 'Deneme Sonuçları', 'Pomodoro', '🎓 Koçluk Yönetimi'];
+    tabBtns.forEach(function(btn, i) {
+        if (ogretmenTabLabels[i]) btn.innerText = ogretmenTabLabels[i];
+    });
+
+    // Özet sekmesini öğretmen dashboard'una çevir
+    ogretmenDashboardOlustur(p);
+
+    if (currentUser && !currentUser.uid.includes('test_')) {
+        ogretmenIstekleriniDinle();
+        ogretmenOgrenciVerileriniYukle();
+    }
+}
+
+function ogretmenDashboardOlustur(profil) {
+    var topRow = document.querySelector('#ozet-tab .top-row');
+    var middleGrid = document.querySelector('#ozet-tab .middle-grid');
+    var chartsContainer = document.querySelector('#ozet-tab .charts-container');
+    if (!topRow || !middleGrid) return;
+
+    // Üst bilgi kartları — öğretmen istatistikleri
+    topRow.innerHTML = '<div class="ai-assistant-panel" style="flex:1.4;">'
+        + '<div class="ai-header-left">'
+        + '<div class="ai-icon">👨‍🏫</div>'
+        + '<div class="ai-content">'
+        + '<h3 style="color:#a78bfa;">ÖĞRETMEN PANELİ</h3>'
+        + '<p id="ogretmenHosgeldin">Hoş geldiniz! Öğrenci isteklerini yönetin.</p>'
+        + '</div></div>'
+        + '<button class="btn btn-outline" style="border-color:#a78bfa;color:#a78bfa;" onclick="switchTab(\'kocluk-tab\')">Koçluk Yönetimi</button>'
+        + '</div>'
+        + '<div class="countdown-box" style="flex:1;">'
+        + '<div class="cd-title">TOPLAM TALEP</div>'
+        + '<div class="cd-timer"><div class="cd-item"><span class="cd-val color-accent" id="ogr-toplam-talep">0</span><span class="cd-lbl">ADET</span></div></div>'
+        + '</div>'
+        + '<div class="countdown-box" style="flex:1; border-left-color:var(--success);">'
+        + '<div class="cd-title">KABUL EDİLEN</div>'
+        + '<div class="cd-timer"><div class="cd-item"><span class="cd-val color-success" id="ogr-kabul-talep">0</span><span class="cd-lbl">DERS</span></div></div>'
+        + '</div>'
+        + '<div class="countdown-box" style="flex:1; border-left-color:#a78bfa;">'
+        + '<div class="cd-title">BEKLEYEN</div>'
+        + '<div class="cd-timer"><div class="cd-item"><span class="cd-val" style="color:#a78bfa;" id="ogr-bekleyen-talep">0</span><span class="cd-lbl">İSTEK</span></div></div>'
+        + '</div>';
+
+    // Orta grid — öğrenci listesi ve son talepler
+    middleGrid.innerHTML = '<div class="analysis-card" style="border-top:3px solid #a78bfa; grid-column: span 3;">'
+        + '<h3 style="color:#a78bfa;">Son Ders Talepleri</h3>'
+        + '<ul class="task-list" id="ogretmenSonTalepListesi"><li style="color:var(--text-muted);font-style:italic;background:none;border:none;">Yükleniyor...</li></ul>'
+        + '</div>'
+        + '<div class="analysis-card" style="border-top:3px solid var(--success); grid-column: span 3;">'
+        + '<h3 class="color-success">Öğrenci Bazlı Soru Analizleri</h3>'
+        + '<ul class="task-list" id="ogretmenOgrenciListesi"><li style="color:var(--text-muted);font-style:italic;background:none;border:none;">Öğrenci verisi yükleniyor...</li></ul>'
+        + '</div>';
+
+    if (chartsContainer) chartsContainer.style.display = 'none';
+}
+
+function ogretmenOgrenciVerileriniYukle() {
+    if (!currentUser) return;
+    db.ref('talepler').orderByChild('ogretmenId').equalTo(currentUser.uid).once('value', function(snap) {
+        var talepler = [];
+        snap.forEach(function(ch) { var t = ch.val(); t._key = ch.key; talepler.push(t); });
+        talepler.sort(function(a,b){ return (b.zaman||0)-(a.zaman||0); });
+
+        var toplam = talepler.length;
+        var kabul = talepler.filter(function(t){ return t.durum === 'Kabul Edildi'; }).length;
+        var bekleyen = talepler.filter(function(t){ return t.durum === 'Bekliyor'; }).length;
+
+        var elT = document.getElementById('ogr-toplam-talep');
+        var elK = document.getElementById('ogr-kabul-talep');
+        var elB = document.getElementById('ogr-bekleyen-talep');
+        if (elT) elT.innerText = toplam;
+        if (elK) elK.innerText = kabul;
+        if (elB) elB.innerText = bekleyen;
+
+        var listEl = document.getElementById('ogretmenSonTalepListesi');
+        if (listEl) {
+            if (talepler.length === 0) {
+                listEl.innerHTML = '<li style="color:var(--text-muted);font-style:italic;background:none;border:none;">Henüz talep yok.</li>';
+            } else {
+                listEl.innerHTML = talepler.slice(0,5).map(function(t) {
+                    var renk = t.durum === 'Kabul Edildi' ? 'var(--success)' : t.durum === 'Reddedildi' ? 'var(--danger)' : 'var(--warning)';
+                    return '<li class="task-item"><span><strong style="color:#a78bfa;">' + (t.ogrenciEmail||'Öğrenci') + '</strong> — ' + t.konu + '</span>'
+                        + '<strong style="color:' + renk + ';font-size:0.75rem;">● ' + t.durum + '</strong></li>';
+                }).join('');
+            }
+        }
+
+        // Öğrenci listesini çek (benzersiz öğrenciler)
+        var ogrenciler = {};
+        talepler.forEach(function(t){ ogrenciler[t.ogrenciId] = t.ogrenciEmail || t.ogrenciId; });
+        var ogrenciListEl = document.getElementById('ogretmenOgrenciListesi');
+        if (ogrenciListEl) {
+            var oIds = Object.keys(ogrenciler);
+            if (oIds.length === 0) {
+                ogrenciListEl.innerHTML = '<li style="color:var(--text-muted);font-style:italic;background:none;border:none;">Henüz ders yapılan öğrenci yok.</li>';
+            } else {
+                var ogrenciHtml = '';
+                var loaded = 0;
+                oIds.forEach(function(oid) {
+                    db.ref('users/' + oid + '/profil').once('value').then(function(s){
+                        var op = s.val() || {};
+                        var oIsim = op.isim || ogrenciler[oid] || 'Öğrenci';
+                        var oSinav = op.tercihSinav || '?';
+                        ogrenciHtml += '<li class="task-item"><span>👤 <strong>' + oIsim + '</strong> <span style="color:var(--text-muted);font-size:0.78rem;">(' + oSinav + ')</span></span>'
+                            + '<button onclick="switchTab(\'kocluk-tab\')" style="background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.3);color:#a78bfa;padding:0.25rem 0.6rem;border-radius:6px;cursor:pointer;font-size:0.72rem;">Talepleri Gör</button></li>';
+                        loaded++;
+                        if (loaded === oIds.length && ogrenciListEl) ogrenciListEl.innerHTML = ogrenciHtml;
+                    });
+                });
+            }
+        }
+    });
+}
+
+function musaitlikToggleGuncelle(musait) {
+    var tog = document.getElementById('musaitlikToggle');
+    if (!tog) return;
+    if (musait) {
+        tog.innerText = 'MUSAiT';
+        tog.style.background = 'rgba(16,185,129,0.2)';
+        tog.style.color = 'var(--success)';
+        tog.style.border = '1px solid rgba(16,185,129,0.4)';
+    } else {
+        tog.innerText = 'MESGUL';
+        tog.style.background = 'rgba(239,68,68,0.2)';
+        tog.style.color = 'var(--danger)';
+        tog.style.border = '1px solid rgba(239,68,68,0.4)';
+    }
+}
+
+function ogretmenIstekleriniDinle() {
+    if (!currentUser) return;
+    db.ref('talepler').orderByChild('ogretmenId').equalTo(currentUser.uid).on('value', function(snap) {
+        var talepler = [];
+        snap.forEach(function(ch) { var t = ch.val(); t._key = ch.key; talepler.push(t); });
+        talepler.sort(function(a,b){ return (b.zaman||0)-(a.zaman||0); });
+        ogretmenIstekleriniRender(talepler);
+        var bekleyen = talepler.filter(function(t){ return t.durum === 'Bekliyor'; }).length;
+        var sayiEl = document.getElementById('bekleyenIstekSayisi');
+        if (sayiEl) {
+            if (bekleyen > 0) { sayiEl.innerText = bekleyen; sayiEl.style.display = 'inline'; }
+            else { sayiEl.style.display = 'none'; }
+        }
+    });
+}
+
+function ogretmenIstekleriniRender(talepler) {
+    var div = document.getElementById('ogretmenIstekListesi');
+    if (!div) return;
+    if (talepler.length === 0) {
+        div.innerHTML = '<p style="color:var(--text-muted);font-size:0.85rem;text-align:center;padding:1.5rem;font-style:italic;">Henuz bekleyen ders istegi yok.</p>';
+        return;
+    }
+    div.innerHTML = talepler.map(function(t) {
+        var renk = t.durum === 'Kabul Edildi' ? 'var(--success)' : t.durum === 'Reddedildi' ? 'var(--danger)' : 'var(--warning)';
+        var linkHtml = (t.durum === 'Kabul Edildi' && t.link)
+            ? '<a href="' + t.link + '" target="_blank" style="color:#a78bfa;font-size:0.78rem;display:block;margin-top:0.4rem;">Gorusme Linki: ' + t.link + '</a>' : '';
+        var btnHtml = t.durum === 'Bekliyor'
+            ? '<div style="display:flex;gap:0.5rem;margin-top:0.5rem;">'
+              + '<button onclick="talepKabul(\'' + t._key + '\')" style="background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.4);color:var(--success);padding:0.4rem 0.875rem;border-radius:8px;cursor:pointer;font-size:0.78rem;font-family:Poppins,sans-serif;font-weight:600;">Kabul Et</button>'
+              + '<button onclick="talepReddet(\'' + t._key + '\')" style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.3);color:var(--danger);padding:0.4rem 0.875rem;border-radius:8px;cursor:pointer;font-size:0.78rem;font-family:Poppins,sans-serif;font-weight:600;">Reddet</button>'
+              + '</div>' : '';
+        return '<div style="background:rgba(0,0,0,0.3);border:1px solid var(--border);border-radius:10px;padding:0.875rem 1rem;margin-bottom:0.5rem;">'
+            + '<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:0.5rem;">'
+            + '<div><span style="font-weight:600;color:var(--text-main);font-size:0.9rem;">' + (t.ogrenciEmail||'Ogrenci') + '</span><br>'
+            + '<span style="font-size:0.8rem;color:var(--accent);">Konu: ' + t.konu + '</span><br>'
+            + '<span style="font-size:0.78rem;color:var(--text-muted);">Tarih: ' + t.tarih + ' ' + t.saat + ' (' + t.sure + ' dk)</span></div>'
+            + '<span style="font-weight:700;font-size:0.78rem;color:' + renk + ';">● ' + t.durum + '</span></div>'
+            + linkHtml + btnHtml + '</div>';
+    }).join('');
+}
+
+function talepKabul(key) {
+    if (!key) return;
+    var odaAdi = 'kronos-kocluk-' + currentUser.uid.substring(0,6) + '-' + Date.now();
+    var jitsiLink = 'https://meet.jit.si/' + odaAdi;
+    db.ref('talepler/' + key).update({ durum: 'Kabul Edildi', link: jitsiLink });
+}
+
+function talepReddet(key) {
+    if (!key) return;
+    db.ref('talepler/' + key).update({ durum: 'Reddedildi' });
+}
+
+function musaitlikDegistir() {
+    if (!currentUser) return;
+    var tog = document.getElementById('musaitlikToggle');
+    var mevcutMusait = tog && tog.innerText.trim() === 'MUSAiT';
+    var yeni = !mevcutMusait;
+    if (!currentUser.uid.includes('test_')) {
+        db.ref('ogretmenler/' + currentUser.uid + '/musait').set(yeni);
+        db.ref('users/' + currentUser.uid + '/profil/musait').set(yeni);
+    }
+    musaitlikToggleGuncelle(yeni);
+}
+
+function ogretmenProfilDuzenle() {
+    if (!currentUser) return;
+    db.ref('users/' + currentUser.uid + '/profil').once('value').then(function(snap) {
+        var p = snap.val() || {};
+        var a = document.getElementById('profilAdi'); if(a) a.value = p.isim || '';
+        var b = document.getElementById('profilBrans'); if(b) b.value = p.brans || '';
+        var u = document.getElementById('profilUzmanlik'); if(u) u.value = p.uzmanlik || '';
+        var s = document.getElementById('profilSaatler'); if(s) s.value = p.saatler || '';
+        document.getElementById('ogretmenProfilModal').classList.add('active');
+    });
+}
+
+function ogretmenProfilKaydet() {
+    if (!currentUser) return;
+    var isim = (document.getElementById('profilAdi') || {}).value || '';
+    var brans = (document.getElementById('profilBrans') || {}).value || '';
+    var uzmanlik = (document.getElementById('profilUzmanlik') || {}).value || '';
+    var saatler = (document.getElementById('profilSaatler') || {}).value || '';
+    if (!isim.trim()) { alert('Ad Soyad zorunludur!'); return; }
+    var guncelleme = { isim: isim.trim(), brans: brans, uzmanlik: uzmanlik, saatler: saatler };
+    if (!currentUser.uid.includes('test_')) {
+        db.ref('users/' + currentUser.uid + '/profil').update(guncelleme);
+        db.ref('ogretmenler/' + currentUser.uid).update(guncelleme);
+    }
+    var el = document.getElementById('ogretmenProfilIsim'); if(el) el.innerText = isim;
+    var elB = document.getElementById('ogretmenProfilBrans');
+    if(elB) elB.innerText = brans + (uzmanlik ? ' - ' + uzmanlik : '') + (saatler ? ' | ' + saatler : '');
+    document.getElementById('ogretmenProfilModal').classList.remove('active');
+}
+
+function koclukKartlariniRender(filtreBrans, filtreMusait) {
+    var konteyner = document.getElementById('koclukKartlari');
+    if (!konteyner) return;
+    if (currentUserRole === 'ogretmen') return;
+    konteyner.innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:2rem;font-style:italic;">Ogretmenler yukleniyor...</p>';
+    db.ref('ogretmenler').once('value').then(function(snap) {
+        ogretmenlerListesi = [];
+        snap.forEach(function(ch) { var o = ch.val(); o._uid = ch.key; ogretmenlerListesi.push(o); });
+        koclukKartlariniFiltreleveRender(filtreBrans || '', filtreMusait || '');
+    }).catch(function() {
+        konteyner.innerHTML = '<div style="text-align:center;padding:3rem;color:var(--text-muted);"><div style="font-size:3rem;margin-bottom:1rem;">👨‍🏫</div><p>Ogretmen listesi yuklenemedi.</p></div>';
+    });
+}
+
+function koclukKartlariniFiltreleveRender(filtreBrans, filtreMusait) {
+    var konteyner = document.getElementById('koclukKartlari');
+    if (!konteyner) return;
+    var filtreli = ogretmenlerListesi.filter(function(h) {
+        var bransUygun = !filtreBrans || h.brans === filtreBrans;
+        var musaitUygun = !filtreMusait
+            || (filtreMusait === 'musait' && h.musait)
+            || (filtreMusait === 'mesgul' && !h.musait);
+        return bransUygun && musaitUygun;
+    });
+    var sayac = document.getElementById('koclukSayac');
+    if (sayac) sayac.innerText = filtreli.length + ' ogretmen listeleniyor';
+    if (filtreli.length === 0) {
+        konteyner.innerHTML = '<div style="text-align:center;padding:3rem;color:var(--text-muted);"><div style="font-size:3rem;margin-bottom:1rem;">👨‍🏫</div><p>Kayitli ogretmen bulunamadi.</p></div>';
+        return;
+    }
+    konteyner.innerHTML = filtreli.map(function(h) {
+        var musaitBadge = h.musait
+            ? '<span class="musait-badge musait">● Musait</span>'
+            : '<span class="musait-badge mesgul">● Mesgul</span>';
+        var btn = h.musait
+            ? '<button class="kocluk-talep-btn aktif" onclick="koclukTalepAcFirebase(\'' + h._uid + '\')">📩 Ders Talebi Gonder</button>'
+            : '<button class="kocluk-talep-btn pasif">⏳ Su An Mesgul</button>';
+        return '<div class="kocluk-kart">'
+            + '<div class="kocluk-kart-header">'
+            + '<div class="kocluk-avatar">👨‍🏫</div>'
+            + '<div style="flex:1"><div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap">'
+            + '<span class="kocluk-isim">' + (h.isim||'Ogretmen') + '</span>' + musaitBadge + '</div>'
+            + '<div class="kocluk-brans">' + (h.brans||'-') + ' Uzmani</div></div></div>'
+            + '<div style="font-size:0.78rem;color:var(--text-muted);line-height:1.5;">' + (h.uzmanlik || 'Uzmanlik belirtilmedi') + '</div>'
+            + '<div style="font-size:0.75rem;color:var(--text-muted);">🕐 Uygun saatler: <span style="color:var(--text-main);">' + (h.saatler || 'Belirtilmedi') + '</span></div>'
+            + '<div style="display:flex;justify-content:flex-end;margin-top:0.5rem;">' + btn + '</div>'
+            + '</div>';
+    }).join('');
+    ogrenciTalepleriniYukle();
+}
+
+function koclukListeyiFiltrele() {
+    var brans = (document.getElementById('koclukBransFilter') || {}).value || '';
+    var musait = (document.getElementById('koclukMüsaitFilter') || {}).value || '';
+    koclukKartlariniFiltreleveRender(brans, musait);
+}
+
+function koclukTalepAcFirebase(ogretmenUid) {
+    var hoca = ogretmenlerListesi.find(function(h) { return h._uid === ogretmenUid; });
+    if (!hoca) return;
+    var sel = document.getElementById('talepHoca');
+    if (sel) {
+        sel.innerHTML = '<option value="' + ogretmenUid + '">' + (hoca.isim || 'Ogretmen') + ' - ' + (hoca.brans || '') + '</option>';
+        sel.setAttribute('data-uid', ogretmenUid);
+    }
+    document.getElementById('koclukTalepModal').classList.add('active');
+}
+
+function talepOnay() {
+    var sel = document.getElementById('talepHoca');
+    var ogretmenUid = sel ? sel.getAttribute('data-uid') : null;
+    var konu = ((document.getElementById('talepKonu') || {}).value || '').trim();
+    var tarih = (document.getElementById('talepTarih') || {}).value || '';
+    var saat = (document.getElementById('talepSaat') || {}).value || '19:00';
+    var sure = (document.getElementById('talepSure') || {}).value || '60';
+    if (!konu) { alert('Konu/talep aciklamasi zorunludur!'); return; }
+    if (!tarih) { alert('Tarih seciniz!'); return; }
+    if (!ogretmenUid) { alert('Ogretmen secilmedi!'); return; }
+    var hoca = ogretmenlerListesi.find(function(h) { return h._uid === ogretmenUid; });
+    var talep = {
+        ogretmenId: ogretmenUid,
+        ogretmenIsim: hoca ? (hoca.isim || 'Ogretmen') : 'Ogretmen',
+        ogretmenBrans: hoca ? (hoca.brans || '') : '',
+        ogrenciId: currentUser ? currentUser.uid : 'test',
+        ogrenciEmail: currentUser ? (currentUser.email || 'Ogrenci') : 'Test Kullanici',
+        konu: konu,
+        tarih: tarih,
+        saat: saat,
+        sure: parseInt(sure),
+        durum: 'Bekliyor',
+        link: '',
+        zaman: Date.now()
+    };
+    document.getElementById('koclukTalepModal').classList.remove('active');
+    if (currentUser && !currentUser.uid.includes('test_')) {
+        db.ref('talepler').push(talep).then(function() {
+            gonderimSonucGoster(talep);
+            ogrenciTalepleriniYukle();
         });
-
-        document.getElementById('koclukSayac').innerText = `${filtreli.length} öğretmen listeleniyor`;
-
-        konteyner.innerHTML = filtreli.map(h => `
-            <div class="kocluk-kart">
-                <div class="kocluk-kart-header">
-                    <div class="kocluk-avatar">${h.emoji}</div>
-                    <div style="flex:1;">
-                        <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
-                            <span class="kocluk-isim">${h.isim}</span>
-                            <span class="musait-badge ${h.musait ? 'musait' : 'mesgul'}">${h.musait ? '● Müsait' : '● Meşgul'}</span>
-                        </div>
-                        <div class="kocluk-brans">${h.brans} Uzmanı</div>
-                    </div>
-                </div>
-                <div style="font-size:0.78rem; color:var(--text-muted); line-height:1.5;">${h.uzmanlik}</div>
-                <div style="font-size:0.75rem; color:var(--text-muted);">🕐 Uygun saatler: <span style="color:var(--text-main);">${h.saatler}</span></div>
-                <div class="kocluk-istatistik">
-                    <div>⭐ Puan <span>${h.puan}</span></div>
-                    <div>📚 Ders <span>${h.dersSayisi}</span></div>
-                </div>
-                <div style="display:flex; justify-content:flex-end;">
-                    <button class="kocluk-talep-btn ${h.musait ? 'aktif' : 'pasif'}"
-                        onclick="${h.musait ? `koclukTalepAc(${h.id})` : 'void(0)'}">
-                        ${h.musait ? '📩 Ders Talebi Gönder' : '⏳ Şu An Meşgul'}
-                    </button>
-                </div>
-            </div>
-        `).join('');
+    } else {
+        gonderimSonucGoster(talep);
     }
+}
 
-    function koclukListeyiFiltrele() {
-        let brans = document.getElementById('koclukBransFilter').value;
-        let musait = document.getElementById('koclukMüsaitFilter').value;
-        koclukKartlariniRender(brans, musait);
-    }
+function gonderimSonucGoster(talep) {
+    var emoji = document.getElementById('koclukLinkEmoji');
+    var baslik = document.getElementById('koclukLinkBaslik');
+    var bilgi = document.getElementById('koclukLinkBilgi');
+    var linkKutu = document.getElementById('koclukLinkKutu');
+    var joinBtn = document.getElementById('koclukJoinBtn');
+    if (emoji) emoji.innerText = '⏳';
+    if (baslik) baslik.innerText = 'Talep Gonderildi!';
+    if (bilgi) bilgi.innerHTML = '<strong style="color:var(--text-main);">' + talep.ogretmenIsim + '</strong> adli ogretmene talep gonderildi.<br>'
+        + '<span style="color:var(--accent);">' + talep.konu + '</span> konusunda<br>'
+        + '<strong>' + talep.tarih + ' saat ' + talep.saat + '</strong> icin ' + talep.sure + ' dakika ders talep edildi.<br>'
+        + '<span style="color:var(--text-muted);font-size:0.8rem;margin-top:0.5rem;display:block;">Ogretmen kabul ettiginde Jitsi gorusme linki aktif olacak.</span>';
+    if (linkKutu) linkKutu.style.display = 'none';
+    if (joinBtn) joinBtn.style.display = 'none';
+    document.getElementById('koclukLinkModal').classList.add('active');
+}
 
-    function koclukTalepGonder() {
-        // Genel talep butonu - hoca seçilmeden açılır
-        let sel = document.getElementById('talepHoca');
-        if (sel) {
-            sel.innerHTML = koclukHocalari
-                .filter(h => h.musait)
-                .map(h => `<option value="${h.id}">${h.emoji} ${h.isim} — ${h.brans}</option>`)
-                .join('');
+function ogrenciTalepleriniYukle() {
+    if (!currentUser || currentUser.uid.includes('test_')) return;
+    db.ref('talepler').orderByChild('ogrenciId').equalTo(currentUser.uid).once('value', function(snap) {
+        var talepler = [];
+        snap.forEach(function(ch) { var t = ch.val(); t._key = ch.key; talepler.push(t); });
+        talepler.sort(function(a,b) { return (b.zaman||0)-(a.zaman||0); });
+        var div = document.getElementById('ogrenciTalepListesi');
+        if (!div) return;
+        if (talepler.length === 0) {
+            div.innerHTML = '<p style="color:var(--text-muted);font-size:0.82rem;font-style:italic;padding:0.5rem;">Henuz talep gonderilmedi.</p>';
+            return;
         }
-        document.getElementById('koclukTalepModal').classList.add('active');
-    }
+        div.innerHTML = talepler.map(function(t) {
+            var renk = t.durum === 'Kabul Edildi' ? 'var(--success)' : t.durum === 'Reddedildi' ? 'var(--danger)' : 'var(--warning)';
+            var linkHtml = (t.durum === 'Kabul Edildi' && t.link)
+                ? '<a href="' + t.link + '" target="_blank" style="display:block;margin-top:0.4rem;color:#a78bfa;font-size:0.78rem;font-weight:600;">🎥 Gorusmeye Katil</a>' : '';
+            return '<div style="background:rgba(0,0,0,0.3);border:1px solid var(--border);border-radius:8px;padding:0.6rem 0.875rem;display:flex;justify-content:space-between;align-items:flex-start;gap:0.5rem;">'
+                + '<div style="font-size:0.82rem;flex:1;"><strong style="color:var(--accent);">' + (t.ogretmenIsim||'Ogretmen') + '</strong> — ' + t.konu + '<br>'
+                + '<span style="color:var(--text-muted);">' + t.tarih + ' ' + t.saat + ' (' + t.sure + ' dk)</span>' + linkHtml + '</div>'
+                + '<span style="font-weight:700;font-size:0.75rem;white-space:nowrap;color:' + renk + ';">● ' + t.durum + '</span></div>';
+        }).join('');
+    });
+}
 
-    function koclukTalepAc(hocaId) {
-        let sel = document.getElementById('talepHoca');
-        if (sel) {
-            sel.innerHTML = koclukHocalari
-                .filter(h => h.musait)
-                .map(h => `<option value="${h.id}" ${h.id === hocaId ? 'selected' : ''}>${h.emoji} ${h.isim} — ${h.brans}</option>`)
-                .join('');
-        }
-        document.getElementById('koclukTalepModal').classList.add('active');
-    }
-
-    function talepOnay() {
-        let hocaId = parseInt(document.getElementById('talepHoca').value);
-        let konu = document.getElementById('talepKonu').value.trim();
-        let tarih = document.getElementById('talepTarih').value;
-        let saat = document.getElementById('talepSaat').value;
-        let sure = document.getElementById('talepSure').value;
-
-        if (!konu) { alert('Konu/talep açıklaması zorunludur!'); return; }
-        if (!tarih) { alert('Tarih seçiniz!'); return; }
-
-        let hoca = koclukHocalari.find(h => h.id === hocaId);
-        if (!hoca) return;
-
-        // Jitsi Meet ile otomatik görüşme linki oluştur
-        // Oda adı: kronos + hocaId + timestamp (benzersiz)
-        let odaAdi = `kronos-kocluk-${hocaId}-${Date.now()}`;
-        let jitsiLink = `https://meet.jit.si/${odaAdi}`;
-
-        // Talebi kaydet
-        let talep = { id: Date.now(), hocaId, hocaIsim: hoca.isim, hocaBrans: hoca.brans, konu, tarih, saat, sure: parseInt(sure), link: jitsiLink, durum: 'Onay Bekleniyor' };
-        koclukTaleplerListesi.push(talep);
-
-        document.getElementById('koclukTalepModal').classList.remove('active');
-
-        // Sonuç modalını göster
-        let bilgi = document.getElementById('koclukLinkBilgi');
-        let linkKutu = document.getElementById('koclukLinkKutu');
-        let linkUrl = document.getElementById('koclukLinkUrl');
-        let joinBtn = document.getElementById('koclukJoinBtn');
-
-        if (bilgi) bilgi.innerHTML = `
-            <strong style="color:var(--text-main);">${hoca.emoji} ${hoca.isim}</strong>'e talep gönderildi.<br>
-            <span style="color:var(--accent);">${konu}</span> konusunda<br>
-            <strong>${tarih} saat ${saat}</strong> için ${sure} dakika ders talep edildi.
-        `;
-
-        // Görüşme linki hemen aktif et (Jitsi için onay gerekmez)
-        if (linkKutu) linkKutu.style.display = 'block';
-        if (linkUrl) { linkUrl.href = jitsiLink; linkUrl.innerText = jitsiLink; }
-        if (joinBtn) { joinBtn.style.display = 'block'; joinBtn.setAttribute('data-link', jitsiLink); }
-
-        document.getElementById('koclukLinkModal').classList.add('active');
-    }
-
-    function koclukGorüsmeyeKatil() {
-        let btn = document.getElementById('koclukJoinBtn');
-        let link = btn ? btn.getAttribute('data-link') : null;
-        if (link) window.open(link, '_blank');
-    }
+function koclukGorüsmeyeKatil() {
+    var btn = document.getElementById('koclukJoinBtn');
+    var link = btn ? btn.getAttribute('data-link') : null;
+    if (link) window.open(link, '_blank');
+}
 
 </script>
 </body>
