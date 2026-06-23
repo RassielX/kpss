@@ -523,7 +523,6 @@
         <button class="tab-btn" onclick="switchTab('deneme-tab')">Deneme Sınavları</button>
         <button class="tab-btn" onclick="switchTab('pomo-tab')" style="color:var(--pomo-color); font-weight: 600;">Pomodoro Takibi</button>
         <button class="tab-btn" onclick="switchTab('kocluk-tab')" style="color:#a78bfa; font-weight: 600;">🎓 Koçluk Merkezi</button>
-        <button class="tab-btn" id="ogretmenTakipTabBtn" onclick="switchTab('ogretmen-takip-tab')" style="color:#10b981; font-weight:600; display:none;">&#127891; Ogrenci Takip</button>
     </div>
 
     <div id="ozet-tab" class="tab-content active">
@@ -799,42 +798,6 @@
     </div>
 
 
-    <!-- OGRETMEN: OGRENCI TAKIP TAB -->
-    <div id="ogretmen-takip-tab" class="tab-content" style="flex-direction:column;gap:1rem;overflow:hidden;">
-        <!-- Ust bar: ogrenci ekle -->
-        <div style="display:flex;gap:1rem;flex-wrap:wrap;align-items:flex-end;flex-shrink:0;background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.2);border-radius:14px;padding:0.875rem 1.25rem;">
-            <div style="font-size:1.5rem;">&#127891;</div>
-            <div style="flex:1;">
-                <div style="font-weight:700;color:#10b981;font-family:Poppins,sans-serif;font-size:0.95rem;margin-bottom:0.2rem;">Ogrenci Takip Sistemi</div>
-                <div style="font-size:0.75rem;color:var(--text-muted);">Manuel ogrenci ekleyip soru cozum ve deneme verilerini girin.</div>
-            </div>
-            <div style="display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center;">
-                <input type="text" id="takipOgrenciAd" placeholder="Ogrenci Ad Soyad" style="background:rgba(0,0,0,0.35);border:1px solid rgba(16,185,129,0.3);color:var(--text);border-radius:8px;padding:0.4rem 0.75rem;font-size:0.82rem;font-family:Poppins,sans-serif;width:190px;">
-                <select id="takipOgrenciSinav" style="background:rgba(0,0,0,0.35);border:1px solid rgba(16,185,129,0.3);color:var(--text);border-radius:8px;padding:0.4rem 0.75rem;font-size:0.82rem;font-family:Poppins,sans-serif;">
-                    <option value="YKS">YKS</option>
-                    <option value="Lisans">KPSS Lisans</option>
-                    <option value="On Lisans">KPSS On Lisans</option>
-                    <option value="AGS">AGS</option>
-                </select>
-                <button onclick="takipOgrenciEkle()" style="background:linear-gradient(135deg,#059669,#10b981);border:none;color:#fff;padding:0.42rem 0.875rem;border-radius:8px;cursor:pointer;font-size:0.82rem;font-family:Poppins,sans-serif;font-weight:600;">+ Ogrenci Ekle</button>
-            </div>
-        </div>
-
-        <!-- Ana icerik: sol liste + sag detay -->
-        <div style="display:grid;grid-template-columns:210px 1fr;gap:1rem;flex:1;min-height:0;overflow:hidden;">
-            <!-- Sol: Ogrenci listesi -->
-            <div style="background:rgba(0,0,0,0.3);border:1px solid var(--border);border-radius:12px;padding:0.875rem;overflow-y:auto;display:flex;flex-direction:column;gap:0.5rem;">
-                <div style="font-size:0.72rem;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.25rem;">Ogrenciler</div>
-                <div id="takipOgrenciListesi"><div style="color:var(--text-muted);font-size:0.78rem;font-style:italic;padding:0.5rem 0;">Henuz ogrenci eklenmedi.</div></div>
-            </div>
-
-            <!-- Sag: Secili ogrencinin detay paneli -->
-            <div style="background:rgba(0,0,0,0.22);border:1px solid var(--border);border-radius:12px;padding:1rem;overflow-y:auto;display:flex;flex-direction:column;gap:0.75rem;" id="takipDetayPanel">
-                <div style="color:var(--text-muted);font-size:0.85rem;text-align:center;padding:2.5rem 0;font-style:italic;">Soldaki listeden bir ogrenci secin.</div>
-            </div>
-        </div>
-    </div>
-
     <!-- KOÇLUK MERKEZİ TAB -->
     <div id="kocluk-tab" class="tab-content">
 
@@ -989,6 +952,111 @@
                 </div>
             </div>
             <iframe id="jitsiFrame" src="" allow="camera; microphone; fullscreen; display-capture; autoplay" style="width:100%; height:600px; border:none; display:block;"></iframe>
+        </div>
+    </div>
+
+    <!-- OGRETMEN: OGRENCI DETAY MODAL (tam ekran yatay) -->
+    <div class="modal-overlay" id="ogrenciDetayModal" style="z-index:9999;">
+        <div class="modal-content" style="max-width:1100px;width:96vw;padding:0;background:#0a0a0f;border:1px solid rgba(16,185,129,0.3);border-radius:16px;overflow:hidden;max-height:90vh;display:flex;flex-direction:column;">
+            <!-- Header -->
+            <div style="background:linear-gradient(135deg,rgba(16,185,129,0.2),rgba(5,150,105,0.1));padding:0.875rem 1.5rem;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;border-bottom:1px solid rgba(16,185,129,0.2);">
+                <div style="display:flex;align-items:center;gap:0.875rem;">
+                    <div style="font-size:1.75rem;">&#127891;</div>
+                    <div>
+                        <div style="font-weight:700;color:#10b981;font-family:Poppins,sans-serif;font-size:1rem;" id="ogrDetayIsim">Ogrenci</div>
+                        <div style="font-size:0.72rem;color:var(--text-muted);" id="ogrDetaySinav">YKS Ogrencisi</div>
+                    </div>
+                </div>
+                <div style="display:flex;gap:0.5rem;align-items:center;">
+                    <button onclick="ogrenciGorusmeTalepEt()" style="background:linear-gradient(135deg,#7c3aed,#a78bfa);border:none;color:#fff;padding:0.4rem 0.875rem;border-radius:8px;cursor:pointer;font-size:0.78rem;font-family:Poppins,sans-serif;font-weight:600;">&#127909; Gorusme Baslat</button>
+                    <button onclick="document.getElementById('ogrenciDetayModal').classList.remove('active')" style="background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.35);color:var(--danger);padding:0.4rem 0.875rem;border-radius:8px;cursor:pointer;font-size:0.78rem;font-family:Poppins,sans-serif;font-weight:600;">&#10005; Kapat</button>
+                </div>
+            </div>
+            <!-- Icerik: 3 sutun yatay -->
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;flex:1;overflow:hidden;">
+                <!-- SOL: Soru Cozumu -->
+                <div style="padding:1rem;border-right:1px solid rgba(255,255,255,0.06);overflow-y:auto;display:flex;flex-direction:column;gap:0.75rem;">
+                    <div style="font-size:0.78rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:0.05em;border-bottom:1px solid rgba(255,107,0,0.2);padding-bottom:0.4rem;">&#128221; Soru Cozumu</div>
+                    <!-- Form -->
+                    <div style="background:rgba(0,0,0,0.25);border-radius:10px;padding:0.6rem;display:flex;flex-direction:column;gap:0.4rem;">
+                        <div style="display:flex;gap:0.4rem;">
+                            <input type="text" id="detSoruDers" placeholder="Ders" style="flex:1;font-size:0.75rem;padding:0.3rem 0.5rem;background:var(--input-bg);border:1px solid var(--border);color:var(--text);border-radius:6px;">
+                            <input type="text" id="detSoruKonu" placeholder="Konu" style="flex:1;font-size:0.75rem;padding:0.3rem 0.5rem;background:var(--input-bg);border:1px solid var(--border);color:var(--text);border-radius:6px;">
+                        </div>
+                        <div style="display:flex;gap:0.4rem;">
+                            <input type="number" id="detSoruToplam" placeholder="Toplam" min="0" style="flex:1;font-size:0.75rem;padding:0.3rem 0.5rem;background:var(--input-bg);border:1px solid var(--border);color:var(--text);border-radius:6px;">
+                            <input type="number" id="detSoruDogru" placeholder="Dogru" min="0" style="flex:1;font-size:0.75rem;padding:0.3rem 0.5rem;background:var(--input-bg);border:1px solid var(--border);color:var(--text);border-radius:6px;">
+                            <input type="number" id="detSoruYanlis" placeholder="Yanlis" min="0" style="flex:1;font-size:0.75rem;padding:0.3rem 0.5rem;background:var(--input-bg);border:1px solid var(--border);color:var(--text);border-radius:6px;">
+                        </div>
+                        <button onclick="detSoruKaydet()" style="background:linear-gradient(135deg,#ea580c,#f97316);border:none;color:#fff;padding:0.32rem;border-radius:6px;cursor:pointer;font-size:0.75rem;font-family:Poppins,sans-serif;font-weight:600;">+ Soru Kaydet</button>
+                    </div>
+                    <div id="detSoruListesi" style="display:flex;flex-direction:column;gap:0.25rem;"></div>
+                </div>
+                <!-- ORTA: Denemeler + Grafik -->
+                <div style="padding:1rem;border-right:1px solid rgba(255,255,255,0.06);overflow-y:auto;display:flex;flex-direction:column;gap:0.75rem;">
+                    <div style="font-size:0.78rem;font-weight:700;color:var(--info);text-transform:uppercase;letter-spacing:0.05em;border-bottom:1px solid rgba(59,130,246,0.2);padding-bottom:0.4rem;">&#128202; Deneme Sonuclari</div>
+                    <!-- Form -->
+                    <div style="background:rgba(0,0,0,0.25);border-radius:10px;padding:0.6rem;display:flex;flex-direction:column;gap:0.4rem;">
+                        <div style="display:flex;gap:0.4rem;">
+                            <input type="text" id="detDenemeAd" placeholder="Deneme Adi (TG-1)" style="flex:2;font-size:0.75rem;padding:0.3rem 0.5rem;background:var(--input-bg);border:1px solid var(--border);color:var(--text);border-radius:6px;">
+                            <input type="date" id="detDenemeTarih" style="flex:1;font-size:0.72rem;padding:0.3rem 0.4rem;background:var(--input-bg);border:1px solid var(--border);color:var(--text);border-radius:6px;">
+                        </div>
+                        <div style="display:flex;gap:0.4rem;">
+                            <input type="number" id="detDenemeNet" placeholder="Top.Net" step="0.25" style="flex:1;font-size:0.75rem;padding:0.3rem 0.5rem;background:var(--input-bg);border:1px solid var(--border);color:var(--text);border-radius:6px;">
+                            <input type="number" id="detDenemeTyt" placeholder="TYT" step="0.25" style="flex:1;font-size:0.75rem;padding:0.3rem 0.5rem;background:var(--input-bg);border:1px solid var(--border);color:var(--text);border-radius:6px;">
+                            <input type="number" id="detDenemeAyt" placeholder="AYT" step="0.25" style="flex:1;font-size:0.75rem;padding:0.3rem 0.5rem;background:var(--input-bg);border:1px solid var(--border);color:var(--text);border-radius:6px;">
+                        </div>
+                        <button onclick="detDenemeKaydet()" style="background:linear-gradient(135deg,#1d4ed8,#3b82f6);border:none;color:#fff;padding:0.32rem;border-radius:6px;cursor:pointer;font-size:0.75rem;font-family:Poppins,sans-serif;font-weight:600;">+ Deneme Kaydet</button>
+                    </div>
+                    <div id="detDenemeListesi" style="display:flex;flex-direction:column;gap:0.25rem;"></div>
+                </div>
+                <!-- SAG: Calisma Programi + AI Analiz -->
+                <div style="padding:1rem;overflow-y:auto;display:flex;flex-direction:column;gap:0.75rem;">
+                    <div style="font-size:0.78rem;font-weight:700;color:#a855f7;text-transform:uppercase;letter-spacing:0.05em;border-bottom:1px solid rgba(168,85,247,0.2);padding-bottom:0.4rem;">&#128197; Calisma Programi</div>
+                    <!-- Form -->
+                    <div style="background:rgba(0,0,0,0.25);border-radius:10px;padding:0.6rem;display:flex;flex-direction:column;gap:0.4rem;">
+                        <div style="display:flex;gap:0.4rem;">
+                            <select id="detPlanGun" style="flex:1;font-size:0.72rem;padding:0.3rem 0.4rem;background:var(--input-bg);border:1px solid var(--border);color:var(--text);border-radius:6px;">
+                                <option>Pazartesi</option><option>Sali</option><option>Carsamba</option><option>Persembe</option><option>Cuma</option><option>Cumartesi</option><option>Pazar</option>
+                            </select>
+                            <input type="text" id="detPlanDers" placeholder="Ders" style="flex:1;font-size:0.75rem;padding:0.3rem 0.5rem;background:var(--input-bg);border:1px solid var(--border);color:var(--text);border-radius:6px;">
+                        </div>
+                        <input type="text" id="detPlanKonu" placeholder="Konu / Gorev" style="font-size:0.75rem;padding:0.3rem 0.5rem;background:var(--input-bg);border:1px solid var(--border);color:var(--text);border-radius:6px;">
+                        <div style="display:flex;gap:0.4rem;">
+                            <input type="number" id="detPlanSure" placeholder="Sure (dk)" min="0" style="flex:1;font-size:0.75rem;padding:0.3rem 0.5rem;background:var(--input-bg);border:1px solid var(--border);color:var(--text);border-radius:6px;">
+                            <button onclick="detPlanKaydet()" style="flex:2;background:linear-gradient(135deg,#7c3aed,#a855f7);border:none;color:#fff;padding:0.32rem;border-radius:6px;cursor:pointer;font-size:0.75rem;font-family:Poppins,sans-serif;font-weight:600;">+ Plan Ekle</button>
+                        </div>
+                    </div>
+                    <div id="detPlanListesi" style="display:flex;flex-direction:column;gap:0.25rem;"></div>
+                    <!-- AI Analiz -->
+                    <div style="font-size:0.78rem;font-weight:700;color:#f59e0b;text-transform:uppercase;letter-spacing:0.05em;border-bottom:1px solid rgba(245,158,11,0.2);padding-bottom:0.4rem;margin-top:0.5rem;">&#129504; Yapay Zeka Analizi</div>
+                    <div id="detAIAnaliz" style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.15);border-radius:10px;padding:0.75rem;font-size:0.78rem;color:var(--text-muted);line-height:1.6;">Ogrenci secildiginde analiz olusturulacak...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- OGRETMEN: YENI OGRENCI EKLE MODAL -->
+    <div class="modal-overlay" id="ogrenciEkleModal">
+        <div class="modal-content" style="max-width:420px;padding:1.75rem;">
+            <button class="modal-close" onclick="document.getElementById('ogrenciEkleModal').classList.remove('active')">&#215;</button>
+            <h3 style="color:#10b981;font-family:Poppins,sans-serif;margin-bottom:1.25rem;font-size:1.05rem;">&#127891; Yeni Ogrenci Ekle</h3>
+            <div style="display:flex;flex-direction:column;gap:0.875rem;">
+                <div class="input-group" style="margin:0;">
+                    <label>Ogrenci Ad Soyad</label>
+                    <input type="text" id="takipOgrenciAd" placeholder="Ali Veli" autocomplete="off">
+                </div>
+                <div class="input-group" style="margin:0;">
+                    <label>Sinav Turu</label>
+                    <select id="takipOgrenciSinav">
+                        <option value="YKS">YKS</option>
+                        <option value="Lisans">KPSS Lisans</option>
+                        <option value="On Lisans">KPSS On Lisans</option>
+                        <option value="AGS">AGS</option>
+                    </select>
+                </div>
+                <button onclick="takipOgrenciEkle();document.getElementById('ogrenciEkleModal').classList.remove('active');ogretmenOgrenciKartlariniYukle();" style="background:linear-gradient(135deg,#059669,#10b981);border:none;color:#fff;padding:0.6rem;border-radius:8px;cursor:pointer;font-size:0.875rem;font-family:Poppins,sans-serif;font-weight:600;">Ogrenci Ekle</button>
+            </div>
         </div>
     </div>
 
@@ -2482,9 +2550,6 @@ function loadOgretmenPanel(profil) {
     document.getElementById('mainContainer').style.display = 'flex';
     document.getElementById('koclukOgrenciPanel').style.display = 'none';
     document.getElementById('koclukOgretmenPanel').style.display = 'flex';
-    var _tBtn = document.getElementById('ogretmenTakipTabBtn');
-    if (_tBtn) _tBtn.style.display = '';
-    if (typeof takipOgrenciListeyiYukle === 'function') takipOgrenciListeyiYukle();
     var isim = p.isim || 'Ogretmen';
     var brans = p.brans || '-';
     var uzmanlik = p.uzmanlik || '';
@@ -2545,89 +2610,92 @@ function ogretmenDashboardOlustur(profil) {
         + '<div class="cd-timer"><div class="cd-item"><span class="cd-val" style="color:#a78bfa;" id="ogr-bekleyen-talep">0</span><span class="cd-lbl">İSTEK</span></div></div>'
         + '</div>';
 
-    // Orta grid - ogretmen yonetim araclari
-    middleGrid.innerHTML = '<div class="analysis-card" style="border-top:3px solid #f59e0b; grid-column: span 2;">'
-        + '<h3 style="color:#f59e0b;">&#128273; Davet Kodu</h3>'
-        + '<p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.75rem;">Ogrencileriniz sizi bulmak icin bu kodu kullansÄ±n.</p>'
-        + '<div id="davetKoduGoster" style="display:none;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:8px;padding:0.6rem 1rem;font-size:1.1rem;font-weight:700;color:#f59e0b;letter-spacing:2px;text-align:center;margin-bottom:0.75rem;"></div>'
+    // Orta grid - ogretmen yonetim araclari (yeni tasarim)
+    middleGrid.innerHTML = '<div class="analysis-card" style="border-top:3px solid #10b981; grid-column: span 6;">'
+        + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:0.5rem;">'
+        + '<h3 style="color:#10b981;margin:0;">&#127891; Ogrenci Takip Sistemi</h3>'
         + '<div style="display:flex;gap:0.5rem;flex-wrap:wrap;">'
-        + '<button onclick="davetKoduUret()" style="background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.4);color:#f59e0b;padding:0.4rem 0.875rem;border-radius:8px;cursor:pointer;font-size:0.78rem;font-family:Poppins,sans-serif;font-weight:600;">Yeni Kod Uret</button>'
-        + '</div>'
-        + '</div>'
-        + '<div class="analysis-card" style="border-top:3px solid var(--accent); grid-column: span 4;">'
-        + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;">'
-        + '<h3 style="color:var(--accent);margin:0;">&#127891; Ogrenci Takip Sistemi</h3>'
-        + '<div style="display:flex;gap:0.5rem;">'
-        + '<button onclick="ogretmenOgrenciPanelAc()" style="background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.4);color:var(--accent);padding:0.4rem 0.875rem;border-radius:8px;cursor:pointer;font-size:0.78rem;font-family:Poppins,sans-serif;font-weight:600;">Ogrenci Ekle / Duzenle</button>'
-        + '<button onclick="ogretmenGorusmeBaslat()" style="background:linear-gradient(135deg,#7c3aed,#a78bfa);border:none;color:#fff;padding:0.4rem 0.875rem;border-radius:8px;cursor:pointer;font-size:0.78rem;font-family:Poppins,sans-serif;font-weight:600;">&#127909; Gorusme Baslat</button>'
+        + '<button onclick="ogretmenOgrenciEkleModal()" style="background:linear-gradient(135deg,#059669,#10b981);border:none;color:#fff;padding:0.4rem 0.875rem;border-radius:8px;cursor:pointer;font-size:0.78rem;font-family:Poppins,sans-serif;font-weight:600;">+ Yeni Ogrenci Ekle</button>'
         + '</div></div>'
-        + '<p style="font-size:0.8rem;color:var(--text-muted);">Ogrenci ekleyip soru cozum ve deneme verilerini manuel girin.</p>'
+        + '<div id="ogretmenOgrenciKartlari" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:0.75rem;">'
+        + '<div style="color:var(--text-muted);font-size:0.82rem;font-style:italic;padding:1rem;grid-column:1/-1;">Henuz ogrenci eklenmedi. Yukari butona basin.</div>'
+        + '</div>'
         + '</div>'
         + '<div class="analysis-card" style="border-top:3px solid #a78bfa; grid-column: span 3;">'
-        + '<h3 style="color:#a78bfa;">Son Ders Talepleri</h3>'
+        + '<h3 style="color:#a78bfa;">&#128276; Gorusme Talepleri</h3>'
         + '<ul class="task-list" id="ogretmenSonTalepListesi"><li style="color:var(--text-muted);font-style:italic;background:none;border:none;">Yukleniyor...</li></ul>'
         + '</div>'
         + '<div class="analysis-card" style="border-top:3px solid var(--success); grid-column: span 3;">'
-        + '<h3 class="color-success">Ogrenci Bazli Soru Analizleri</h3>'
-        + '<ul class="task-list" id="ogretmenOgrenciListesi"><li style="color:var(--text-muted);font-style:italic;background:none;border:none;">Ogrenci verisi yukleniyor...</li></ul>'
+        + '<h3 class="color-success">&#128200; Ogrenci Analiz Ozeti</h3>'
+        + '<div id="ogretmenAnalizOzeti" style="color:var(--text-muted);font-size:0.82rem;font-style:italic;padding:0.5rem;">Ogrenci verisi yukleniyor...</div>'
         + '</div>';
+    // Ogrenci kartlarini localStorage'dan yukle
+    setTimeout(function(){ if(typeof ogretmenOgrenciKartlariniYukle==='function') ogretmenOgrenciKartlariniYukle(); }, 100);
 }
 
 function ogretmenOgrenciVerileriniYukle() {
-    if (!currentUser) return;
+    // Ogrenci kartlarini localStorage'dan yukle (Firebase Rules sorunu yok)
+    ogretmenOgrenciKartlariniYukle();
+
+    // Talepleri Firebase'den yukle - hata olursa sessizce devam et
+    if (!currentUser || currentUser.uid.includes('test_')) {
+        _ogretmenTalepIstatistikGuncelle([]);
+        return;
+    }
     db.ref('talepler').orderByChild('ogretmenId').equalTo(currentUser.uid).once('value', function(snap) {
         var talepler = [];
         snap.forEach(function(ch) { var t = ch.val(); t._key = ch.key; talepler.push(t); });
         talepler.sort(function(a,b){ return (b.zaman||0)-(a.zaman||0); });
+        _ogretmenTalepIstatistikGuncelle(talepler);
+    }).catch(function() {
+        _ogretmenTalepIstatistikGuncelle([]);
+    });
+}
 
-        var toplam = talepler.length;
-        var kabul = talepler.filter(function(t){ return t.durum === 'Kabul Edildi'; }).length;
-        var bekleyen = talepler.filter(function(t){ return t.durum === 'Bekliyor'; }).length;
+function _ogretmenTalepIstatistikGuncelle(talepler) {
+    var toplam = talepler.length;
+    var kabul = talepler.filter(function(t){ return t.durum === 'Kabul Edildi'; }).length;
+    var bekleyen = talepler.filter(function(t){ return t.durum === 'Bekliyor'; }).length;
+    var elT = document.getElementById('ogr-toplam-talep');
+    var elK = document.getElementById('ogr-kabul-talep');
+    var elB = document.getElementById('ogr-bekleyen-talep');
+    if (elT) elT.innerText = toplam;
+    if (elK) elK.innerText = kabul;
+    if (elB) elB.innerText = bekleyen;
 
-        var elT = document.getElementById('ogr-toplam-talep');
-        var elK = document.getElementById('ogr-kabul-talep');
-        var elB = document.getElementById('ogr-bekleyen-talep');
-        if (elT) elT.innerText = toplam;
-        if (elK) elK.innerText = kabul;
-        if (elB) elB.innerText = bekleyen;
-
-        var listEl = document.getElementById('ogretmenSonTalepListesi');
-        if (listEl) {
-            if (talepler.length === 0) {
-                listEl.innerHTML = '<li style="color:var(--text-muted);font-style:italic;background:none;border:none;">Henüz talep yok.</li>';
-            } else {
-                listEl.innerHTML = talepler.slice(0,5).map(function(t) {
-                    var renk = t.durum === 'Kabul Edildi' ? 'var(--success)' : t.durum === 'Reddedildi' ? 'var(--danger)' : 'var(--warning)';
-                    return '<li class="task-item"><span><strong style="color:#a78bfa;">' + (t.ogrenciEmail||'Öğrenci') + '</strong> — ' + t.konu + '</span>'
-                        + '<strong style="color:' + renk + ';font-size:0.75rem;">● ' + t.durum + '</strong></li>';
-                }).join('');
-            }
+    var listEl = document.getElementById('ogretmenSonTalepListesi');
+    if (listEl) {
+        if (talepler.length === 0) {
+            listEl.innerHTML = '<li style="color:var(--text-muted);font-style:italic;background:none;border:none;padding:0.5rem;">Henuz gorusme talebi yok.<br><span style="font-size:0.72rem;">Ogrenciler Kocluk Merkezi\'nden talep gonderebilir.</span></li>';
+        } else {
+            listEl.innerHTML = talepler.slice(0,5).map(function(t) {
+                var renk = t.durum === 'Kabul Edildi' ? 'var(--success)' : t.durum === 'Reddedildi' ? 'var(--danger)' : 'var(--warning)';
+                var jitsiBtn = (t.durum === 'Bekliyor')
+                    ? '<button onclick="talepKabulEt(\'' + t._key + '\')" style="background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.35);color:var(--success);padding:0.2rem 0.5rem;border-radius:5px;cursor:pointer;font-size:0.7rem;">Kabul</button>'
+                    : (t.durum === 'Kabul Edildi' ? '<button onclick="jitsiAc(\'kronos-talep-' + t._key.substring(0,6) + '\',\'' + (t.ogrenciEmail||'Ogrenci') + '\')" style="background:linear-gradient(135deg,#7c3aed,#a78bfa);border:none;color:#fff;padding:0.2rem 0.5rem;border-radius:5px;cursor:pointer;font-size:0.7rem;">&#127909; Katil</button>' : '');
+                return '<li class="task-item" style="flex-direction:column;align-items:flex-start;gap:0.25rem;">'
+                    + '<div style="display:flex;justify-content:space-between;width:100%;align-items:center;">'
+                    + '<span style="font-size:0.78rem;"><strong style="color:#a78bfa;">' + (t.ogrenciEmail||'Ogrenci') + '</strong> — ' + t.konu + '</span>'
+                    + '<strong style="color:' + renk + ';font-size:0.72rem;white-space:nowrap;">● ' + t.durum + '</strong>'
+                    + '</div>'
+                    + '<div style="display:flex;gap:0.4rem;align-items:center;font-size:0.7rem;color:var(--text-muted);">'
+                    + (t.tarih ? '<span>' + t.tarih + ' ' + (t.saat||'') + '</span>' : '')
+                    + (t.sure ? '<span>' + t.sure + ' dk</span>' : '')
+                    + jitsiBtn
+                    + '</div></li>';
+            }).join('');
         }
+    }
+}
 
-        // Öğrenci listesini çek (benzersiz öğrenciler)
-        var ogrenciler = {};
-        talepler.forEach(function(t){ ogrenciler[t.ogrenciId] = t.ogrenciEmail || t.ogrenciId; });
-        var ogrenciListEl = document.getElementById('ogretmenOgrenciListesi');
-        if (ogrenciListEl) {
-            var oIds = Object.keys(ogrenciler);
-            if (oIds.length === 0) {
-                ogrenciListEl.innerHTML = '<li style="color:var(--text-muted);font-style:italic;background:none;border:none;">Henüz ders yapılan öğrenci yok.</li>';
-            } else {
-                var ogrenciHtml = '';
-                var loaded = 0;
-                oIds.forEach(function(oid) {
-                    db.ref('users/' + oid + '/profil').once('value').then(function(s){
-                        var op = s.val() || {};
-                        var oIsim = op.isim || ogrenciler[oid] || 'Öğrenci';
-                        var oSinav = op.tercihSinav || '?';
-                        ogrenciHtml += '<li class="task-item"><span>👤 <strong>' + oIsim + '</strong> <span style="color:var(--text-muted);font-size:0.78rem;">(' + oSinav + ')</span></span>'
-                            + '<button onclick="switchTab(\'kocluk-tab\')" style="background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.3);color:#a78bfa;padding:0.25rem 0.6rem;border-radius:6px;cursor:pointer;font-size:0.72rem;">Talepleri Gör</button></li>';
-                        loaded++;
-                        if (loaded === oIds.length && ogrenciListEl) ogrenciListEl.innerHTML = ogrenciHtml;
-                    });
-                });
-            }
-        }
+function talepKabulEt(talepKey) {
+    if (!currentUser) return;
+    db.ref('talepler/' + talepKey).update({ durum: 'Kabul Edildi' }).then(function() {
+        // Jitsi odasini otomatik ac
+        jitsiAc('kronos-talep-' + talepKey.substring(0,6), 'Gorusme');
+        ogretmenOgrenciVerileriniYukle();
+    }).catch(function(e) {
+        alert('Talep guncellenemedi: ' + (e.message||e));
     });
 }
 
@@ -3495,6 +3563,300 @@ function takipVeriYukle(key) {
     // Firebase versiyonu icin fallback - localStorage versiyonunu cagir
     takipVeriGoster(key);
 }
+
+// ===================== OGRETMEN OGRENCI KARTLARI + DETAY MODAL =====================
+
+var _aktifDetayKey = null;
+
+function ogretmenOgrenciEkleModal() {
+    var m = document.getElementById('ogrenciEkleModal');
+    if (m) { m.classList.add('active'); var inp = document.getElementById('takipOgrenciAd'); if (inp) { inp.value=''; inp.focus(); } }
+}
+
+function ogretmenOgrenciKartlariniYukle() {
+    var kart = document.getElementById('ogretmenOgrenciKartlari');
+    if (!kart) return;
+    var veri = _takipVeriOku();
+    var ogrenciler = Object.keys(veri.ogrenciler || {}).map(function(k){ var o=veri.ogrenciler[k]; o._key=k; return o; })
+        .sort(function(a,b){ return (a.eklenme||0)-(b.eklenme||0); });
+    if (ogrenciler.length === 0) {
+        kart.innerHTML = '<div style="color:var(--text-muted);font-size:0.82rem;font-style:italic;padding:1rem;grid-column:1/-1;">Henuz ogrenci eklenmedi. Yukari butona basin.</div>';
+        ogretmenAnalizOzetiniYukle([]);
+        return;
+    }
+    kart.innerHTML = ogrenciler.map(function(o) {
+        var soruSay = Object.keys(o.sorular||{}).length;
+        var denemeSay = Object.keys(o.denemeler||{}).length;
+        var planSay = Object.keys(o.planlar||{}).length;
+        // Son deneme net
+        var sonNet = '-';
+        if (denemeSay > 0) {
+            var denArr = Object.values(o.denemeler||{}).sort(function(a,b){ return (b.zaman||0)-(a.zaman||0); });
+            if (denArr[0]) sonNet = denArr[0].topNet || '-';
+        }
+        // Ortalama dogru oran
+        var soruArr = Object.values(o.sorular||{});
+        var toplamSoru = soruArr.reduce(function(s,x){ return s+(x.toplam||0); }, 0);
+        var toplamDogru = soruArr.reduce(function(s,x){ return s+(x.dogru||0); }, 0);
+        var oran = toplamSoru > 0 ? Math.round(toplamDogru/toplamSoru*100) : 0;
+        var oranRenk = oran >= 75 ? '#10b981' : oran >= 50 ? '#f59e0b' : '#ef4444';
+        return '<div onclick="ogrenciDetayAc(\'' + o._key + '\')" style="background:rgba(0,0,0,0.35);border:1px solid rgba(16,185,129,0.25);border-radius:12px;padding:0.875rem;cursor:pointer;transition:all 0.2s;hover:border-color:#10b981;">'
+            + '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.6rem;">'
+            + '<div style="font-weight:700;color:#10b981;font-family:Poppins,sans-serif;font-size:0.88rem;">' + (o.isim||o._key) + '</div>'
+            + '<div style="font-size:0.65rem;background:rgba(16,185,129,0.1);color:#10b981;border:1px solid rgba(16,185,129,0.25);border-radius:20px;padding:1px 7px;">' + (o.sinav||'YKS') + '</div>'
+            + '</div>'
+            + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:0.35rem;font-size:0.72rem;">'
+            + '<div style="background:rgba(255,107,0,0.08);border-radius:6px;padding:0.3rem 0.5rem;"><span style="color:var(--text-muted);">Soru</span> <strong style="color:var(--accent);">' + soruSay + '</strong></div>'
+            + '<div style="background:rgba(59,130,246,0.08);border-radius:6px;padding:0.3rem 0.5rem;"><span style="color:var(--text-muted);">Deneme</span> <strong style="color:var(--info);">' + denemeSay + '</strong></div>'
+            + '<div style="background:rgba(168,85,247,0.08);border-radius:6px;padding:0.3rem 0.5rem;"><span style="color:var(--text-muted);">Plan</span> <strong style="color:#a855f7;">' + planSay + '</strong></div>'
+            + '<div style="background:rgba(16,185,129,0.08);border-radius:6px;padding:0.3rem 0.5rem;"><span style="color:var(--text-muted);">Son Net</span> <strong style="color:#10b981;">' + sonNet + '</strong></div>'
+            + '</div>'
+            + '<div style="margin-top:0.5rem;background:rgba(0,0,0,0.3);border-radius:4px;height:5px;overflow:hidden;">'
+            + '<div style="height:100%;width:' + oran + '%;background:' + oranRenk + ';border-radius:4px;transition:width 0.5s;"></div>'
+            + '</div>'
+            + '<div style="font-size:0.65rem;color:' + oranRenk + ';text-align:right;margin-top:2px;">%' + oran + ' basari</div>'
+            + '</div>';
+    }).join('');
+    ogretmenAnalizOzetiniYukle(ogrenciler);
+}
+
+function ogretmenAnalizOzetiniYukle(ogrenciler) {
+    var el = document.getElementById('ogretmenAnalizOzeti');
+    if (!el) return;
+    if (!ogrenciler || ogrenciler.length === 0) {
+        el.innerHTML = '<span style="font-style:italic;">Henuz ogrenci yok.</span>'; return;
+    }
+    var html = '';
+    ogrenciler.forEach(function(o) {
+        var soruArr = Object.values(o.sorular||{});
+        var oran = soruArr.length > 0
+            ? Math.round(soruArr.reduce(function(s,x){ return s+(x.dogru||0); },0) / Math.max(soruArr.reduce(function(s,x){ return s+(x.toplam||1); },0), 1) * 100)
+            : 0;
+        var renk = oran>=75?'var(--success)':oran>=50?'var(--warning)':'var(--danger)';
+        var denArr = Object.values(o.denemeler||{}).sort(function(a,b){ return (b.zaman||0)-(a.zaman||0); });
+        var sonNet = denArr.length > 0 ? denArr[0].topNet : '-';
+        html += '<div style="display:flex;align-items:center;justify-content:space-between;padding:0.3rem 0;border-bottom:1px solid rgba(255,255,255,0.04);">'
+            + '<span style="font-size:0.78rem;font-weight:600;color:var(--text);">&#128100; ' + (o.isim||'?') + '</span>'
+            + '<div style="display:flex;gap:0.75rem;font-size:0.72rem;">'
+            + '<span style="color:' + renk + ';">%' + oran + '</span>'
+            + '<span style="color:var(--info);">Net: ' + sonNet + '</span>'
+            + '</div></div>';
+    });
+    el.innerHTML = html;
+}
+
+function ogrenciDetayAc(key) {
+    var veri = _takipVeriOku();
+    var ogr = (veri.ogrenciler||{})[key];
+    if (!ogr) return;
+    _aktifDetayKey = key;
+    var m = document.getElementById('ogrenciDetayModal');
+    if (!m) return;
+    document.getElementById('ogrDetayIsim').innerText = ogr.isim || key;
+    document.getElementById('ogrDetaySinav').innerText = (ogr.sinav||'YKS') + ' Ogrencisi';
+    m.classList.add('active');
+    detVerileriYukle(key);
+    detAIAnalizOlustur(key);
+}
+
+function ogrenciGorusmeTalepEt() {
+    if (!_aktifDetayKey) return;
+    var veri = _takipVeriOku();
+    var ogr = (veri.ogrenciler||{})[_aktifDetayKey];
+    var isim = ogr ? (ogr.isim||'Ogrenci') : 'Ogrenci';
+    var odaAdi = 'kronos-' + (currentUser ? currentUser.uid.substring(0,6) : 'ogr') + '-' + _aktifDetayKey.substring(0,4);
+    jitsiAc(odaAdi, isim + ' ile Gorusme');
+}
+
+function detVerileriYukle(key) {
+    var veri = _takipVeriOku();
+    var ogr = (veri.ogrenciler||{})[key] || {};
+    // --- Soru listesi ---
+    var soruEl = document.getElementById('detSoruListesi');
+    if (soruEl) {
+        var sorular = Object.keys(ogr.sorular||{}).map(function(k){ var s=ogr.sorular[k]; s._key=k; return s; })
+            .sort(function(a,b){ return (b.zaman||0)-(a.zaman||0); });
+        if (sorular.length===0) {
+            soruEl.innerHTML = '<div style="color:var(--text-muted);font-size:0.75rem;font-style:italic;padding:0.4rem;">Henuz soru kaydedilmedi.</div>';
+        } else {
+            soruEl.innerHTML = sorular.map(function(s) {
+                var net = ((s.dogru||0)-(s.yanlis||0)*0.25).toFixed(2);
+                return '<div style="background:rgba(0,0,0,0.28);border:1px solid var(--border);border-radius:7px;padding:0.28rem 0.5rem;font-size:0.72rem;display:flex;justify-content:space-between;align-items:center;">'
+                    + '<span><strong style="color:var(--accent);">' + (s.ders||'-') + '</strong> <span style="color:var(--text-muted);">- ' + (s.konu||'') + '</span></span>'
+                    + '<span style="display:flex;gap:0.4rem;align-items:center;color:var(--text-muted);">'
+                    + '<span style="color:var(--success);">D:' + (s.dogru||0) + '</span>'
+                    + '<span style="color:var(--danger);">Y:' + (s.yanlis||0) + '</span>'
+                    + '<span style="color:var(--info);">Net:' + net + '</span>'
+                    + '<button onclick="detSoruSil(\'' + key + '\',\'' + s._key + '\')" style="background:none;border:none;color:var(--danger);cursor:pointer;font-size:0.7rem;padding:0;">&#10005;</button>'
+                    + '</span></div>';
+            }).join('');
+        }
+    }
+    // --- Deneme listesi ---
+    var denEl = document.getElementById('detDenemeListesi');
+    if (denEl) {
+        var denemeler = Object.keys(ogr.denemeler||{}).map(function(k){ var d=ogr.denemeler[k]; d._key=k; return d; })
+            .sort(function(a,b){ return (b.zaman||0)-(a.zaman||0); });
+        if (denemeler.length===0) {
+            denEl.innerHTML = '<div style="color:var(--text-muted);font-size:0.75rem;font-style:italic;padding:0.4rem;">Henuz deneme kaydedilmedi.</div>';
+        } else {
+            denEl.innerHTML = denemeler.map(function(d) {
+                return '<div style="background:rgba(0,0,0,0.28);border:1px solid var(--border);border-radius:7px;padding:0.28rem 0.5rem;font-size:0.72rem;display:flex;justify-content:space-between;align-items:center;">'
+                    + '<span><strong style="color:var(--info);">' + (d.ad||'-') + '</strong>' + (d.tarih?' <span style="color:var(--text-muted);">('+d.tarih+')</span>':'') + '</span>'
+                    + '<span style="display:flex;gap:0.4rem;align-items:center;color:var(--text-muted);">'
+                    + '<span style="color:var(--success);">Top:' + (d.topNet||0) + '</span>'
+                    + '<span>TYT:' + (d.tytNet||0) + '</span>'
+                    + '<span>AYT:' + (d.aytNet||0) + '</span>'
+                    + '<button onclick="detDenemeSil(\'' + key + '\',\'' + d._key + '\')" style="background:none;border:none;color:var(--danger);cursor:pointer;font-size:0.7rem;padding:0;">&#10005;</button>'
+                    + '</span></div>';
+            }).join('');
+        }
+    }
+    // --- Plan listesi ---
+    var planEl = document.getElementById('detPlanListesi');
+    if (planEl) {
+        var planlar = Object.keys(ogr.planlar||{}).map(function(k){ var p=ogr.planlar[k]; p._key=k; return p; })
+            .sort(function(a,b){ var gs=['Pazartesi','Sali','Carsamba','Persembe','Cuma','Cumartesi','Pazar']; return gs.indexOf(a.gun||'')-gs.indexOf(b.gun||''); });
+        if (planlar.length===0) {
+            planEl.innerHTML = '<div style="color:var(--text-muted);font-size:0.75rem;font-style:italic;padding:0.4rem;">Henuz plan girilmedi.</div>';
+        } else {
+            planEl.innerHTML = planlar.map(function(p) {
+                return '<div style="background:rgba(0,0,0,0.28);border:1px solid var(--border);border-radius:7px;padding:0.28rem 0.5rem;font-size:0.72rem;display:flex;justify-content:space-between;align-items:center;">'
+                    + '<span><strong style="color:#a855f7;">' + (p.gun||'-') + '</strong> <span style="color:var(--accent);">' + (p.ders||'-') + '</span>' + (p.konu?' <span style="color:var(--text-muted);">- '+p.konu+'</span>':'') + '</span>'
+                    + '<span style="display:flex;gap:0.4rem;align-items:center;color:var(--text-muted);">'
+                    + (p.sure ? '<span>'+p.sure+'dk</span>' : '')
+                    + '<button onclick="detPlanSil(\'' + key + '\',\'' + p._key + '\')" style="background:none;border:none;color:var(--danger);cursor:pointer;font-size:0.7rem;padding:0;">&#10005;</button>'
+                    + '</span></div>';
+            }).join('');
+        }
+    }
+}
+
+function detSoruKaydet() {
+    if (!_aktifDetayKey) return;
+    var ders=(document.getElementById('detSoruDers')||{}).value||'';
+    var konu=(document.getElementById('detSoruKonu')||{}).value||'';
+    var toplam=parseInt((document.getElementById('detSoruToplam')||{}).value||0);
+    var dogru=parseInt((document.getElementById('detSoruDogru')||{}).value||0);
+    var yanlis=parseInt((document.getElementById('detSoruYanlis')||{}).value||0);
+    if (!ders) { alert('Ders zorunludur!'); return; }
+    var veri=_takipVeriOku();
+    if (!veri.ogrenciler||!veri.ogrenciler[_aktifDetayKey]) return;
+    if (!veri.ogrenciler[_aktifDetayKey].sorular) veri.ogrenciler[_aktifDetayKey].sorular={};
+    veri.ogrenciler[_aktifDetayKey].sorular[Date.now().toString()]={ders:ders,konu:konu,toplam:toplam,dogru:dogru,yanlis:yanlis,zaman:Date.now()};
+    _takipVeriYaz(veri);
+    ['detSoruDers','detSoruKonu','detSoruToplam','detSoruDogru','detSoruYanlis'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});
+    detVerileriYukle(_aktifDetayKey);
+    ogretmenOgrenciKartlariniYukle();
+    detAIAnalizOlustur(_aktifDetayKey);
+}
+
+function detDenemeKaydet() {
+    if (!_aktifDetayKey) return;
+    var ad=(document.getElementById('detDenemeAd')||{}).value||'';
+    var tarih=(document.getElementById('detDenemeTarih')||{}).value||'';
+    var topNet=parseFloat((document.getElementById('detDenemeNet')||{}).value||0);
+    var tytNet=parseFloat((document.getElementById('detDenemeTyt')||{}).value||0);
+    var aytNet=parseFloat((document.getElementById('detDenemeAyt')||{}).value||0);
+    if (!ad) { alert('Deneme adi zorunludur!'); return; }
+    var veri=_takipVeriOku();
+    if (!veri.ogrenciler||!veri.ogrenciler[_aktifDetayKey]) return;
+    if (!veri.ogrenciler[_aktifDetayKey].denemeler) veri.ogrenciler[_aktifDetayKey].denemeler={};
+    veri.ogrenciler[_aktifDetayKey].denemeler[Date.now().toString()]={ad:ad,tarih:tarih,topNet:topNet,tytNet:tytNet,aytNet:aytNet,zaman:Date.now()};
+    _takipVeriYaz(veri);
+    ['detDenemeAd','detDenemeTarih','detDenemeNet','detDenemeTyt','detDenemeAyt'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});
+    detVerileriYukle(_aktifDetayKey);
+    ogretmenOgrenciKartlariniYukle();
+    detAIAnalizOlustur(_aktifDetayKey);
+}
+
+function detPlanKaydet() {
+    if (!_aktifDetayKey) return;
+    var gun=(document.getElementById('detPlanGun')||{}).value||'Pazartesi';
+    var ders=(document.getElementById('detPlanDers')||{}).value||'';
+    var konu=(document.getElementById('detPlanKonu')||{}).value||'';
+    var sure=parseInt((document.getElementById('detPlanSure')||{}).value||0);
+    if (!ders) { alert('Ders zorunludur!'); return; }
+    var veri=_takipVeriOku();
+    if (!veri.ogrenciler||!veri.ogrenciler[_aktifDetayKey]) return;
+    if (!veri.ogrenciler[_aktifDetayKey].planlar) veri.ogrenciler[_aktifDetayKey].planlar={};
+    veri.ogrenciler[_aktifDetayKey].planlar[Date.now().toString()]={gun:gun,ders:ders,konu:konu,sure:sure,zaman:Date.now()};
+    _takipVeriYaz(veri);
+    ['detPlanDers','detPlanKonu','detPlanSure'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});
+    detVerileriYukle(_aktifDetayKey);
+    ogretmenOgrenciKartlariniYukle();
+}
+
+function detSoruSil(ogrKey, soruKey) {
+    if (!confirm('Bu soruyu sil?')) return;
+    var veri=_takipVeriOku();
+    if (veri.ogrenciler&&veri.ogrenciler[ogrKey]&&veri.ogrenciler[ogrKey].sorular) delete veri.ogrenciler[ogrKey].sorular[soruKey];
+    _takipVeriYaz(veri); detVerileriYukle(ogrKey); ogretmenOgrenciKartlariniYukle();
+}
+
+function detDenemeSil(ogrKey, denKey) {
+    if (!confirm('Bu denemeyi sil?')) return;
+    var veri=_takipVeriOku();
+    if (veri.ogrenciler&&veri.ogrenciler[ogrKey]&&veri.ogrenciler[ogrKey].denemeler) delete veri.ogrenciler[ogrKey].denemeler[denKey];
+    _takipVeriYaz(veri); detVerileriYukle(ogrKey); ogretmenOgrenciKartlariniYukle();
+}
+
+function detPlanSil(ogrKey, planKey) {
+    if (!confirm('Bu plani sil?')) return;
+    var veri=_takipVeriOku();
+    if (veri.ogrenciler&&veri.ogrenciler[ogrKey]&&veri.ogrenciler[ogrKey].planlar) delete veri.ogrenciler[ogrKey].planlar[planKey];
+    _takipVeriYaz(veri); detVerileriYukle(ogrKey); ogretmenOgrenciKartlariniYukle();
+}
+
+function detAIAnalizOlustur(key) {
+    var el = document.getElementById('detAIAnaliz');
+    if (!el) return;
+    var veri = _takipVeriOku();
+    var ogr = (veri.ogrenciler||{})[key] || {};
+    var soruArr = Object.values(ogr.sorular||{});
+    var denArr = Object.values(ogr.denemeler||{}).sort(function(a,b){return (b.zaman||0)-(a.zaman||0);});
+    var planArr = Object.values(ogr.planlar||{});
+    if (soruArr.length===0 && denArr.length===0) {
+        el.innerHTML = '<span style="color:var(--text-muted);font-style:italic;">Analiz icin soru veya deneme verisi girin.</span>';
+        return;
+    }
+    // Ders bazli net hesapla
+    var dersBazli = {};
+    soruArr.forEach(function(s){
+        var d=s.ders||'Diger';
+        if(!dersBazli[d]) dersBazli[d]={toplam:0,dogru:0,yanlis:0};
+        dersBazli[d].toplam+=s.toplam||0;
+        dersBazli[d].dogru+=s.dogru||0;
+        dersBazli[d].yanlis+=s.yanlis||0;
+    });
+    var enDusuk = null; var enYuksek = null;
+    Object.keys(dersBazli).forEach(function(d){
+        var oran = dersBazli[d].toplam>0 ? dersBazli[d].dogru/dersBazli[d].toplam : 0;
+        if (!enDusuk || oran < dersBazli[enDusuk].dogru/Math.max(dersBazli[enDusuk].toplam,1)) enDusuk=d;
+        if (!enYuksek || oran > dersBazli[enYuksek].dogru/Math.max(dersBazli[enYuksek].toplam,1)) enYuksek=d;
+    });
+    // Deneme trendi
+    var netTrend = '';
+    if (denArr.length >= 2) {
+        var fark = (denArr[0].topNet||0) - (denArr[1].topNet||0);
+        netTrend = fark > 0 ? '&#128200; Son denemede <strong style="color:var(--success);">+' + fark.toFixed(2) + ' net artis</strong>.'
+                 : fark < 0 ? '&#128201; Son denemede <strong style="color:var(--danger);">' + fark.toFixed(2) + ' net dusus</strong>.'
+                 : 'Son iki deneme neti esit.';
+    }
+    var html = '';
+    if (enDusuk && enDusuk!==enYuksek) {
+        html += '<div style="margin-bottom:0.4rem;">&#128279; <strong style="color:var(--danger);">' + enDusuk + '</strong> en dusuk basari orani. Bu derse odaklanmasi onerilir.</div>';
+        html += '<div style="margin-bottom:0.4rem;">&#9989; <strong style="color:var(--success);">' + enYuksek + '</strong> en guclu alan.</div>';
+    }
+    if (netTrend) html += '<div style="margin-bottom:0.4rem;">' + netTrend + '</div>';
+    var toplamPlanlananDk = planArr.reduce(function(s,p){return s+(p.sure||0);},0);
+    if (toplamPlanlananDk > 0) html += '<div style="margin-bottom:0.4rem;">&#9201; Haftalik toplam <strong style="color:#a855f7;">' + toplamPlanlananDk + ' dk</strong> calisma planlandi.</div>';
+    if (denArr.length > 0) html += '<div>&#127919; Son deneme net: <strong style="color:var(--info);">' + (denArr[0].topNet||0) + '</strong> (TYT:' + (denArr[0].tytNet||0) + ' / AYT:' + (denArr[0].aytNet||0) + ').</div>';
+    el.innerHTML = html || '<span style="color:var(--text-muted);">Yeterli veri yok.</span>';
+}
+
+// loadOgretmenPanel icinde ogretmenTakipTabBtn referansini temizle
+// (tab kaldirildi, fonksiyon hala cagrilabilir - guvenli fallback)
 
 </script>
 </body>
