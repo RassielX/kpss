@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+﻿﻿﻿<!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
@@ -316,7 +316,43 @@
             .header-logo { position: static; transform: none; margin-bottom: 10px; }
             .header-actions { position: static; transform: none; justify-content: center; margin-top: 10px; width: 100%; }
         }
-    </style>
+    
+        /* === KRONOS YATAY RAPOR LAYOUT === */
+        #kronosReportContent .k-metrics { display:grid; grid-template-columns:repeat(4,1fr); gap:0.4rem; margin-bottom:0.4rem; }
+        #kronosReportContent .k-charts  { display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.4rem; margin-bottom:0.4rem; }
+        #kronosReportContent .k-bottom  { display:grid; grid-template-columns:1fr 1fr; gap:0.4rem; }
+        #kronosReportContent .k-card    { background:rgba(0,0,0,0.35); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:0.5rem 0.7rem; }
+        #kronosReportContent .k-metric-val { font-size:1.5rem; font-weight:800; line-height:1; }
+        #kronosReportContent .k-metric-lbl { font-size:0.65rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:.5px; margin-top:3px; font-family:Poppins,sans-serif; }
+        #kronosReportContent .k-metric-sub { font-size:0.68rem; color:var(--text-muted); margin-top:2px; }
+        /* === MOBIL GENEL === */
+        @media (max-width:900px){
+            #kronosReportContent .k-metrics { grid-template-columns:repeat(2,1fr); }
+            #kronosReportContent .k-charts  { grid-template-columns:1fr; }
+            #kronosReportContent .k-bottom  { grid-template-columns:1fr; }
+        }
+        @media (max-width:768px){
+            .container { width:100vw!important; height:100vh!important; border-radius:0!important; }
+            .tabs { flex-wrap:wrap; gap:.2rem; padding:.4rem; }
+            .tab-btn { font-size:.68rem!important; padding:.35rem .5rem!important; }
+            .top-row { flex-direction:column!important; gap:.75rem!important; }
+            .middle-grid { grid-template-columns:1fr!important; }
+            .countdown-box { min-width:unset!important; }
+            .header-title { flex-wrap:wrap; gap:.5rem; }
+            .header-title span { font-size:.8rem!important; }
+            .analysis-card { padding:.75rem!important; }
+            .modal-content { width:99vw!important; max-height:96vh!important; }
+            #ogretmenOgrenciModal .modal-content,
+            #jitsiModal .modal-content { width:100vw!important; height:100vh!important; max-height:100vh!important; border-radius:0!important; }
+            #jitsiFrame { height:calc(100vh - 60px)!important; }
+            .koclukKartlari { grid-template-columns:1fr!important; }
+        }
+        @media (max-width:480px){
+            .tab-btn { font-size:.6rem!important; padding:.3rem .35rem!important; }
+            .cd-val { font-size:1.8rem!important; }
+            .ai-assistant-panel { padding:.75rem!important; }
+        }
+        </style>
 </head>
 <body>
 
@@ -450,14 +486,19 @@
     </div>
 </div>
 
-<div class="modal-overlay" id="kronosModal">
-    <div class="modal-content">
-        <button class="modal-close" onclick="closeKronos()">×</button>
-        <div class="kronos-header" id="kronosRealHeader">
-            <div class="ai-icon" style="font-size: 3.2rem; color: var(--accent);">👁️‍🗨️</div>
-            <div class="kronos-title">KRONOS<br><span style="font-size:0.9rem; color:var(--text-muted); font-weight:400; font-family:'Roboto', sans-serif;">Strateji ve Analiz Koçu</span></div>
+<div class="modal-overlay" id="kronosModal" style="padding:0;align-items:stretch;">
+    <div class="modal-content" style="width:100vw;max-width:100vw;height:100vh;max-height:100vh;border-radius:0;overflow:hidden;display:flex;flex-direction:column;padding:0;background:rgba(8,8,14,0.97);">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:0.4rem 0.875rem;border-bottom:1px solid rgba(255,255,255,0.08);flex-shrink:0;" id="kronosRealHeader">
+            <div style="display:flex;align-items:center;gap:0.75rem;">
+                <span style="font-size:1.8rem;">&#128200;</span>
+                <div>
+                    <div style="font-weight:800;font-size:1.1rem;color:#a78bfa;font-family:Poppins,sans-serif;letter-spacing:1px;">KRONOS ANALIZ RAPORU</div>
+                    <div style="font-size:0.72rem;color:var(--text-muted);">Strateji ve Performans Ozeti</div>
+                </div>
+            </div>
+            <button onclick="closeKronos()" style="background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.35);color:var(--danger);padding:0.4rem 0.875rem;border-radius:8px;cursor:pointer;font-size:0.82rem;font-family:Poppins,sans-serif;font-weight:600;">&#10005; Kapat</button>
         </div>
-        <div id="kronosReportContent"></div>
+        <div id="kronosReportContent" style="flex:1;overflow-y:auto;overflow-x:hidden;padding:0.5rem 0.875rem;"></div>
     </div>
 </div>
 
@@ -2165,44 +2206,47 @@
                     : 'Program neredeyse tamam. Son rötuşları yapın ve deneme sınavlarını artırın.';
         if (appDenemeVerileri.length < 3) tavsiye += ' Deneme sınavı sayınız az — en az haftada 1 deneme hedefleyin.';
         if (basariOrani < 50 && soruToplam > 20) tavsiye += ' Soru çözüm başarı oranınız düşük — yanlış konuları derinlemesine çalışın.';
-        var html = '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-bottom:1.5rem;">'
-            + '<div style="background:rgba(255,107,0,0.1);border:1px solid rgba(255,107,0,0.3);border-radius:14px;padding:1.25rem;text-align:center;">'
-            + '<div style="font-size:2rem;font-weight:800;color:var(--accent);line-height:1;">' + yuzde + '%</div>'
-            + '<div style="font-size:0.72rem;color:var(--text-muted);margin-top:6px;font-family:Poppins,sans-serif;text-transform:uppercase;letter-spacing:0.5px;">Program Tamamlama</div>'
-            + '<div style="font-size:0.7rem;color:var(--text-muted);margin-top:2px;">' + tamamlanan + '/' + toplamGorev + ' konu</div></div>'
-            + '<div style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:14px;padding:1.25rem;text-align:center;">'
-            + '<div style="font-size:2rem;font-weight:800;color:var(--success);line-height:1;">' + dOrt + '</div>'
-            + '<div style="font-size:0.72rem;color:var(--text-muted);margin-top:6px;font-family:Poppins,sans-serif;text-transform:uppercase;letter-spacing:0.5px;">Ort. Deneme Neti</div>'
-            + '<div style="font-size:0.7rem;color:var(--text-muted);margin-top:2px;">En yüksek: ' + dMax + '</div></div>'
-            + '<div style="background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.3);border-radius:14px;padding:1.25rem;text-align:center;">'
-            + '<div style="font-size:2rem;font-weight:800;color:var(--info);line-height:1;">' + soruToplam + '</div>'
-            + '<div style="font-size:0.72rem;color:var(--text-muted);margin-top:6px;font-family:Poppins,sans-serif;text-transform:uppercase;letter-spacing:0.5px;">Toplam Soru</div>'
-            + '<div style="font-size:0.7rem;color:var(--success);margin-top:2px;">%' + basariOrani + ' başarı</div></div>'
-            + '<div style="background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.3);border-radius:14px;padding:1.25rem;text-align:center;">'
-            + '<div style="font-size:2rem;font-weight:800;color:var(--pomo-color);line-height:1;">' + pomoSure + '</div>'
-            + '<div style="font-size:0.72rem;color:var(--text-muted);margin-top:6px;font-family:Poppins,sans-serif;text-transform:uppercase;letter-spacing:0.5px;">Çalışma (dk)</div>'
-            + '<div style="font-size:0.7rem;color:var(--text-muted);margin-top:2px;">' + pomoSayi + ' Pomodoro</div></div>'
+        var aciklamaMetni = yuzde < 30 ? 'Programa yeni basladiniz. Ilk 2 haftada temel konulara odaklanin.' : yuzde < 60 ? 'Iyi ilerliyorsunuz. Yapilmayan konulari geciktirmeden tamamlayin.' : yuzde < 85 ? 'Harika gidiyor! Zayif konularinizi tekrar edin.' : 'Program neredeyse tamam. Son retuslarinizi yapin ve deneme sinavlarini artirin.';
+        if (appDenemeVerileri.length < 3) aciklamaMetni += ' Deneme sinavi sayiniz az - en az haftada 1 deneme hedefleyin.';
+        if (basariOrani < 50 && soruToplam > 20) aciklamaMetni += ' Soru cozum basari oraniniz dusuk - yanlis konulari derinlemesine calisin.';
+        var html = '<div class="k-metrics">'
+            + '<div class="k-card" style="text-align:center;border-top:3px solid var(--accent);">'
+            + '<div class="k-metric-val" style="color:var(--accent)">' + yuzde + '%</div>'
+            + '<div class="k-metric-lbl">Program Tamamlama</div>'
+            + '<div class="k-metric-sub">' + tamamlanan + '/' + toplamGorev + ' konu</div></div>'
+            + '<div class="k-card" style="text-align:center;border-top:3px solid var(--success);">'
+            + '<div class="k-metric-val" style="color:var(--success)">' + dOrt + '</div>'
+            + '<div class="k-metric-lbl">Ort. Deneme Neti</div>'
+            + '<div class="k-metric-sub">En yuksek: ' + dMax + '</div></div>'
+            + '<div class="k-card" style="text-align:center;border-top:3px solid var(--info);">'
+            + '<div class="k-metric-val" style="color:var(--info)">' + soruToplam + '</div>'
+            + '<div class="k-metric-lbl">Toplam Soru</div>'
+            + '<div class="k-metric-sub">%' + basariOrani + ' basari</div></div>'
+            + '<div class="k-card" style="text-align:center;border-top:3px solid var(--pomo-color);">'
+            + '<div class="k-metric-val" style="color:var(--pomo-color)">' + pomoSure + '</div>'
+            + '<div class="k-metric-lbl">Calisma (dk)</div>'
+            + '<div class="k-metric-sub">' + pomoSayi + ' Pomodoro</div></div>'
             + '</div>'
-            + '<div class="kronos-report-item"><h4>📊 ' + sinav + ' Performans Özeti</h4>'
-            + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem 1.5rem;font-size:0.87rem;color:var(--text-muted);line-height:2.2;">'
-            + '<div>✅ Tamamlanan</div><div style="color:var(--success);font-weight:700;">' + tamamlanan + ' konu</div>'
-            + '<div>❌ Yapılamayan</div><div style="color:var(--danger);font-weight:700;">' + yapilamadi + ' konu</div>'
-            + '<div>📝 Deneme Sayısı</div><div style="color:var(--info);font-weight:700;">' + appDenemeVerileri.length + '</div>'
-            + '<div>🏆 En İyi Ders</div><div style="color:var(--success);font-weight:700;">' + enIyiDers + '</div>'
-            + '<div>⚠️ Geliştirilecek</div><div style="color:var(--warning);font-weight:700;">' + enKotuDers + '</div>'
+            + '<div class="k-charts">'
+            + '<div class="k-card"><div style="font-weight:700;font-size:0.85rem;color:#a78bfa;margin-bottom:0.5rem;">&#128200; Deneme Netleri (Son 10)</div><canvas id="kronosDenemChart" style="max-height:145px;width:100%;"></canvas></div>'
+            + '<div class="k-card"><div style="font-weight:700;font-size:0.85rem;color:var(--accent);margin-bottom:0.5rem;">&#127919; Ders Bazli Basari (%)</div><canvas id="kronosDersChart" style="max-height:145px;width:100%;"></canvas></div>'
+            + '<div class="k-card"><div style="font-weight:700;font-size:0.85rem;color:var(--pomo-color);margin-bottom:0.5rem;">&#128336; Haftalik Pomodoro</div><canvas id="kronosPomoDagChart" style="max-height:145px;width:100%;"></canvas></div>'
+            + '</div>'
+            + '<div class="k-bottom">'
+            + '<div class="k-card" style="border-top:3px solid var(--success);">'
+            + '<div style="font-weight:700;font-size:0.85rem;color:var(--success);margin-bottom:0.75rem;">&#127919; Performans Ozeti</div>'
+            + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:0.15rem 0.75rem;font-size:0.78rem;color:var(--text-muted);line-height:1.85;">'
+            + '<div>Tamamlanan:</div><div style="color:var(--success);font-weight:700;">' + tamamlanan + ' konu</div>'
+            + '<div>Yapilamayan:</div><div style="color:var(--danger);font-weight:700;">' + yapilamadi + ' konu</div>'
+            + '<div>Deneme Sayisi:</div><div style="color:var(--info);font-weight:700;">' + appDenemeVerileri.length + '</div>'
+            + '<div>En Iyi Ders:</div><div style="color:var(--success);font-weight:700;">' + enIyiDers + '</div>'
+            + '<div>Gelistirilecek:</div><div style="color:var(--warning);font-weight:700;">' + enKotuDers + '</div>'
             + '</div></div>'
-            + '<div class="kronos-report-item"><h4>🧠 KRONOS Stratejik Tavsiye</h4>'
-            + '<p style="font-size:0.87rem;color:var(--text-muted);line-height:1.9;">' + tavsiye + '</p>'
-            + '<p style="font-size:0.72rem;color:rgba(255,255,255,0.25);margin-top:0.75rem;text-align:right;">Rapor: '
-            + now.toLocaleDateString('tr-TR') + ' ' + now.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'}) + '</p></div>';
-            html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.5rem;">'
-                + '<div class="kronos-report-item"><h4>&#128200; Deneme Netleri (Son 10)</h4>'
-                + '<canvas id="kronosDenemChart" height="180"></canvas></div>'
-                + '<div class="kronos-report-item"><h4>&#127919; Ders Bazli Basari (%)</h4>'
-                + '<canvas id="kronosDersChart" height="180"></canvas></div>'
-                + '</div>'
-                + '<div class="kronos-report-item" style="margin-top:1rem;"><h4>&#128336; Haftalik Calisma Dagiliimi (Pomodoro)</h4>'
-                + '<canvas id="kronosPomoDagChart" height="120"></canvas></div>';
+            + '<div class="k-card" style="border-top:3px solid #a78bfa;">'
+            + '<div style="font-weight:700;font-size:0.85rem;color:#a78bfa;margin-bottom:0.75rem;">&#128161; KRONOS Stratejik Tavsiye</div>'
+            + '<p style="font-size:0.8rem;color:var(--text-muted);line-height:1.55;">' + aciklamaMetni + '</p>'
+            + '<p style="font-size:0.68rem;color:rgba(255,255,255,0.2);margin-top:0.75rem;text-align:right;">Rapor: ' + now.toLocaleDateString('tr-TR') + ' ' + now.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'}) + '</p>'
+            + '</div></div>';
         document.getElementById('kronosRealHeader').style.display = 'flex';
         document.getElementById('kronosReportContent').innerHTML = html;
         // Chart.js grafikleri render et
@@ -2474,7 +2518,7 @@ function ogretmenDashboardOlustur(profil) {
         + '<h3 style="color:var(--accent);margin:0;">&#127891; Ogrenci Takip Sistemi</h3>'
         + '<div style="display:flex;gap:0.5rem;">'
         + '<button onclick="ogretmenOgrenciPanelAc()" style="background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.4);color:var(--accent);padding:0.4rem 0.875rem;border-radius:8px;cursor:pointer;font-size:0.78rem;font-family:Poppins,sans-serif;font-weight:600;">Ogrenci Ekle / Duzenle</button>'
-        + '<button onclick="jitsiAc(\'kronos-ogretmen-\' + (currentUser ? currentUser.uid.substring(0,6) : \'xxx\'), \'Ogretmen Toplantisi\')" style="background:linear-gradient(135deg,#7c3aed,#a78bfa);border:none;color:#fff;padding:0.4rem 0.875rem;border-radius:8px;cursor:pointer;font-size:0.78rem;font-family:Poppins,sans-serif;font-weight:600;">&#127909; Gorusme Baslat</button>'
+        + '<button onclick="ogretmenGorusmeBaslat()" style="background:linear-gradient(135deg,#7c3aed,#a78bfa);border:none;color:#fff;padding:0.4rem 0.875rem;border-radius:8px;cursor:pointer;font-size:0.78rem;font-family:Poppins,sans-serif;font-weight:600;">&#127909; Gorusme Baslat</button>'
         + '</div></div>'
         + '<p style="font-size:0.8rem;color:var(--text-muted);">Ogrenci ekleyip soru cozum ve deneme verilerini manuel girin.</p>'
         + '</div>'
@@ -2798,8 +2842,10 @@ function ogrenciTalepleriniYukle() {
         }
         div.innerHTML = talepler.map(function(t) {
             var renk = t.durum === 'Kabul Edildi' ? 'var(--success)' : t.durum === 'Reddedildi' ? 'var(--danger)' : 'var(--warning)';
-            var linkHtml = (t.durum === 'Kabul Edildi' && t.link)
-            ? '<button onclick="jitsiAc(t.oda, \\'Kocluk Gorusmesi\\')" style="display:block;margin-top:0.4rem;background:linear-gradient(135deg,#7c3aed,#a78bfa);border:none;color:#fff;padding:0.35rem 0.875rem;border-radius:8px;font-size:0.78rem;font-weight:600;cursor:pointer;font-family:Poppins,sans-serif;">&#127909; Gorusmeye Katil</button>' : '';
+            var tOda = t.oda || '';
+            var tLink = t.link || '';
+            var linkHtml = (t.durum === 'Kabul Edildi' && tLink)
+            ? ('<button class="kocluk-join" data-oda="' + tOda + '" data-link="' + tLink + '" style="display:inline-block;margin-top:0.4rem;background:linear-gradient(135deg,#7c3aed,#a78bfa);border:none;color:#fff;padding:0.35rem 0.875rem;border-radius:8px;font-size:0.78rem;font-weight:600;cursor:pointer;font-family:Poppins,sans-serif;">&#127909; Gorusmeye Katil</button>') : '';
             return '<div style="background:rgba(0,0,0,0.3);border:1px solid var(--border);border-radius:8px;padding:0.6rem 0.875rem;display:flex;justify-content:space-between;align-items:flex-start;gap:0.5rem;">'
                 + '<div style="font-size:0.82rem;flex:1;"><strong style="color:var(--accent);">' + (t.ogretmenIsim||'Ogretmen') + '</strong> — ' + t.konu + '<br>'
                 + '<span style="color:var(--text-muted);">' + t.tarih + ' ' + t.saat + ' (' + t.sure + ' dk)</span>' + linkHtml + '</div>'
@@ -2873,14 +2919,14 @@ function ogretmenOgrenciListeyiYukle() {
                 + (o.isim || o._key) + '</button>';
         }).join('');
         if (aktifOgretmenOgrenci) {
-            document.getElementById('ogretmenOgrenciDetay') && (document.getElementById('ogretmenOgrenciDetay').style.display = 'block');
+            document.getElementById('aktifOgrenciPanel') && (document.getElementById('aktifOgrenciPanel').style.display = 'block');
         }
     });
 }
 
 function ogretmenOgrenciEkle() {
     if (!currentUser) return;
-    var isimEl = document.getElementById('yeniOgrenciIsim');
+    var isimEl = document.getElementById('yeniOgrenciAd');
     var sinav = (document.getElementById('yeniOgrenciSinav') || {}).value || 'YKS';
     var isim = (isimEl || {}).value || '';
     if (!isim.trim()) { alert('Ogrenci adi zorunludur!'); return; }
@@ -2894,8 +2940,8 @@ function ogretmenOgrenciEkle() {
 
 function ogretmenOgrenciSec(key, isim) {
     aktifOgretmenOgrenci = key;
-    var detay = document.getElementById('ogretmenOgrenciDetay');
-    var baslik = document.getElementById('aktifOgrenciBaslik');
+    var detay = document.getElementById('aktifOgrenciPanel');
+    var baslik = document.getElementById('aktifOgrenciIsim');
     if (baslik) baslik.innerText = isim + ' — Takip Paneli';
     if (detay) detay.style.display = 'block';
     goruntuleMod('soru');
@@ -2904,10 +2950,10 @@ function ogretmenOgrenciSec(key, isim) {
 }
 
 function goruntuleMod(mod) {
-    var soruBlok = document.getElementById('soruBlok');
-    var denemeBlok = document.getElementById('denemeBlok');
-    var tabSoru = document.getElementById('tabSoru');
-    var tabDeneme = document.getElementById('tabDeneme');
+    var soruBlok = document.getElementById('ogrSoruPanel');
+    var denemeBlok = document.getElementById('ogrDenemePanel');
+    var tabSoru = document.getElementById('modSoru');
+    var tabDeneme = document.getElementById('modDeneme');
     if (!soruBlok || !denemeBlok) return;
     if (mod === 'soru') {
         soruBlok.style.display = 'block';
@@ -2925,8 +2971,8 @@ function goruntuleMod(mod) {
 
 function ogretmenOgrenciVerileriniGoster(ogrKey) {
     if (!currentUser || !ogrKey) return;
-    var soruListEl = document.getElementById('soruListesi');
-    var denemeListEl = document.getElementById('denemeListesi');
+    var soruListEl = document.getElementById('ogrSoruListesi');
+    var denemeListEl = document.getElementById('ogrDenemeListesi');
     db.ref('ogretmenler/' + currentUser.uid + '/ogrenciler/' + ogrKey + '/sorular').once('value').then(function(snap) {
         if (!soruListEl) return;
         var kayitlar = [];
@@ -2971,15 +3017,15 @@ function ogretmenOgrenciVerileriniGoster(ogrKey) {
 
 function ogretmenSoruKaydet() {
     if (!currentUser || !aktifOgretmenOgrenci) { alert('Once bir ogrenci secin!'); return; }
-    var ders = (document.getElementById('soruDers') || {}).value || '';
-    var konu = (document.getElementById('soruKonu') || {}).value || '';
-    var soru = parseInt((document.getElementById('soruAdet') || {}).value) || 0;
-    var dogru = parseInt((document.getElementById('soruDogru') || {}).value) || 0;
-    var yanlis = parseInt((document.getElementById('soruYanlis') || {}).value) || 0;
+    var ders = (document.getElementById('ogrSoruDers') || {}).value || '';
+    var konu = (document.getElementById('ogrSoruKonu') || {}).value || '';
+    var soru = parseInt((document.getElementById('ogrSoruToplam') || {}).value) || 0;
+    var dogru = parseInt((document.getElementById('ogrSoruDogru') || {}).value) || 0;
+    var yanlis = parseInt((document.getElementById('ogrSoruYanlis') || {}).value) || 0;
     if (!ders || soru === 0) { alert('Ders ve soru sayisi zorunludur!'); return; }
     var veri = { ders: ders, konu: konu, soru: soru, dogru: dogru, yanlis: yanlis, tarih: Date.now() };
     db.ref('ogretmenler/' + currentUser.uid + '/ogrenciler/' + aktifOgretmenOgrenci + '/sorular').push(veri).then(function() {
-        ['soruDers','soruKonu','soruAdet','soruDogru','soruYanlis'].forEach(function(id) {
+        ['ogrSoruDers','ogrSoruKonu','ogrSoruToplam','ogrSoruDogru','ogrSoruYanlis'].forEach(function(id) {
             var el = document.getElementById(id); if (el) el.value = '';
         });
         ogretmenOgrenciVerileriniGoster(aktifOgretmenOgrenci);
@@ -3020,23 +3066,55 @@ function davetKoduileOgretmenEkle() {
     var kodEl = document.getElementById('davetKoduGiris');
     var kod = kodEl ? kodEl.value.trim().toUpperCase() : '';
     if (!kod) { alert('Lutfen davet kodu girin!'); return; }
+    // Once davetKodlari/{kod} dene; basarisiz olursa ogretmenler.orderByChild ile ara
+    var _araFn = function(k, el) {
+        db.ref('ogretmenler').orderByChild('davetKodu').equalTo(k).once('value').then(function(s2) {
+            if (!s2.exists()) { alert('Gecersiz davet kodu! Ogretmeninizden yeni kod isteyin.'); return; }
+            s2.forEach(function(ch) {
+                var o = ch.val(); o._uid = ch.key;
+                if (!ogretmenlerListesi.some(function(h){ return h._uid === ch.key; })) ogretmenlerListesi.push(o);
+                koclukKartlariniFiltreleveRender('', '');
+                if (el) el.value = '';
+                alert('Ogretmen listelendi: ' + (o.isim || ch.key));
+            });
+        }).catch(function(e2){ alert('Baglanti hatasi: ' + e2.message); });
+    };
     db.ref('davetKodlari/' + kod).once('value').then(function(snap) {
-        if (!snap.exists()) { alert('Gecersiz davet kodu!'); return; }
+        if (!snap.exists()) { _araFn(kod, kodEl); return; }
         var ogretmenUid = snap.val().uid;
         db.ref('ogretmenler/' + ogretmenUid).once('value').then(function(oSnap) {
             var ogretmen = oSnap.val();
-            if (!ogretmen) { alert('Ogretmen bulunamadi!'); return; }
-            var kartlar = document.getElementById('koclukKartlari');
-            if (kartlar) {
+            if (!ogretmen) { _araFn(kod, kodEl); return; }
+            if (!ogretmenlerListesi.some(function(h){ return h._uid === ogretmenUid; })) {
                 ogretmen._uid = ogretmenUid;
                 ogretmenlerListesi.push(ogretmen);
-                koclukKartlariniFiltreleveRender('', '');
             }
+            koclukKartlariniFiltreleveRender('', '');
             if (kodEl) kodEl.value = '';
             alert('Ogretmen listelendi: ' + (ogretmen.isim || ogretmenUid));
-        });
-    });
+        }).catch(function(){ _araFn(kod, kodEl); });
+    }).catch(function(){ _araFn(kod, kodEl); });
 }
+
+
+function ogretmenGorusmeBaslat() {
+    var uid = currentUser ? currentUser.uid.substring(0,6) : 'xxx';
+    var odaAdi = 'kronos-ogretmen-' + uid;
+    jitsiAc(odaAdi, 'Ogretmen Toplantisi');
+}
+
+// kocluk-join butonlari icin event delegation
+document.addEventListener('click', function(e) {
+    var btn = e.target.closest('.kocluk-join');
+    if (!btn) return;
+    var oda = btn.getAttribute('data-oda');
+    var link = btn.getAttribute('data-link');
+    if (oda && oda.trim()) {
+        jitsiAc(oda, 'Kocluk Gorusmesi');
+    } else if (link && link.trim()) {
+        window.open(link, '_blank');
+    }
+});
 
 </script>
 </body>
