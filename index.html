@@ -256,6 +256,31 @@
             text-align: center; letter-spacing: 1px; z-index: 10; font-family: 'Poppins', sans-serif;
         }
 
+        /* ─── KOÇLUK MERKEZİ KARTI ─── */
+        .kocluk-kart {
+            background: var(--bg-surface-grad); border: 1px solid var(--border); border-radius: 16px;
+            padding: 1.25rem; display: flex; flex-direction: column; gap: 0.75rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        }
+        .kocluk-kart:hover { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(0,0,0,0.6); border-color: rgba(167,139,250,0.3); }
+        .kocluk-kart-header { display: flex; align-items: center; gap: 0.875rem; }
+        .kocluk-avatar { width: 52px; height: 52px; border-radius: 50%; background: linear-gradient(135deg, #7c3aed, #a78bfa); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0; border: 2px solid rgba(167,139,250,0.4); }
+        .kocluk-isim { font-size: 1rem; font-weight: 600; color: var(--text-main); font-family: 'Poppins', sans-serif; }
+        .kocluk-brans { font-size: 0.78rem; color: #a78bfa; font-weight: 500; }
+        .musait-badge { display: inline-block; padding: 0.25rem 0.65rem; border-radius: 20px; font-size: 0.7rem; font-weight: 700; font-family: 'Poppins', sans-serif; }
+        .musait-badge.musait { background: rgba(16,185,129,0.15); color: var(--success); border: 1px solid rgba(16,185,129,0.35); }
+        .musait-badge.mesgul { background: rgba(239,68,68,0.12); color: var(--danger); border: 1px solid rgba(239,68,68,0.3); }
+        .kocluk-istatistik { display: flex; gap: 1rem; font-size: 0.78rem; color: var(--text-muted); border-top: 1px dashed var(--border); padding-top: 0.75rem; }
+        .kocluk-istatistik span { color: var(--text-main); font-weight: 600; }
+        .kocluk-talep-btn { padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer; border: none; font-family: 'Poppins', sans-serif; transition: all 0.3s ease; }
+        .kocluk-talep-btn.aktif { background: linear-gradient(135deg, #7c3aed, #a78bfa); color: #fff; box-shadow: 0 4px 12px rgba(124,58,237,0.35); }
+        .kocluk-talep-btn.aktif:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(124,58,237,0.5); }
+        .kocluk-talep-btn.pasif { background: rgba(255,255,255,0.04); color: var(--text-muted); border: 1px solid var(--border); cursor: not-allowed; }
+
+        /* ─── PROGRAM DURUM BADGE'LERİ ─── */
+        .plan-empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; gap: 2rem; padding: 2rem; text-align: center; }
+
         @media (max-width: 1400px) {
             .middle-grid { grid-template-columns: repeat(3, 1fr); } 
             .top-row { flex-wrap: wrap; }
@@ -357,7 +382,7 @@
             <input type="number" id="setupHours" placeholder="Örn: 5" min="1" max="15" value="5">
         </div>
         
-        <button class="btn btn-primary" style="width: 100%; height: 44px;" onclick="saveSetup()">PLANI OLUŞTUR VE BAŞLA</button>
+        <button class="btn btn-primary" style="width: 100%; height: 44px;" onclick="saveSetup()">KAYDET VE BAŞLA</button>
     </div>
 </div>
 
@@ -392,6 +417,7 @@
         <button class="tab-btn" onclick="switchTab('soru-tab')">Soru Çözümü</button>
         <button class="tab-btn" onclick="switchTab('deneme-tab')">Deneme Sınavları</button>
         <button class="tab-btn" onclick="switchTab('pomo-tab')" style="color:var(--pomo-color); font-weight: 600;">Pomodoro Takibi</button>
+        <button class="tab-btn" onclick="switchTab('kocluk-tab')" style="color:#a78bfa; font-weight: 600;">🎓 Koçluk Merkezi</button>
     </div>
 
     <div id="ozet-tab" class="tab-content active">
@@ -496,16 +522,72 @@
     </div>
 
     <div id="konu-tab" class="tab-content">
-        <div class="filter-bar" style="margin-bottom:1rem; padding: 0.8rem 1rem;">
-            <label>Hafta Seçimi:</label>
-            <select id="weekSelect" onchange="haftayiGoster()"></select>
-            <span style="margin-left: auto; color:var(--text-muted); font-size:0.85rem; font-style:italic;" id="aiPlanInfo">Günlük hedefinize göre planlandı.</span>
+        <!-- PROGRAM BOŞ DURUMU -->
+        <div id="programBosEkrani" style="display:flex; flex-direction:column; align-items:center; justify-content:center; flex:1; gap:2rem; padding: 2rem;">
+            <div style="text-align:center;">
+                <div style="font-size:4rem; margin-bottom:1rem;">📋</div>
+                <h2 style="color:var(--text-main); font-family:'Poppins',sans-serif; font-size:1.4rem; margin-bottom:0.5rem;">Çalışma Programınız Henüz Oluşturulmadı</h2>
+                <p style="color:var(--text-muted); font-size:0.9rem; max-width:500px; line-height:1.6;">Yapay zeka destekli otomatik plan oluşturabilir veya kendiniz manuel olarak konu ekleyebilirsiniz.</p>
+            </div>
+            <div style="display:flex; gap:1rem; flex-wrap:wrap; justify-content:center;">
+                <button class="btn btn-primary" style="gap:0.5rem; font-size:0.9rem; padding:0.9rem 1.8rem;" onclick="aiPlanOlustur()">
+                    🤖 Yapay Zeka ile Oluştur
+                </button>
+                <button class="btn btn-outline" style="font-size:0.9rem; padding:0.9rem 1.8rem;" onclick="manuelPlanAc()">
+                    ✏️ Manuel Konu Ekle
+                </button>
+            </div>
         </div>
-        <div class="table-responsive">
-            <table>
-                <thead id="konuTableHead"></thead>
-                <tbody id="konuTableBody"></tbody>
-            </table>
+
+        <!-- DOLU PROGRAM GÖRÜNÜMÜ -->
+        <div id="programDoluEkrani" style="display:none; flex-direction:column; flex:1; min-height:0;">
+            <div class="filter-bar" style="margin-bottom:1rem; padding:0.8rem 1rem; flex-wrap:wrap; gap:0.5rem;">
+                <label>Hafta:</label>
+                <select id="weekSelect" onchange="haftayiGoster()"></select>
+                <button class="btn" style="font-size:0.75rem; padding:0.4rem 0.9rem; background:rgba(167,139,250,0.1); border:1px solid rgba(167,139,250,0.4); color:#a78bfa;" onclick="aiPlanOlustur()">🤖 Planı Yenile (AI)</button>
+                <button class="btn" style="font-size:0.75rem; padding:0.4rem 0.9rem; background:rgba(255,107,0,0.08); border:1px solid rgba(255,107,0,0.3); color:var(--accent);" onclick="manuelPlanAc()">✏️ Konu Ekle</button>
+                <button class="btn" style="font-size:0.75rem; padding:0.4rem 0.9rem; background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.3); color:var(--danger);" onclick="programiSifirla()">🗑️ Programı Sıfırla</button>
+                <span style="margin-left:auto; color:var(--text-muted); font-size:0.8rem; font-style:italic;" id="aiPlanInfo"></span>
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <thead id="konuTableHead"></thead>
+                    <tbody id="konuTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- MANUEL KONU EKLEME MODAL -->
+    <div class="modal-overlay" id="manuelPlanModal">
+        <div class="modal-content" style="max-width:560px; padding:2rem;">
+            <button class="modal-close" onclick="document.getElementById('manuelPlanModal').classList.remove('active')">×</button>
+            <h3 style="color:var(--accent); font-family:'Poppins',sans-serif; margin-bottom:1.5rem; font-size:1.2rem;">✏️ Manuel Konu / Görev Ekle</h3>
+            <div style="display:flex; flex-direction:column; gap:1rem;">
+                <div class="input-group">
+                    <label>Ders / Alan</label>
+                    <input type="text" id="manuelDers" placeholder="Örn: Matematik, Türkçe, Fizik..." autocomplete="off">
+                </div>
+                <div class="input-group">
+                    <label>Konu Adı</label>
+                    <input type="text" id="manuelKonu" placeholder="Örn: Türevler, Paragraf, Elektrik..." autocomplete="off">
+                </div>
+                <div style="display:flex; gap:1rem;">
+                    <div class="input-group">
+                        <label>Hafta</label>
+                        <input type="number" id="manuelHafta" placeholder="1" min="1" max="52" value="1">
+                    </div>
+                    <div class="input-group">
+                        <label>Gün (1-7)</label>
+                        <input type="number" id="manuelGun" placeholder="1" min="1" max="7" value="1">
+                    </div>
+                </div>
+                <button class="btn btn-primary" style="width:100%;" onclick="manuelKonuKaydet()">Programa Ekle</button>
+            </div>
+            <div style="margin-top:1.5rem; border-top:1px dashed var(--border); padding-top:1rem;">
+                <h4 style="color:var(--text-muted); font-size:0.85rem; margin-bottom:0.75rem;">📌 Mevcut Manuel Konular</h4>
+                <div id="manuelKonuListesi" style="max-height:200px; overflow-y:auto; display:flex; flex-direction:column; gap:0.5rem;"></div>
+            </div>
         </div>
     </div>
 
@@ -607,6 +689,105 @@
                 </thead>
                 <tbody id="pomodoroListesi"></tbody>
             </table>
+        </div>
+    </div>
+
+    <!-- KOÇLUK MERKEZİ TAB -->
+    <div id="kocluk-tab" class="tab-content">
+        <div style="display:flex; flex-direction:column; flex:1; min-height:0; gap:1rem;">
+            <!-- Üst bilgi -->
+            <div style="background:linear-gradient(135deg,rgba(167,139,250,0.12),rgba(109,40,217,0.08)); border:1px solid rgba(167,139,250,0.25); border-radius:14px; padding:1.25rem 1.5rem; flex-shrink:0; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;">
+                <div style="display:flex; align-items:center; gap:1rem;">
+                    <div style="font-size:2.5rem;">🎓</div>
+                    <div>
+                        <h3 style="color:#a78bfa; font-family:'Poppins',sans-serif; font-size:1.1rem; margin-bottom:0.2rem;">KOÇLUK MERKEZİ</h3>
+                        <p style="color:var(--text-muted); font-size:0.8rem;">Müsait öğretmenlerden biletli ders talebi oluşturun. Onay sonrası otomatik görüşme linki oluşturulur.</p>
+                    </div>
+                </div>
+                <button class="btn" style="background:rgba(167,139,250,0.15); border:1px solid rgba(167,139,250,0.4); color:#a78bfa; font-size:0.85rem; padding:0.6rem 1.2rem;" onclick="koclukTalepGonder()">
+                    📩 Ders Talebi Gönder
+                </button>
+            </div>
+
+            <!-- Filtre -->
+            <div style="display:flex; gap:1rem; flex-shrink:0; flex-wrap:wrap; align-items:center;">
+                <select id="koclukBransFilter" onchange="koclukListeyiFiltrele()" style="padding:0.5rem 1rem; font-size:0.85rem; min-width:180px;">
+                    <option value="">Tüm Branşlar</option>
+                    <option value="Matematik">Matematik</option>
+                    <option value="Türkçe">Türkçe / Edebiyat</option>
+                    <option value="Fizik">Fizik</option>
+                    <option value="Kimya">Kimya</option>
+                    <option value="Biyoloji">Biyoloji</option>
+                    <option value="Tarih">Tarih</option>
+                    <option value="Coğrafya">Coğrafya</option>
+                    <option value="Felsefe">Felsefe / Psikoloji</option>
+                    <option value="İngilizce">İngilizce</option>
+                    <option value="KPSS">KPSS Genel</option>
+                </select>
+                <select id="koclukMüsaitFilter" onchange="koclukListeyiFiltrele()" style="padding:0.5rem 1rem; font-size:0.85rem; min-width:160px;">
+                    <option value="">Tüm Durumlar</option>
+                    <option value="musait">Sadece Müsaitler</option>
+                    <option value="mesgul">Meşgul</option>
+                </select>
+                <span style="color:var(--text-muted); font-size:0.8rem; margin-left:auto;" id="koclukSayac">6 öğretmen listeleniyor</span>
+            </div>
+
+            <!-- Öğretmen kartları -->
+            <div id="koclukKartlari" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:1rem; overflow-y:auto; padding-right:4px;"></div>
+        </div>
+    </div>
+
+    <!-- KOÇLUK TALEP MODAL -->
+    <div class="modal-overlay" id="koclukTalepModal">
+        <div class="modal-content" style="max-width:500px; padding:2rem;">
+            <button class="modal-close" onclick="document.getElementById('koclukTalepModal').classList.remove('active')">×</button>
+            <h3 style="color:#a78bfa; font-family:'Poppins',sans-serif; margin-bottom:1.5rem; font-size:1.2rem;">📩 Ders Talebi Oluştur</h3>
+            <div style="display:flex; flex-direction:column; gap:1rem;">
+                <div class="input-group">
+                    <label>Öğretmen Seçin</label>
+                    <select id="talepHoca"></select>
+                </div>
+                <div class="input-group">
+                    <label>Konu / Talep Açıklaması</label>
+                    <input type="text" id="talepKonu" placeholder="Örn: Türev soruları, Paragraf analizi..." autocomplete="off">
+                </div>
+                <div style="display:flex; gap:1rem;">
+                    <div class="input-group">
+                        <label>Tercih Edilen Tarih</label>
+                        <input type="date" id="talepTarih">
+                    </div>
+                    <div class="input-group">
+                        <label>Tercih Edilen Saat</label>
+                        <input type="time" id="talepSaat" value="19:00">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Süre</label>
+                    <select id="talepSure">
+                        <option value="30">30 Dakika</option>
+                        <option value="45">45 Dakika</option>
+                        <option value="60" selected>1 Saat</option>
+                        <option value="90">1.5 Saat</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" style="width:100%; background:linear-gradient(135deg,#7c3aed,#a78bfa);" onclick="talepOnay()">Talebi Gönder ve Link Oluştur</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- KOÇLUK ONAY / LİNK MODAL -->
+    <div class="modal-overlay" id="koclukLinkModal">
+        <div class="modal-content" style="max-width:480px; padding:2.5rem; text-align:center;">
+            <button class="modal-close" onclick="document.getElementById('koclukLinkModal').classList.remove('active')">×</button>
+            <div style="font-size:3rem; margin-bottom:1rem;">✅</div>
+            <h3 style="color:#a78bfa; font-family:'Poppins',sans-serif; margin-bottom:0.75rem; font-size:1.2rem;">Talep Gönderildi!</h3>
+            <p style="color:var(--text-muted); font-size:0.875rem; margin-bottom:1.5rem; line-height:1.6;" id="koclukLinkBilgi">Öğretmen talebinizi onayladıktan sonra görüşme linki aktif hale gelecektir.</p>
+            <div id="koclukLinkKutu" style="background:rgba(167,139,250,0.1); border:1px solid rgba(167,139,250,0.3); border-radius:10px; padding:1rem; margin-bottom:1rem; display:none;">
+                <p style="color:var(--text-muted); font-size:0.75rem; margin-bottom:0.5rem;">GÖRÜŞME LİNKİNİZ</p>
+                <a id="koclukLinkUrl" href="#" target="_blank" style="color:#a78bfa; font-weight:600; font-size:0.9rem; word-break:break-all; text-decoration:none;"></a>
+            </div>
+            <button class="btn" id="koclukJoinBtn" style="background:linear-gradient(135deg,#7c3aed,#a78bfa); color:#fff; border:none; display:none; width:100%; margin-bottom:0.75rem;" onclick="koclukGorüsmeyeKatil()">🎥 Görüşmeye Katıl</button>
+            <button class="btn" style="background:transparent; border:1px solid var(--border); color:var(--text-muted); width:100%;" onclick="document.getElementById('koclukLinkModal').classList.remove('active')">Kapat</button>
         </div>
     </div>
 </div>
@@ -859,15 +1040,25 @@
         }
         document.getElementById('headerExamName').innerText = examText;
 
+        // Syllabus'ı her zaman hazırla (soru/deneme sekmeleri için gerekli)
         buildDynamicSyllabus();
-        updateKonuListesiUI();
         updateSoruTabUI();
         updateDenemeTabUI();
         baslatGeriSayim();
 
         if(currentUser.uid.includes("test_")) {
+            programDurumunuGuncelle();
             haftayiGoster(); updateDashboard(); renderDeneme(); renderPomodoroHistory();
         } else {
+            db.ref('users/' + currentUser.uid + '/yks/programOlusturuldu').once('value', (snap) => {
+                if (snap.val()) { programOlusturuldu = true; buildDynamicSyllabus(); updateKonuListesiUI(); }
+                programDurumunuGuncelle();
+                haftayiGoster();
+            });
+            db.ref('users/' + currentUser.uid + '/yks/manuelKonular').once('value', (snap) => {
+                manuelKonular = snap.val() ? Object.values(snap.val()) : [];
+                if (manuelKonular.length > 0) { programDurumunuGuncelle(); haftayiGoster(); }
+            });
             db.ref('users/' + currentUser.uid + '/yks/konuDurumlari').on('value', (snapshot) => {
                 appKonuDurumlari = snapshot.val() || {}; haftayiGoster(); updateDashboard();
             });
@@ -884,22 +1075,146 @@
 
         document.getElementById('inpTarih').valueAsDate = new Date();
         document.getElementById('denemeTarih').valueAsDate = new Date();
+        document.getElementById('talepTarih') && (document.getElementById('talepTarih').valueAsDate = new Date());
         updatePomoDisplay();
+        koclukKartlariniRender();
     }
 
-    /* ─── YAPAY ZEKA PLANI OLUŞTURMA MOTORU ─── */
+    /* ─── ÇALIŞMA PROGRAMI DURUM YÖNETİMİ ─── */
+    let programOlusturuldu = false;
+    let manuelKonular = [];
+
+    function programDurumunuGuncelle() {
+        let bosEkran = document.getElementById('programBosEkrani');
+        let doluEkran = document.getElementById('programDoluEkrani');
+        if (!bosEkran || !doluEkran) return;
+        if (programOlusturuldu || manuelKonular.length > 0) {
+            bosEkran.style.display = 'none';
+            doluEkran.style.display = 'flex';
+        } else {
+            bosEkran.style.display = 'flex';
+            doluEkran.style.display = 'none';
+        }
+    }
+
+    /* ─── YAPAY ZEKA İLE PLAN OLUŞTUR ─── */
+    function aiPlanOlustur() {
+        buildDynamicSyllabus();
+        programOlusturuldu = true;
+        if (currentUser && !currentUser.uid.includes("test_")) {
+            db.ref('users/' + currentUser.uid + '/yks/programOlusturuldu').set(true);
+        }
+        programDurumunuGuncelle();
+        let info = document.getElementById('aiPlanInfo');
+        if (info) info.innerText = `🤖 ${userSettings.hours}s/gün hedefe göre AI tarafından oluşturuldu`;
+        haftayiGoster();
+        updateKonuListesiUI();
+    }
+
+    /* ─── MANUEL PLAN SİSTEMİ ─── */
+    function manuelPlanAc() {
+        document.getElementById('manuelPlanModal').classList.add('active');
+        renderManuelKonuListesi();
+    }
+
+    function manuelKonuKaydet() {
+        let ders = document.getElementById('manuelDers').value.trim();
+        let konu = document.getElementById('manuelKonu').value.trim();
+        let hafta = parseInt(document.getElementById('manuelHafta').value) || 1;
+        let gun = parseInt(document.getElementById('manuelGun').value) || 1;
+        if (!ders || !konu) { alert('Ders ve konu adı zorunludur!'); return; }
+        if (gun < 1 || gun > 7) { alert('Gün 1-7 arasında olmalıdır!'); return; }
+
+        let yeni = { id: Date.now(), ders, konu, hafta, gun };
+        manuelKonular.push(yeni);
+
+        // Mevcut dersi syllabusa ekle (soru çözümü seçim listesi için)
+        if (!currentSyllabus[ders]) currentSyllabus[ders] = [];
+        if (!currentSyllabus[ders].includes(konu)) currentSyllabus[ders].push(konu);
+
+        // weekSelect güncelle
+        let maxHafta = Math.max(...manuelKonular.map(k => k.hafta), 1);
+        let ws = document.getElementById('weekSelect');
+        if (ws) {
+            ws.innerHTML = '';
+            for (let i = 1; i <= maxHafta; i++) {
+                let opt = document.createElement('option');
+                opt.value = i; opt.innerText = `${i}. Hafta`; ws.appendChild(opt);
+            }
+        }
+
+        if (currentUser && !currentUser.uid.includes("test_")) {
+            db.ref('users/' + currentUser.uid + '/yks/manuelKonular').set(manuelKonular);
+        }
+
+        document.getElementById('manuelDers').value = '';
+        document.getElementById('manuelKonu').value = '';
+        programOlusturuldu = true;
+        programDurumunuGuncelle();
+        renderManuelKonuListesi();
+        haftayiGoster();
+    }
+
+    function renderManuelKonuListesi() {
+        let div = document.getElementById('manuelKonuListesi');
+        if (!div) return;
+        if (manuelKonular.length === 0) {
+            div.innerHTML = '<p style="color:var(--text-muted); font-size:0.8rem; text-align:center; padding:0.5rem;">Henüz manuel konu eklenmedi.</p>';
+            return;
+        }
+        div.innerHTML = manuelKonular.map(k => `
+            <div style="background:rgba(0,0,0,0.3); border:1px solid var(--border); border-radius:8px; padding:0.6rem 0.875rem; display:flex; justify-content:space-between; align-items:center; font-size:0.82rem;">
+                <div>
+                    <strong style="color:var(--accent);">${k.ders}</strong>
+                    <span style="color:var(--text-main);"> — ${k.konu}</span>
+                    <span style="color:var(--text-muted); font-size:0.75rem; margin-left:0.5rem;">H${k.hafta}/G${k.gun}</span>
+                </div>
+                <button onclick="manuelKonuSil(${k.id})" style="background:none; border:none; color:var(--danger); cursor:pointer; font-size:1.1rem; padding:0 0.25rem; line-height:1;">×</button>
+            </div>
+        `).join('');
+    }
+
+    function manuelKonuSil(id) {
+        manuelKonular = manuelKonular.filter(k => k.id !== id);
+        if (currentUser && !currentUser.uid.includes("test_")) {
+            db.ref('users/' + currentUser.uid + '/yks/manuelKonular').set(manuelKonular);
+        }
+        renderManuelKonuListesi();
+        haftayiGoster();
+        if (manuelKonular.length === 0 && !programOlusturuldu) programDurumunuGuncelle();
+    }
+
+    function programiSifirla() {
+        if (!confirm('Çalışma programı sıfırlanacak. Konu durumları korunacak. Devam?')) return;
+        tamProgram = [];
+        manuelKonular = [];
+        programOlusturuldu = false;
+        let ws = document.getElementById('weekSelect');
+        if (ws) ws.innerHTML = '';
+        if (currentUser && !currentUser.uid.includes("test_")) {
+            db.ref('users/' + currentUser.uid + '/yks/programOlusturuldu').remove();
+            db.ref('users/' + currentUser.uid + '/yks/manuelKonular').remove();
+        }
+        programDurumunuGuncelle();
+        let thead = document.getElementById('konuTableHead');
+        let tbody = document.getElementById('konuTableBody');
+        if (thead) thead.innerHTML = '';
+        if (tbody) tbody.innerHTML = '';
+    }
+
+    /* ─── YAPAY ZEKA PLAN MOTORU – DOĞAL YAYILIM ─── */
     function buildDynamicSyllabus() {
         currentSyllabus = {};
         
         if (userSettings.exam === 'YKS') {
-            Object.assign(currentSyllabus, syllabusData['YKS']); 
+            Object.assign(currentSyllabus, syllabusData['YKS']);
             if (userSettings.branch && aytSyllabus[userSettings.branch]) {
-                Object.assign(currentSyllabus, aytSyllabus[userSettings.branch]); 
+                Object.assign(currentSyllabus, aytSyllabus[userSettings.branch]);
             } else if (userSettings.branch === 'Dil (TYT+YDT)') {
                 currentSyllabus['YDT İngilizce'] = ydtSyllabus;
             }
         } else {
-            currentSyllabus = JSON.parse(JSON.stringify(syllabusData[userSettings.exam]));
+            currentSyllabus = JSON.parse(JSON.stringify(syllabusData[userSettings.exam] || {}));
             if (userSettings.exam === 'AGS' && userSettings.branch) {
                 currentSyllabus['ÖABT (Alan)'] = oabtSyllabus[userSettings.branch] || [];
             }
@@ -909,44 +1224,77 @@
         let totalKonuCount = 0;
         dersler.forEach(d => totalKonuCount += currentSyllabus[d].length);
         
-        let konularHaftada = userSettings.hours * 1.5; 
-        let totalWeeks = Math.ceil(totalKonuCount / konularHaftada);
-        if(totalWeeks < 6) totalWeeks = 6;
-        if(totalWeeks > 24) totalWeeks = 24;
+        // Gerçekçi hafta hesabı: günlük saat başına ~1.5 konu/ders
+        let gunlukToplamKonu = Math.max(dersler.length, Math.round(userSettings.hours * 1.2));
+        let totalWeeks = Math.ceil(totalKonuCount / (gunlukToplamKonu * 7));
+        if (totalWeeks < 4) totalWeeks = 4;
+        if (totalWeeks > 26) totalWeeks = 26;
 
         let ws = document.getElementById("weekSelect");
-        ws.innerHTML = "";
-        for(let i=1; i<=totalWeeks; i++){
-            let opt = document.createElement('option');
-            opt.value = i; opt.innerText = `${i}. Hafta Planı`; ws.appendChild(opt);
+        if (ws) {
+            ws.innerHTML = "";
+            for (let i = 1; i <= totalWeeks; i++) {
+                let opt = document.createElement('option');
+                opt.value = i; opt.innerText = `${i}. Hafta`; ws.appendChild(opt);
+            }
         }
 
         tamProgram = [];
         let totalDays = totalWeeks * 7;
+        
+        // Her ders için konuları DOĞAL ve dengeli yay – her gün farklı ders
         let dagitimlar = {};
-        dersler.forEach(d => { dagitimlar[d] = dengeliDagit(currentSyllabus[d], totalDays); });
+        dersler.forEach(d => { dagitimlar[d] = doğalYayilim(currentSyllabus[d], totalDays); });
 
-        for(let i=0; i<totalDays; i++) {
-            let row = { gun: `GÜN ${i+1}`, w: Math.floor(i/7) + 1 };
+        for (let i = 0; i < totalDays; i++) {
+            let row = { gun: `GÜN ${i+1}`, w: Math.floor(i/7) + 1, gunNo: (i % 7) + 1 };
             dersler.forEach(d => { row[d] = dagitimlar[d][i]; });
             tamProgram.push(row);
         }
+
+        // Manuel konuları programa ekle
+        manuelKonular.forEach(mk => {
+            let gunIndex = (mk.hafta - 1) * 7 + (mk.gun - 1);
+            if (!currentSyllabus[mk.ders]) { currentSyllabus[mk.ders] = []; dersler.push(mk.ders); }
+            if (!currentSyllabus[mk.ders].includes(mk.konu)) currentSyllabus[mk.ders].push(mk.konu);
+        });
     }
 
-    function dengeliDagit(konuListesi, toplamGun) {
+    /* ─── DOĞAL YAYILIM ALGORİTMASI ─── */
+    // Konuları tüm program günlerine dengeli dağıtır.
+    // Her konunun arası eşit tutulur, ilk güne yığılma olmaz.
+    function doğalYayilim(konuListesi, toplamGun) {
         let sonuc = Array(toplamGun).fill("-");
         if (!konuListesi || konuListesi.length === 0) return sonuc;
         if (konuListesi.length === 1) { sonuc[0] = konuListesi[0]; return sonuc; }
-        let adim = (toplamGun - 1) / (konuListesi.length - 1);
-        for (let i = 0; i < konuListesi.length; i++) {
-            let index = Math.round(i * adim);
-            if (sonuc[index] !== "-") {
-                let k = index; while (k < toplamGun && sonuc[k] !== "-") k++;
-                if (k < toplamGun) index = k;
-                else { k = index; while (k >= 0 && sonuc[k] !== "-") k--; index = k; }
+
+        let toplamKonu = konuListesi.length;
+
+        if (toplamKonu <= toplamGun) {
+            // Konular günlere sığıyor: eşit aralıkla dağıt
+            let aralik = toplamGun / toplamKonu;
+            for (let i = 0; i < toplamKonu; i++) {
+                let gunIndex = Math.floor(i * aralik + aralik * 0.2);
+                gunIndex = Math.min(gunIndex, toplamGun - 1);
+                // Çakışma varsa ileriye bak
+                let deneme = gunIndex;
+                while (deneme < toplamGun && sonuc[deneme] !== "-") deneme++;
+                if (deneme < toplamGun) {
+                    sonuc[deneme] = konuListesi[i];
+                } else {
+                    deneme = gunIndex - 1;
+                    while (deneme >= 0 && sonuc[deneme] !== "-") deneme--;
+                    if (deneme >= 0) sonuc[deneme] = konuListesi[i];
+                }
             }
-            sonuc[index] = konuListesi[i];
+        } else {
+            // Konular günden fazla: günde birden fazla konu
+            let konuIndex = 0;
+            for (let g = 0; g < toplamGun && konuIndex < toplamKonu; g++) {
+                sonuc[g] = konuListesi[konuIndex++];
+            }
         }
+
         return sonuc;
     }
 
@@ -991,28 +1339,72 @@
         const tbody = document.getElementById("konuTableBody");
         if(!tbody) return;
         tbody.innerHTML = "";
-        
+
+        // Program boşsa gösterme
+        if (tamProgram.length === 0 && manuelKonular.length === 0) return;
+
         let haftaVerisi = tamProgram.filter(item => item.w === seciliHafta);
         let dersler = Object.keys(currentSyllabus);
 
-        haftaVerisi.forEach((row) => {
-            const tr = document.createElement("tr");
-            let html = `<td style="color:var(--text-muted); font-weight:600;">${row.gun}</td>`;
-            dersler.forEach(ders => {
-                if(row[ders] === "-") {
-                    html += `<td>-</td>`;
-                } else {
-                    let benzersizId = `btn_${row.gun.replace(/\s+/g, '')}_${ders.replace(/\s+/g, '')}_${row.w}`;
-                    let durum = appKonuDurumlari[benzersizId] || "Bekliyor";
-                    let btnClass = "status-btn";
-                    if (durum === "Tamamlandı") btnClass += " yesil";
-                    if (durum === "Yapılmadı") btnClass += " kirmizi";
-                    html += `<td><span class="subject-name">${row[ders]}</span><button id="${benzersizId}" class="${btnClass}" data-durum="${durum}" onclick="durumDegistir('${benzersizId}')">${durum}</button></td>`;
-                }
+        // Eğer AI programı varsa normal tablo çiz
+        if (haftaVerisi.length > 0 && dersler.length > 0) {
+            // Günlerin adını belirle
+            const gunIsimleri = ['PAZARTESİ', 'SALI', 'ÇARŞAMBA', 'PERŞEMBE', 'CUMA', 'CUMARTESİ', 'PAZAR'];
+            haftaVerisi.forEach((row) => {
+                const tr = document.createElement("tr");
+                let gunNo = row.gunNo || ((parseInt(row.gun.replace('GÜN ', '')) - 1) % 7);
+                let gunIsmi = gunIsimleri[gunNo - 1] || row.gun;
+                let html = `<td style="color:var(--text-muted); font-weight:600; font-size:0.8rem;">${row.gun}<br><span style="color:var(--accent); font-size:0.7rem;">${gunIsmi}</span></td>`;
+                dersler.forEach(ders => {
+                    if (row[ders] === "-" || row[ders] === undefined) {
+                        html += `<td style="color:rgba(255,255,255,0.15);">—</td>`;
+                    } else {
+                        let benzersizId = `btn_${row.gun.replace(/\s+/g, '')}_${ders.replace(/\s+/g, '')}_${row.w}`;
+                        let durum = appKonuDurumlari[benzersizId] || "Bekliyor";
+                        let btnClass = "status-btn";
+                        if (durum === "Tamamlandı") btnClass += " yesil";
+                        if (durum === "Yapılmadı") btnClass += " kirmizi";
+                        html += `<td><span class="subject-name">${row[ders]}</span><button id="${benzersizId}" class="${btnClass}" data-durum="${durum}" onclick="durumDegistir('${benzersizId}')">${durum}</button></td>`;
+                    }
+                });
+                tr.innerHTML = html;
+                tbody.appendChild(tr);
             });
-            tr.innerHTML = html;
-            tbody.appendChild(tr);
-        });
+        }
+
+        // Manuel konuları bu haftaya ait olanları ekle
+        let manuelHafta = manuelKonular.filter(k => k.hafta === seciliHafta);
+        if (manuelHafta.length > 0) {
+            // Başlık satırı
+            let baslikTr = document.createElement("tr");
+            baslikTr.innerHTML = `<td colspan="${Math.max(dersler.length + 1, 2)}" style="background:rgba(255,107,0,0.06); color:var(--accent); font-size:0.78rem; font-weight:700; text-align:left; padding:0.6rem 1rem; letter-spacing:0.5px;">📌 MANUEL EKLENEN KONULAR</td>`;
+            tbody.appendChild(baslikTr);
+
+            manuelHafta.forEach(mk => {
+                const tr = document.createElement("tr");
+                let benzersizId = `btn_manuel_${mk.id}`;
+                let durum = appKonuDurumlari[benzersizId] || "Bekliyor";
+                let btnClass = "status-btn";
+                if (durum === "Tamamlandı") btnClass += " yesil";
+                if (durum === "Yapılmadı") btnClass += " kirmizi";
+                tr.innerHTML = `
+                    <td style="color:var(--text-muted); font-size:0.8rem;">H${mk.hafta}/G${mk.gun}</td>
+                    <td colspan="${Math.max(dersler.length, 1)}" style="text-align:left;">
+                        <span style="color:var(--accent); font-weight:600; font-size:0.82rem; margin-right:0.5rem;">${mk.ders}</span>
+                        <span class="subject-name" style="display:inline; max-width:none;">${mk.konu}</span>
+                        <button id="${benzersizId}" class="${btnClass}" data-durum="${durum}" onclick="durumDegistir('${benzersizId}')" style="margin-left:0.75rem;">${durum}</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Her ikisi de boşsa
+        if (haftaVerisi.length === 0 && manuelHafta.length === 0) {
+            let bosTr = document.createElement("tr");
+            bosTr.innerHTML = `<td colspan="${Math.max(dersler.length + 1, 2)}" style="text-align:center; color:var(--text-muted); padding:2rem; font-style:italic;">Bu hafta için konu bulunmuyor.</td>`;
+            tbody.appendChild(bosTr);
+        }
     }
 
     function durumDegistir(btnId) {
@@ -1125,8 +1517,16 @@
                 thHtml += `<th>YDT NET</th>`;
             }
         } else {
+            // KPSS Lisans/Ön Lisans soru dağılımı (ÖSYM 2024 kılavuzu)
+            // Lisans: Türkçe 30, Mat 30, Tarih 27, Coğrafya 18, Vatandaşlık 15 = 120 soru
+            // Ön Lisans: Türkçe 30, Mat 30, Tarih 27, Coğrafya 18, Vatandaşlık 15 = 120 soru
+            const kpssKonuSayilari = { 'Türkçe': 30, 'Matematik': 30, 'Tarih': 27, 'Coğrafya': 18, 'Vatandaşlık': 15 };
             dersler.forEach((d, index) => {
-                let count = (index<2 ? 30 : (index===2?27:(index===3?18:15))); 
+                // Ders adındaki anahtar kelimeye göre soru sayısını bul
+                let count = 15; // varsayılan
+                for (let anahtar of Object.keys(kpssKonuSayilari)) {
+                    if (d.toLowerCase().includes(anahtar.toLowerCase())) { count = kpssKonuSayilari[anahtar]; break; }
+                }
                 inputs.innerHTML += `<div><label style="font-size:0.85rem; font-weight:600; color:var(--text-muted); display:block; margin-bottom:0.5rem; text-align: center;">${d.toUpperCase()} (${count})</label><div class="d-input-group"><label>D</label><input type="number" id="d_${index}_D" min="0" max="${count}"></div><div class="d-input-group"><label>Y</label><input type="number" id="d_${index}_Y" min="0" max="${count}"></div></div>`;
                 let kisaltma = d.length > 5 ? d.substring(0,3).toUpperCase() : d.toUpperCase();
                 thHtml += `<th>${kisaltma} NET</th>`;
@@ -1228,15 +1628,18 @@
     // --- SAYAÇ VE GERİ SAYIM MOTORU ---
     function baslatGeriSayim() {
         if(geriSayimInterval) clearInterval(geriSayimInterval);
-        
-        let targetDateStr = "2026/09/06 10:15:00"; 
+
+        // Tarihler ÖSYM 2026 takvimi (https://www.osym.gov.tr)
+        // KPSS Lisans: 6-7 Eylül 2026 | Ön Lisans: 4-5 Ekim 2026
+        // AGS (MEB Akademi): 26 Temmuz 2026 | YKS-TYT: 13 Haziran 2026
+        let targetDateStr = "2026/09/06 10:15:00"; // KPSS Lisans
         if (userSettings && userSettings.exam === 'Ön Lisans') targetDateStr = "2026/10/04 10:15:00";
         if (userSettings && userSettings.exam === 'AGS') targetDateStr = "2026/07/26 10:15:00";
-        if (userSettings && userSettings.exam === 'YKS') targetDateStr = "2027/06/19 10:15:00";
+        if (userSettings && userSettings.exam === 'YKS') targetDateStr = "2026/06/13 10:15:00";
 
         const sinavTarihi = new Date(targetDateStr).getTime();
         let examLabel = userSettings.exam === 'YKS' ? 'TYT' : userSettings.exam.toUpperCase();
-        let dateEkrani = targetDateStr.split(' ')[0].split('/').reverse().join('.'); 
+        let dateEkrani = targetDateStr.split(' ')[0].split('/').reverse().join('.');
         document.getElementById("cd-title-text").innerText = `${examLabel} SINAVI (${dateEkrani})`;
 
         geriSayimInterval = setInterval(() => {
@@ -1397,6 +1800,8 @@
             if(onclickAttr && onclickAttr.includes(tabId)) btn.classList.add('active');
         }
         if (tabId === 'ozet-tab') updateDashboard();
+        if (tabId === 'kocluk-tab') koclukKartlariniRender();
+        if (tabId === 'konu-tab') programDurumunuGuncelle();
     };
 
     // --- POMODORO MOTORU ---
@@ -1448,11 +1853,152 @@
             const ctx = new (window.AudioContext || window.webkitAudioContext)();
             const osc = ctx.createOscillator(); const gain = ctx.createGain();
             osc.connect(gain); gain.connect(ctx.destination);
-            osc.type = 'sine'; osc.frequency.setValueAtTime(880, ctx.currentTime); osc.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 1.5); 
-            gain.gain.setValueAtTime(0.5, ctx.currentTime); gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 1.5); 
+            osc.type = 'sine'; osc.frequency.setValueAtTime(880, ctx.currentTime); osc.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 1.5);
+            gain.gain.setValueAtTime(0.5, ctx.currentTime); gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 1.5);
             osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 1.5);
         } catch (e) { console.log("Ses çalınamadı."); }
     }
+
+    /* ═══════════════════════════════════════════════════
+       KOÇLUK MERKEZİ SİSTEMİ
+       Jitsi Meet ile ücretsiz video konferans entegrasyonu
+       ═══════════════════════════════════════════════════ */
+
+    // Demo öğretmen veritabanı (gerçek sistemde Firebase'den gelir)
+    const koclukHocalari = [
+        { id: 1, isim: "Ayşe Kaya", brans: "Matematik", uzmanlik: "TYT/AYT Matematik, Türev, İntegral", puan: 4.9, dersSayisi: 312, musait: true, emoji: "👩‍🏫", saatler: "09:00-12:00, 19:00-22:00" },
+        { id: 2, isim: "Mehmet Demir", brans: "Türkçe", uzmanlik: "TYT Türkçe, Paragraf, Dil Bilgisi, KPSS", puan: 4.8, dersSayisi: 245, musait: true, emoji: "👨‍🏫", saatler: "14:00-17:00, 20:00-23:00" },
+        { id: 3, isim: "Elif Şahin", brans: "Fizik", uzmanlik: "AYT Fizik, Elektrik, Mekanik", puan: 4.7, dersSayisi: 189, musait: false, emoji: "👩‍🔬", saatler: "10:00-13:00" },
+        { id: 4, isim: "Can Yılmaz", brans: "KPSS", uzmanlik: "KPSS Lisans/Ön Lisans, Genel Yetenek, Genel Kültür", puan: 4.9, dersSayisi: 421, musait: true, emoji: "👨‍💼", saatler: "08:00-11:00, 18:00-21:00" },
+        { id: 5, isim: "Selin Arslan", brans: "Kimya", uzmanlik: "AYT Kimya, Organik Kimya, Denge", puan: 4.6, dersSayisi: 156, musait: true, emoji: "👩‍🔬", saatler: "15:00-18:00, 21:00-23:00" },
+        { id: 6, isim: "Burak Çelik", brans: "Tarih", uzmanlik: "TYT/AYT Tarih, KPSS Tarih, İnkılap Tarihi", puan: 4.8, dersSayisi: 278, musait: false, emoji: "👨‍🏫", saatler: "11:00-14:00" },
+        { id: 7, isim: "Zeynep Özkan", brans: "İngilizce", uzmanlik: "YDT İngilizce, Gramer, Okuma Teknikleri", puan: 4.9, dersSayisi: 367, musait: true, emoji: "👩‍💻", saatler: "09:00-12:00, 20:00-22:00" },
+        { id: 8, isim: "Emre Aydın", brans: "Biyoloji", uzmanlik: "AYT Biyoloji, Genetik, Hücre Biyolojisi", puan: 4.7, dersSayisi: 203, musait: true, emoji: "👨‍🔬", saatler: "13:00-16:00, 19:00-21:00" }
+    ];
+
+    let koclukTaleplerListesi = []; // Kullanıcının talepleri
+
+    function koclukKartlariniRender(filtreBrans = '', filtreMusait = '') {
+        let konteyner = document.getElementById('koclukKartlari');
+        if (!konteyner) return;
+
+        let filtreli = koclukHocalari.filter(h => {
+            let bransUygun = !filtreBrans || h.brans === filtreBrans;
+            let musaitUygun = !filtreMusait ||
+                (filtreMusait === 'musait' && h.musait) ||
+                (filtreMusait === 'mesgul' && !h.musait);
+            return bransUygun && musaitUygun;
+        });
+
+        document.getElementById('koclukSayac').innerText = `${filtreli.length} öğretmen listeleniyor`;
+
+        konteyner.innerHTML = filtreli.map(h => `
+            <div class="kocluk-kart">
+                <div class="kocluk-kart-header">
+                    <div class="kocluk-avatar">${h.emoji}</div>
+                    <div style="flex:1;">
+                        <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
+                            <span class="kocluk-isim">${h.isim}</span>
+                            <span class="musait-badge ${h.musait ? 'musait' : 'mesgul'}">${h.musait ? '● Müsait' : '● Meşgul'}</span>
+                        </div>
+                        <div class="kocluk-brans">${h.brans} Uzmanı</div>
+                    </div>
+                </div>
+                <div style="font-size:0.78rem; color:var(--text-muted); line-height:1.5;">${h.uzmanlik}</div>
+                <div style="font-size:0.75rem; color:var(--text-muted);">🕐 Uygun saatler: <span style="color:var(--text-main);">${h.saatler}</span></div>
+                <div class="kocluk-istatistik">
+                    <div>⭐ Puan <span>${h.puan}</span></div>
+                    <div>📚 Ders <span>${h.dersSayisi}</span></div>
+                </div>
+                <div style="display:flex; justify-content:flex-end;">
+                    <button class="kocluk-talep-btn ${h.musait ? 'aktif' : 'pasif'}"
+                        onclick="${h.musait ? `koclukTalepAc(${h.id})` : 'void(0)'}">
+                        ${h.musait ? '📩 Ders Talebi Gönder' : '⏳ Şu An Meşgul'}
+                    </button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function koclukListeyiFiltrele() {
+        let brans = document.getElementById('koclukBransFilter').value;
+        let musait = document.getElementById('koclukMüsaitFilter').value;
+        koclukKartlariniRender(brans, musait);
+    }
+
+    function koclukTalepGonder() {
+        // Genel talep butonu - hoca seçilmeden açılır
+        let sel = document.getElementById('talepHoca');
+        if (sel) {
+            sel.innerHTML = koclukHocalari
+                .filter(h => h.musait)
+                .map(h => `<option value="${h.id}">${h.emoji} ${h.isim} — ${h.brans}</option>`)
+                .join('');
+        }
+        document.getElementById('koclukTalepModal').classList.add('active');
+    }
+
+    function koclukTalepAc(hocaId) {
+        let sel = document.getElementById('talepHoca');
+        if (sel) {
+            sel.innerHTML = koclukHocalari
+                .filter(h => h.musait)
+                .map(h => `<option value="${h.id}" ${h.id === hocaId ? 'selected' : ''}>${h.emoji} ${h.isim} — ${h.brans}</option>`)
+                .join('');
+        }
+        document.getElementById('koclukTalepModal').classList.add('active');
+    }
+
+    function talepOnay() {
+        let hocaId = parseInt(document.getElementById('talepHoca').value);
+        let konu = document.getElementById('talepKonu').value.trim();
+        let tarih = document.getElementById('talepTarih').value;
+        let saat = document.getElementById('talepSaat').value;
+        let sure = document.getElementById('talepSure').value;
+
+        if (!konu) { alert('Konu/talep açıklaması zorunludur!'); return; }
+        if (!tarih) { alert('Tarih seçiniz!'); return; }
+
+        let hoca = koclukHocalari.find(h => h.id === hocaId);
+        if (!hoca) return;
+
+        // Jitsi Meet ile otomatik görüşme linki oluştur
+        // Oda adı: kronos + hocaId + timestamp (benzersiz)
+        let odaAdi = `kronos-kocluk-${hocaId}-${Date.now()}`;
+        let jitsiLink = `https://meet.jit.si/${odaAdi}`;
+
+        // Talebi kaydet
+        let talep = { id: Date.now(), hocaId, hocaIsim: hoca.isim, hocaBrans: hoca.brans, konu, tarih, saat, sure: parseInt(sure), link: jitsiLink, durum: 'Onay Bekleniyor' };
+        koclukTaleplerListesi.push(talep);
+
+        document.getElementById('koclukTalepModal').classList.remove('active');
+
+        // Sonuç modalını göster
+        let bilgi = document.getElementById('koclukLinkBilgi');
+        let linkKutu = document.getElementById('koclukLinkKutu');
+        let linkUrl = document.getElementById('koclukLinkUrl');
+        let joinBtn = document.getElementById('koclukJoinBtn');
+
+        if (bilgi) bilgi.innerHTML = `
+            <strong style="color:var(--text-main);">${hoca.emoji} ${hoca.isim}</strong>'e talep gönderildi.<br>
+            <span style="color:var(--accent);">${konu}</span> konusunda<br>
+            <strong>${tarih} saat ${saat}</strong> için ${sure} dakika ders talep edildi.
+        `;
+
+        // Görüşme linki hemen aktif et (Jitsi için onay gerekmez)
+        if (linkKutu) linkKutu.style.display = 'block';
+        if (linkUrl) { linkUrl.href = jitsiLink; linkUrl.innerText = jitsiLink; }
+        if (joinBtn) { joinBtn.style.display = 'block'; joinBtn.setAttribute('data-link', jitsiLink); }
+
+        document.getElementById('koclukLinkModal').classList.add('active');
+    }
+
+    function koclukGorüsmeyeKatil() {
+        let btn = document.getElementById('koclukJoinBtn');
+        let link = btn ? btn.getAttribute('data-link') : null;
+        if (link) window.open(link, '_blank');
+    }
+
 </script>
 </body>
 </html>
