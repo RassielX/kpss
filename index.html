@@ -301,78 +301,94 @@
             .middle-grid { grid-template-columns: repeat(3, 1fr); }
             .top-row { flex-wrap: wrap; }
             .ai-assistant-panel, .countdown-box, .pomodoro-box, .progress-box { flex: 1 1 45%; min-width: 300px; }
-            body { overflow-y: auto; height: auto; }
-            .container { height: auto; min-height: 96vh; overflow: visible; }
-            .tab-content { overflow: auto; min-height: 400px; }
+            /* Masaüstü büyük ekran — scroll gerekebilir ama overflow:hidden korunuyor */
         }
 
+        /* ─── MOBİL: 992px ve altı ─── */
         @media (max-width: 992px) {
+            html, body { overflow-y: auto !important; overflow-x: hidden !important; height: auto !important; max-height: none !important; }
+            .container { width: 100vw !important; height: auto !important; min-height: 100vh !important; max-height: none !important; border-radius: 0 !important; border: none !important; padding: 0.875rem !important; overflow: visible !important; }
+            .tab-content { overflow: visible !important; min-height: auto !important; }
+            .tab-content.active { overflow-y: auto !important; }
             .charts-container { flex-direction: column; }
-            .chart-box { min-height: 350px; }
-            .container { width: 100vw; border-radius: 0; border: none; padding: 1rem; min-height: 100vh; }
-            body { padding: 0; }
+            .chart-box { min-height: 300px; }
             /* Program tablosu mobilde yatay kaydırmalı */
             #programGrid { table-layout: auto; }
-            #programGrid th, #programGrid td { white-space: normal; word-break: break-word; min-width: 90px; }
+            #programGrid th, #programGrid td { white-space: normal; word-break: break-word; min-width: 80px; }
             .program-hucre { min-height: 44px !important; font-size: 0.72rem !important; }
         }
 
+        /* ─── MOBİL: 768px ve altı ─── */
         @media (max-width: 768px) {
-            .header-title { font-size: 1.1rem; flex-wrap: wrap; text-align: center; justify-content: center; margin-bottom: 0.75rem; gap: 0.4rem; }
-            .header-title > span { font-size: 0.82rem !important; word-break: break-word; text-align: center; }
-            .tabs { overflow-x: auto; padding-bottom: 8px; justify-content: flex-start; -webkit-overflow-scrolling: touch; gap: 0; }
+            html, body { overflow-y: auto !important; overflow-x: hidden !important; height: auto !important; max-height: none !important; }
+            .container { padding: 0.75rem !important; overflow: visible !important; }
+            /* Başlık */
+            .header-title { font-size: 0.95rem !important; flex-wrap: wrap; text-align: center; justify-content: center; margin-bottom: 0.5rem !important; gap: 0.3rem; min-height: auto !important; }
+            .header-title > span { font-size: 0.78rem !important; word-break: break-word; }
+            .header-logo { position: static !important; transform: none !important; margin-bottom: 4px; }
+            .header-actions { position: static !important; transform: none !important; justify-content: center; margin-top: 4px; width: 100%; flex-wrap: wrap; gap: 5px; }
+            .logout-btn { font-size: 0.68rem !important; padding: 4px 8px !important; }
+            /* Tab butonları */
+            .tabs { overflow-x: auto; padding-bottom: 6px; justify-content: flex-start; -webkit-overflow-scrolling: touch; gap: 0; margin-bottom: 0.75rem !important; }
             .tabs::-webkit-scrollbar { height: 3px; }
             .tabs::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
-            .tab-btn { font-size: 0.72rem !important; padding: 0.5rem 0.65rem !important; white-space: nowrap; }
-            .top-row { flex-direction: column; gap: 0.6rem !important; }
-            .ai-assistant-panel, .countdown-box, .pomodoro-box, .progress-box { flex: 1 1 100%; min-width: 100%; width: 100%; }
-            .middle-grid { grid-template-columns: 1fr !important; }
-            .form-row { flex-direction: column; align-items: stretch; }
+            .tab-btn { font-size: 0.68rem !important; padding: 0.45rem 0.6rem !important; white-space: nowrap; }
+            /* Layout */
+            .top-row { flex-direction: column; gap: 0.5rem !important; }
+            .ai-assistant-panel, .countdown-box, .pomodoro-box, .progress-box { flex: 1 1 100% !important; min-width: 100% !important; width: 100% !important; }
+            .ai-assistant-panel { flex-direction: column; align-items: flex-start; gap: 0.6rem; padding: 0.875rem !important; }
+            .ai-assistant-panel .btn-outline { width: 100%; text-align: center; }
+            .middle-grid { grid-template-columns: 1fr 1fr !important; gap: 0.5rem !important; }
+            /* Formlar */
+            .form-row { flex-direction: column; align-items: stretch; gap: 0.5rem; }
             .input-group { width: 100%; }
             .filter-bar { flex-direction: column; align-items: stretch; }
-            .deneme-grid { grid-template-columns: repeat(2, 1fr); }
-            .modal-content { padding: 1.25rem; width: 98vw; max-width: 98vw !important; margin: 0.5rem auto; box-sizing: border-box; }
-            .kronos-header { flex-direction: column; text-align: center; }
-            .kronos-header .ai-icon { font-size: 3rem; }
-            .modal-close { top: 0.75rem; right: 0.75rem; font-size: 1.6rem; }
-            .header-logo { position: static; transform: none; margin-bottom: 6px; }
-            .header-actions { position: static; transform: none; justify-content: center; margin-top: 6px; width: 100%; flex-wrap: wrap; gap: 6px; }
-            .logout-btn { font-size: 0.72rem; padding: 5px 10px; }
-            /* Program grid mobil */
-            #konuTabToolbar, #konuTabOgretmenToolbar { flex-wrap: wrap; gap: 0.4rem !important; }
-            #konuTabToolbar button, #konuTabOgretmenToolbar button { font-size: 0.72rem !important; padding: 0.3rem 0.6rem !important; }
-            #programGrid { min-width: 100%; }
-            #programGrid th { font-size: 0.65rem !important; padding: 0.35rem 0.3rem !important; }
-            #programGrid td { padding: 0.2rem !important; }
-            .program-hucre { min-height: 40px !important; font-size: 0.68rem !important; padding: 0.25rem 0.3rem !important; line-height: 1.25 !important; }
-            /* Tablo */
-            table { font-size: 0.78rem; }
-            th { padding: 0.6rem 0.6rem; font-size: 0.68rem; }
-            td { padding: 0.5rem 0.5rem; white-space: normal; word-break: break-word; }
+            /* Tablolar */
+            table { font-size: 0.75rem; }
+            th { padding: 0.5rem 0.4rem !important; font-size: 0.65rem !important; white-space: nowrap; }
+            td { padding: 0.4rem 0.4rem !important; word-break: break-word; white-space: normal; }
             /* Deneme grid */
-            .deneme-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
-            .d-input-group input { width: 52px; }
+            .deneme-grid { grid-template-columns: repeat(2, 1fr); gap: 0.6rem; }
+            .d-input-group input { width: 48px; }
+            /* Modal */
+            .modal-content { padding: 1rem !important; width: 98vw !important; max-width: 98vw !important; margin: 0.5rem auto; box-sizing: border-box; }
+            .kronos-header { flex-direction: column; text-align: center; }
+            .modal-close { top: 0.6rem !important; right: 0.6rem !important; font-size: 1.5rem !important; }
             /* Stat kartlar */
-            .stat-card .val { font-size: 1.4rem; }
+            .stat-card .val { font-size: 1.3rem !important; }
             /* Koçluk kartları */
             #koclukKartlari { grid-template-columns: 1fr !important; }
-            /* AI paneli */
-            .ai-assistant-panel { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
-            .ai-assistant-panel .btn-outline { width: 100%; text-align: center; }
+            /* Program grid */
+            #konuTabToolbar, #konuTabOgretmenToolbar { flex-wrap: wrap; gap: 0.35rem !important; }
+            #konuTabToolbar button, #konuTabOgretmenToolbar button { font-size: 0.68rem !important; padding: 0.25rem 0.5rem !important; }
+            #programGrid th { font-size: 0.6rem !important; padding: 0.3rem 0.25rem !important; }
+            #programGrid td { padding: 0.15rem !important; }
+            .program-hucre { min-height: 38px !important; font-size: 0.65rem !important; padding: 0.2rem 0.25rem !important; line-height: 1.2 !important; }
             /* Konu durum butonları */
-            .konu-durum-btn { font-size: 0.62rem !important; padding: 0.2rem 0.4rem !important; min-width: 70px !important; }
+            .konu-durum-btn { font-size: 0.58rem !important; padding: 0.15rem 0.35rem !important; min-width: 62px !important; }
+            /* Öğrenci kartları */
+            #ogretmenOgrenciKartlari { grid-template-columns: 1fr !important; }
+            /* Genel bakış dashboard */
+            .dashboard { grid-template-columns: repeat(2, 1fr) !important; gap: 0.5rem !important; }
         }
 
+        /* ─── MOBİL: 480px ve altı (küçük telefonlar) ─── */
         @media (max-width: 480px) {
-            .container { padding: 0.6rem !important; }
+            .container { padding: 0.5rem !important; }
             .tab-btn { font-size: 0.6rem !important; padding: 0.3rem 0.4rem !important; }
-            .cd-val { font-size: 1.6rem !important; }
-            .ai-assistant-panel { padding: 0.75rem !important; }
-            .modal-content { padding: 1rem !important; }
-            .program-hucre { min-height: 36px !important; font-size: 0.62rem !important; }
-            .deneme-grid { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
-            .input-group label { font-size: 0.72rem; }
-            input, select { font-size: 0.82rem; padding: 0.5rem 0.75rem; }
+            .cd-val { font-size: 1.5rem !important; }
+            .ai-assistant-panel { padding: 0.6rem !important; }
+            .modal-content { padding: 0.875rem !important; }
+            .program-hucre { min-height: 32px !important; font-size: 0.58rem !important; }
+            .deneme-grid { grid-template-columns: 1fr 1fr; gap: 0.4rem; }
+            .input-group label { font-size: 0.68rem !important; }
+            input, select, textarea { font-size: 16px !important; } /* iOS zoom önleme */
+            .middle-grid { grid-template-columns: 1fr !important; }
+            .header-title { font-size: 0.82rem !important; }
+            /* Konu toolbar butonları küçük ekranda daha kompakt */
+            #konuTabToolbar button, #konuTabOgretmenToolbar button { font-size: 0.6rem !important; padding: 0.2rem 0.35rem !important; }
+            /* Öğrenci kart mini istatistik */
+            #ogretmenOgrenciKartlari > div { padding: 0.5rem !important; }
         }
 
         /* === PROGRAM HÜCRESİ DURUM RENKLERİ === */
@@ -430,6 +446,62 @@
             #jitsiModal .modal-content { width:100vw!important; height:100vh!important; max-height:100vh!important; border-radius:0!important; }
             #jitsiFrame { height:calc(100vh - 60px)!important; }
         }
+        /* ─── GÜNLÜK GÖREVLER MOBİL ─── */
+        @media (max-width: 768px) {
+            .gunluk-gorevler-bolumu #gunlukGorevInput { width: 100% !important; }
+            .gunluk-gorevler-bolumu > div:first-child { flex-direction: column; align-items: stretch; }
+            .gunluk-gorevler-bolumu > div:first-child > div:last-child { flex-wrap: wrap; }
+            #gunlukGorevListesi { gap: 0.4rem !important; }
+            #gunlukGorevListesi > div { max-width: 100% !important; }
+        }
+
+        /* ─── PROGRAM HÜCRESİ SİL BUTONU ─── */
+        .program-hucre:not(:hover) button[title="Bu konuyu sil"] { opacity: 0 !important; }
+        @media (max-width: 768px) {
+            .program-hucre button[title="Bu konuyu sil"] { opacity: 0.7 !important; }
+        }
+
+        /* ─── KRONOS MODAL RESPONSIVE ─── */
+        @media (max-width: 768px) {
+            #kronosModal > .modal-content {
+                width: 100vw !important;
+                max-width: 100vw !important;
+                height: 100vh !important;
+                max-height: 100vh !important;
+                border-radius: 0 !important;
+            }
+        }
+
+        /* ─── ÖĞRETmen PANELİ KART OVERFLOW FİX ─── */
+        #ogretmenOgrenciKartlari > div {
+            min-width: 0;
+            overflow: hidden;
+        }
+
+        /* ─── GENEL TASARIM İYİLEŞTİRMELERİ ─── */
+        .analysis-card, .stat-card {
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+        }
+        .gunluk-gorevler-bolumu {
+            transition: border-color 0.3s ease;
+        }
+        .gunluk-gorevler-bolumu:hover {
+            border-color: rgba(16,185,129,0.4) !important;
+        }
+
+        /* ─── ÖĞRETMEN GÖREV BÖLÜMÜ ─── */
+        #ogretmenGorevBolumu input:focus {
+            border-color: rgba(245,158,11,0.7) !important;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(245,158,11,0.15);
+        }
+
+        /* ─── TABLEt: 992px ─── */
+        @media (max-width: 992px) {
+            .gunluk-gorevler-bolumu > div:first-child { flex-wrap: wrap; gap: 0.4rem; }
+            #gunlukGorevInput { width: 160px !important; }
+        }
+
         </style>
 </head>
 <body>
@@ -559,8 +631,8 @@
     </div>
 </div>
 
-<div class="modal-overlay" id="kronosModal" style="padding:0;align-items:stretch;">
-    <div class="modal-content" style="width:100vw;max-width:100vw;height:100vh;max-height:100vh;border-radius:0;overflow:hidden;display:flex;flex-direction:column;padding:0;background:rgba(8,8,14,0.97);">
+<div class="modal-overlay" id="kronosModal" style="padding:1rem;align-items:center;justify-content:center;">
+    <div class="modal-content" style="width:min(96vw,1200px);max-width:min(96vw,1200px);height:min(92vh,800px);max-height:min(92vh,800px);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;padding:0;background:rgba(8,8,14,0.97);border:1px solid rgba(167,139,250,0.2);box-shadow:0 30px 80px rgba(0,0,0,0.9),0 0 60px rgba(167,139,250,0.08);">
         <div style="display:flex;align-items:center;justify-content:space-between;padding:0.4rem 0.875rem;border-bottom:1px solid rgba(255,255,255,0.08);flex-shrink:0;" id="kronosRealHeader">
             <div style="display:flex;align-items:center;gap:0.75rem;">
                 <span style="font-size:1.8rem;">&#128200;</span>
@@ -683,6 +755,27 @@
             </div>
         </div>
 
+        <!-- GÜNLÜK GÖREVLER BÖLÜMÜ -->
+        <div class="gunluk-gorevler-bolumu" style="background:var(--bg-surface-grad);border:1px solid rgba(16,185,129,0.2);border-radius:16px;padding:1rem 1.25rem;margin-bottom:0.75rem;flex-shrink:0;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;flex-wrap:wrap;gap:0.5rem;">
+                <h3 style="font-family:'Poppins',sans-serif;font-size:0.88rem;font-weight:700;color:#10b981;text-transform:uppercase;letter-spacing:0.5px;display:flex;align-items:center;gap:0.5rem;margin:0;">
+                    ✅ Günlük Görevler
+                    <span id="gunlukGorevBadge" style="background:rgba(16,185,129,0.15);color:#10b981;font-size:0.68rem;padding:2px 8px;border-radius:10px;border:1px solid rgba(16,185,129,0.3);">0/0</span>
+                </h3>
+                <div style="display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap;">
+                    <input type="text" id="gunlukGorevInput" placeholder="Yeni görev ekle..." autocomplete="off"
+                        style="padding:0.4rem 0.75rem;background:rgba(0,0,0,0.4);border:1px solid rgba(16,185,129,0.3);border-radius:8px;color:var(--text-main);font-size:0.82rem;font-family:'Roboto',sans-serif;outline:none;width:220px;transition:border-color 0.2s;"
+                        onfocus="this.style.borderColor='#10b981'" onblur="this.style.borderColor='rgba(16,185,129,0.3)'"
+                        onkeydown="if(event.key==='Enter')gunlukGorevEkle()">
+                    <button onclick="gunlukGorevEkle()" style="background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.4);color:#10b981;padding:0.4rem 0.875rem;border-radius:8px;cursor:pointer;font-size:0.78rem;font-family:'Poppins',sans-serif;font-weight:600;white-space:nowrap;">+ Ekle</button>
+                    <button onclick="gunlukGorevleriSifirla()" title="Bugünkü görevleri sıfırla" style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);color:var(--danger);padding:0.4rem 0.65rem;border-radius:8px;cursor:pointer;font-size:0.78rem;">🗑</button>
+                </div>
+            </div>
+            <div id="gunlukGorevListesi" style="display:flex;flex-wrap:wrap;gap:0.5rem;min-height:32px;align-items:flex-start;">
+                <span style="color:var(--text-muted);font-size:0.78rem;font-style:italic;padding:0.25rem 0;">Henüz görev eklenmedi. Yukarıdan ekleyebilirsiniz.</span>
+            </div>
+        </div>
+
         <div class="charts-container">
             <div class="chart-box">
                 <h3>Deneme Sınavları Gelişim Grafiği</h3>
@@ -747,6 +840,10 @@
                 <!-- Konu: seçili derse göre datalist önerileri -->
                 <div class="input-group">
                     <label>Konu Adı</label>
+                    <!-- Mobilde select, masaüstünde datalist input -->
+                    <select id="manuelKonuSelect" onchange="document.getElementById('manuelKonu').value=this.value" style="display:none;width:100%;box-sizing:border-box;padding:0.65rem 1rem;background:rgba(0,0,0,0.4);border:1px solid var(--border);border-radius:8px;color:var(--text-main);font-size:0.9rem;">
+                        <option value="">-- Konu seçin --</option>
+                    </select>
                     <input type="text" id="manuelKonu" list="manuelKonuListeSec" placeholder="Konuyu seçin veya yazın..." autocomplete="off" style="width:100%;box-sizing:border-box;">
                     <datalist id="manuelKonuListeSec"></datalist>
                 </div>
@@ -1661,6 +1758,7 @@
             'TYT Matematik': [
                 "Temel Kavramlar (Sayılar, Basamak, Tek/Çift)",
                 "Bölme-Bölünebilme",
+                "EBOB-EKOK",
                 "Rasyonel Sayılar",
                 "Eşitsizlik ve Mutlak Değer",
                 "Üslü ve Köklü Sayılar",
@@ -1755,6 +1853,7 @@
                 "Newton'un Yasaları ve Uygulamaları",
                 "Enerji ve Momentum",
                 "Dalga Mekaniği",
+                "Optik (Aynalar ve Mercekler)",
                 "Elektrik Alan ve Sığa",
                 "Manyetizma",
                 "Modern Fizik",
@@ -1778,6 +1877,8 @@
                 "İnsan Fizyolojisi (Destek, Sindirim, Dolaşım)",
                 "İnsan Fizyolojisi (Solunum ve Üriner)",
                 "Üreme ve Gelişme",
+                "Kalıtım (Mendel Genetiği, Kan Grupları)",
+                "Mutasyon, Modifikasyon ve Çevre",
                 "Komünite ve Popülasyon Ekolojisi",
                 "Genden Proteine (Protein Sentezi)",
                 "Fotosentez ve Kemosentez",
@@ -1793,11 +1894,13 @@
                 "Karmaşık Sayılar",
                 "Polinomlar",
                 "Logaritma",
-                "Trigonometri",
-                "Diziler",
+                "Trigonometri (Temel ve Toplam-Fark Formülleri)",
+                "Diziler (Aritmetik ve Geometrik)",
                 "Limit ve Süreklilik",
                 "Türev ve Uygulamaları",
-                "İntegral (Belirsiz ve Belirli)"
+                "İntegral (Belirsiz ve Belirli)",
+                "Alan Hesabı",
+                "Analitik Geometri (Çemberin Analitiği)"
             ],
             'AYT Edebiyat': [
                 "Şiir Bilgisi (Nazım Şekilleri, Türleri)",
@@ -2395,6 +2498,7 @@
         var ders = (document.getElementById('manuelDers') || {}).value || '';
         var dl = document.getElementById('manuelKonuListeSec');
         var konuInp = document.getElementById('manuelKonu');
+        var konuSelect = document.getElementById('manuelKonuSelect');
         if (!dl) return;
         dl.innerHTML = '';
         var konular = currentSyllabus[ders] || [];
@@ -2402,7 +2506,24 @@
             var opt = document.createElement('option');
             opt.value = k; dl.appendChild(opt);
         });
+        // Mobil: select dropdown doldur ve göster
+        var isMobil = window.innerWidth <= 768;
+        if (konuSelect) {
+            konuSelect.innerHTML = '<option value="">-- Konu seçin --</option>';
+            konular.forEach(function(k) {
+                var opt = document.createElement('option');
+                opt.value = k; opt.textContent = k; konuSelect.appendChild(opt);
+            });
+            if (isMobil && konular.length > 0) {
+                konuSelect.style.display = 'block';
+                if (konuInp) konuInp.style.display = 'none';
+            } else {
+                konuSelect.style.display = 'none';
+                if (konuInp) konuInp.style.display = 'block';
+            }
+        }
         if (konuInp) konuInp.value = '';
+        if (konuSelect) konuSelect.value = '';
     }
 
     function manuelKonuKaydet() {
@@ -2487,7 +2608,8 @@
     }
 
     /* ─── YAPAY ZEKA PLAN MOTORU – DOĞAL YAYILIM ─── */
-    function buildDynamicSyllabus() {
+    // window'a expose edildi — aiProgramOlusturveKapat() dış scope'tan çağırıyor
+    window.buildDynamicSyllabus = function buildDynamicSyllabus() {
         currentSyllabus = {};
         
         if (userSettings.exam === 'YKS') {
@@ -2514,14 +2636,12 @@
         if (totalWeeks < 4) totalWeeks = 4;
         if (totalWeeks > 26) totalWeeks = 26;
 
-        // weekSelect kaldırıldı — sınırsız hafta navigasyonu _programHafta ile yapılıyor
-
         tamProgram = [];
         let totalDays = totalWeeks * 7;
         
         // Her ders için konuları DOĞAL ve dengeli yay – her gün farklı ders
         let dagitimlar = {};
-        dersler.forEach(d => { dagitimlar[d] = doğalYayilim(currentSyllabus[d], totalDays); });
+        dersler.forEach(d => { dagitimlar[d] = window.doğalYayilim(currentSyllabus[d], totalDays); });
 
         for (let i = 0; i < totalDays; i++) {
             let row = { gun: `GÜN ${i+1}`, w: Math.floor(i/7) + 1, gunNo: (i % 7) + 1 };
@@ -2535,7 +2655,7 @@
             if (!currentSyllabus[mk.ders]) { currentSyllabus[mk.ders] = []; dersler.push(mk.ders); }
             if (!currentSyllabus[mk.ders].includes(mk.konu)) currentSyllabus[mk.ders].push(mk.konu);
         });
-    }
+    };
 
     /* ─── DOĞAL YAYILIM ALGORİTMASI ─── */
     // Konuları tüm program günlerine dengeli dağıtır.
@@ -2877,6 +2997,8 @@
             document.getElementById("konuProgressBar").style.width = `${yuzde}%`;
             document.getElementById("konuProgressYuzde").innerText = `%${yuzde}`;
 
+            // BUG FIX: dersler bu fonksiyon scope'unda tanımlanıyor
+            let dersler = Object.keys(currentSyllabus || {});
             let stats = { 'GENEL': { tot: 0, d: 0, y: 0, b:0, net: 0 } };
             dersler.forEach(d => { stats[d] = { tot: 0, d: 0, y: 0, b:0, net: 0 }; });
             let konuStats = {};
@@ -2967,7 +3089,16 @@
                     options: { maintainAspectRatio: false }
                 });
             }
-        } catch(e) {}
+            // Günlük görevleri göster (öğrenci modunda)
+            if (typeof gunlukGorevleriGoster === 'function' && currentUserRole !== 'ogretmen') {
+                gunlukGorevleriGoster();
+            }
+        } catch(e) {
+            // Günlük görevler hata olsa da render edilsin
+            if (typeof gunlukGorevleriGoster === 'function' && currentUserRole !== 'ogretmen') {
+                try { gunlukGorevleriGoster(); } catch(e2) {}
+            }
+        }
     }
 
     function generateKronosReport() {
@@ -3350,7 +3481,7 @@ function ogretmenDashboardOlustur(profil) {
         + '<div style="display:flex;gap:0.5rem;flex-wrap:wrap;">'
         + '<button onclick="ogretmenOgrenciEkleModal()" style="background:linear-gradient(135deg,#059669,#10b981);border:none;color:#fff;padding:0.4rem 0.875rem;border-radius:8px;cursor:pointer;font-size:0.78rem;font-family:Poppins,sans-serif;font-weight:600;">+ Yeni Ogrenci Ekle</button>'
         + '</div></div>'
-        + '<div id="ogretmenOgrenciKartlari" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:0.85rem;overflow-y:auto;max-height:260px;padding-right:4px;">'
+        + '<div id="ogretmenOgrenciKartlari" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:0.85rem;overflow-y:auto;max-height:420px;padding-right:6px;min-height:60px;">'
         + '<div style="color:var(--text-muted);font-size:0.82rem;font-style:italic;padding:1rem;grid-column:1/-1;">Henuz ogrenci eklenmedi. Yukari butona basin.</div>'
         + '</div>'
         + '</div>'
@@ -3384,8 +3515,14 @@ function ogretmenDashboardOlustur(profil) {
         + '</div></div>';
     // Grafik kutularini ogretmen panelinde gizle
     if (chartsContainer) chartsContainer.style.display = 'none';
+    // Günlük Görevler bölümünü öğretmen panelinde gizle
+    var gunlukGorevBolumu = document.querySelector('#ozet-tab .gunluk-gorevler-bolumu');
+    if (gunlukGorevBolumu) gunlukGorevBolumu.style.display = 'none';
     // Ogrenci kartlarini localStorage'dan yukle
-    setTimeout(function(){ if(typeof ogretmenOgrenciKartlariniYukle==='function') ogretmenOgrenciKartlariniYukle(); }, 100);
+    setTimeout(function(){
+        if(typeof ogretmenOgrenciKartlariniYukle==='function') ogretmenOgrenciKartlariniYukle();
+        if(typeof ogretmenGorevleriBolumu==='function') ogretmenGorevleriBolumu(profil);
+    }, 150);
 }
 
 function ogretmenOgrenciVerileriniYukle() {
@@ -4535,8 +4672,8 @@ function ogretmenOgrenciKartlariniYukle() {
             + '<div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#059669,#10b981);display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:700;color:#fff;flex-shrink:0;">'
             + (o.isim||'?').charAt(0).toUpperCase()
             + '</div>'
-            + '<div>'
-            + '<div style="font-weight:700;color:var(--text-main);font-family:Poppins,sans-serif;font-size:0.88rem;line-height:1.2;word-break:break-word;overflow-wrap:break-word;max-width:150px;">' + (o.isim||o._key) + '</div>'
+            + '<div style="min-width:0;flex:1;">'
+            + '<div style="font-weight:700;color:var(--text-main);font-family:Poppins,sans-serif;font-size:0.88rem;line-height:1.3;white-space:normal;word-break:break-word;overflow-wrap:anywhere;max-width:160px;">' + (o.isim||o._key) + '</div>'
             + '<div style="font-size:0.65rem;color:var(--text-muted);">' + (o.sinav||'YKS') + (o.alan ? ' · ' + o.alan.split(' ')[0] : '') + ' öğrencisi</div>'
             + '</div></div>'
             // Aksiyon butonları
@@ -5413,7 +5550,10 @@ function programGridRender() {
 
             let konuIci = konu
                 ? '<div style="display:flex;flex-direction:column;align-items:center;gap:4px;width:100%;">'
-                    + '<span style="line-height:1.3;font-size:0.78rem;">' + konu + '</span>'
+                    + '<div style="display:flex;align-items:flex-start;justify-content:space-between;width:100%;gap:2px;">'
+                    + '<span style="line-height:1.3;font-size:0.78rem;flex:1;text-align:center;">' + konu + '</span>'
+                    + '<button onclick="event.stopPropagation();programHucreSil(\'' + hucreKey.replace(/'/g,"\\'") + '\')" title="Bu konuyu sil" style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.25);color:var(--danger);border-radius:4px;cursor:pointer;font-size:0.65rem;padding:1px 4px;line-height:1.2;flex-shrink:0;opacity:0.6;transition:opacity 0.2s;" onmouseover="this.style.opacity=\'1\'" onmouseout="this.style.opacity=\'0.6\'">✕</button>'
+                    + '</div>'
                     + '<button class="konu-durum-btn ' + durumBtnClass + '" '
                     + 'onclick="event.stopPropagation();konuDurumDegistir(\'' + hucreKey.replace(/'/g,"\\'") + '\')" '
                     + 'title="Durumu değiştir: Bekliyor → Tamamlandı → Yapılmadı">'
@@ -5462,6 +5602,31 @@ function konuDurumDegistir(hucreKey) {
     } else if (currentUser && !currentUser.uid.includes('test_')) {
         // Öğrenci modunda: Firebase'e kaydet
         db.ref('users/' + currentUser.uid + '/yks/konuDurumlari').set(appKonuDurumlari);
+    }
+    programGridRender();
+    updateDashboard();
+}
+
+function programHucreSil(hucreKey) {
+    if (!hucreKey || !_programHucreVerisi[hucreKey]) return;
+    let konu = _programHucreVerisi[hucreKey];
+    if (!confirm('"' + konu + '" konusunu programdan sil?')) return;
+    delete _programHucreVerisi[hucreKey];
+    // Status kaydını da sil
+    let statusKey = 'status_' + hucreKey;
+    if (appKonuDurumlari[statusKey]) delete appKonuDurumlari[statusKey];
+
+    if (currentUserRole === 'ogretmen' && window._gridAktifOgrKey) {
+        let storageKey = 'ogretmen_grid_' + (currentUser ? currentUser.uid : 'test') + '_' + window._gridAktifOgrKey;
+        let mevcut = {};
+        try { mevcut = JSON.parse(localStorage.getItem(storageKey) || '{}'); } catch(e) {}
+        delete mevcut[hucreKey];
+        localStorage.setItem(storageKey, JSON.stringify(mevcut));
+    } else {
+        _programHucreVerisiFirebaseSave();
+        if (currentUser && !currentUser.uid.includes('test_')) {
+            db.ref('users/' + currentUser.uid + '/yks/konuDurumlari').set(appKonuDurumlari);
+        }
     }
     programGridRender();
     updateDashboard();
@@ -5587,7 +5752,8 @@ function programAiModalAc() {
     if (!userSettings || !userSettings.exam) {
         alert('Önce sınav ayarlarını kaydedin (Ayarlar sekmesi).'); return;
     }
-    buildDynamicSyllabus();
+    if (typeof window.buildDynamicSyllabus === 'function') window.buildDynamicSyllabus();
+    else { alert('Sistem yüklenmedi, sayfayı yenileyin.'); return; }
     if (Object.keys(currentSyllabus || {}).length === 0) {
         alert('Sınav ayarları yüklenmedi. Lütfen ayarları kaydedin.'); return;
     }
@@ -5604,7 +5770,16 @@ function programAiModalAc() {
 }
 
 function aiProgramOlusturveKapat() {
-    buildDynamicSyllabus();
+    // Öğretmen override tarafından da çağrılabilir — guard ile koru
+    if (typeof window.buildDynamicSyllabus === 'function') {
+        window.buildDynamicSyllabus();
+    } else if (typeof buildDynamicSyllabus === 'function') {
+        buildDynamicSyllabus();
+    }
+    if (Object.keys(currentSyllabus || {}).length === 0) {
+        alert('Sınav ayarları henüz yüklenmedi. Lütfen sayfayı yenileyin veya ayarlarınızı kontrol edin.');
+        return;
+    }
     let saatGunluk = parseInt(document.getElementById('aiSaatGunluk').value) || 6;
     let gunSayisi = parseInt(document.getElementById('aiGunSayisi').value) || 7;
     let agirlikDers = (document.getElementById('aiAgirlikDers').value || '').trim();
@@ -5629,7 +5804,8 @@ function aiProgramOlusturveKapat() {
         let toplamAktifGun = toplamHafta * gunSayisiEff;
         let carpan = (d === agirlikDers) ? 1.4 : 1.0;
         let hisseli = Math.round(toplamAktifGun * carpan);
-        dagitimlar[d] = doğalYayilim(konuListesi, hisseli > (toplamHafta * 7) ? toplamHafta * 7 : hisseli);
+        var _yayilimFn = window.doğalYayilim || doğalYayilim;
+        dagitimlar[d] = _yayilimFn(konuListesi, hisseli > (toplamHafta * 7) ? toplamHafta * 7 : hisseli);
     });
 
     let aktifGunSayac = {};
@@ -6099,9 +6275,8 @@ function aiProgramOlusturveKapat() {
         var carpan = (d === agirlikDers) ? 1.4 : 1.0;
         var hisseli = Math.round(toplamAktifGun * carpan);
         if (hisseli > toplamHafta * 7) hisseli = toplamHafta * 7;
-        dagitimlar[d] = typeof doğalYayilim === 'function'
-            ? doğalYayilim(konuListesi, hisseli)
-            : konuListesi; // fallback
+        var _yayilimFn2 = window.doğalYayilim || (typeof doğalYayilim === 'function' ? doğalYayilim : null);
+        dagitimlar[d] = _yayilimFn2 ? _yayilimFn2(konuListesi, hisseli) : konuListesi;
     });
 
     // Var olan ogrenci grid verisini koru, uzerine yaz
@@ -6134,6 +6309,214 @@ function aiProgramOlusturveKapat() {
     if (lbl) lbl.innerText = _ogretmenProgramHafta + '. Hafta';
     _programHafta = _ogretmenProgramHafta;
     _ogretmenGridOgrYukle(window._gridAktifOgrKey);
+}
+
+// ===================== GÜNLÜK GÖREVLER (ÖĞRENCİ PANELİ) =====================
+var _gunlukGorevlerKey = 'kronos_gunluk_gorevler_v1';
+
+function _gunlukGorevBugununAnahtari() {
+    var now = new Date();
+    return now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
+}
+
+function _gunlukGorevleriOku() {
+    var key = _gunlukGorevlerKey;
+    if (window.currentUser && !window.currentUser.uid.includes('test_')) {
+        key = _gunlukGorevlerKey + '_' + window.currentUser.uid;
+    }
+    try {
+        var veri = JSON.parse(localStorage.getItem(key) || '{}');
+        var bugun = _gunlukGorevBugununAnahtari();
+        // Eski günleri temizle (sadece bugünü tut)
+        if (!veri[bugun]) veri[bugun] = [];
+        return { veri: veri, bugun: bugun, key: key };
+    } catch(e) { return { veri: {}, bugun: _gunlukGorevBugununAnahtari(), key: key }; }
+}
+
+function _gunlukGorevleriYaz(veri, storageKey) {
+    try { localStorage.setItem(storageKey, JSON.stringify(veri)); } catch(e) {}
+}
+
+function gunlukGorevleriGoster() {
+    var d = _gunlukGorevleriOku();
+    var gorevler = d.veri[d.bugun] || [];
+    var listEl = document.getElementById('gunlukGorevListesi');
+    var badgeEl = document.getElementById('gunlukGorevBadge');
+    if (!listEl) return;
+    var tamam = gorevler.filter(function(g){ return g.tamam; }).length;
+    if (badgeEl) badgeEl.innerText = tamam + '/' + gorevler.length;
+    if (gorevler.length === 0) {
+        listEl.innerHTML = '<span style="color:var(--text-muted);font-size:0.78rem;font-style:italic;padding:0.25rem 0;">Henüz görev eklenmedi. Yukarıdan ekleyebilirsiniz.</span>';
+        return;
+    }
+    listEl.innerHTML = gorevler.map(function(g, i) {
+        var renk = g.tamam ? 'rgba(16,185,129,0.18)' : 'rgba(255,255,255,0.04)';
+        var border = g.tamam ? '1px solid rgba(16,185,129,0.4)' : '1px solid rgba(255,255,255,0.08)';
+        var textDecor = g.tamam ? 'line-through;opacity:0.6' : 'none';
+        return '<div style="display:inline-flex;align-items:center;gap:0.4rem;background:' + renk + ';border:' + border + ';border-radius:20px;padding:0.3rem 0.65rem;cursor:pointer;transition:all 0.2s;max-width:280px;" '
+            + 'onclick="gunlukGorevToggle(' + i + ')" title="Tamamlandı olarak işaretle">'
+            + '<span style="font-size:0.85rem;">' + (g.tamam ? '✅' : '⬜') + '</span>'
+            + '<span style="font-size:0.8rem;color:var(--text-main);text-decoration:' + (g.tamam ? 'line-through' : 'none') + ';opacity:' + (g.tamam ? '0.6' : '1') + ';white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px;">' + g.metin + '</span>'
+            + '<button onclick="event.stopPropagation();gunlukGorevSil(' + i + ')" style="background:none;border:none;color:rgba(239,68,68,0.5);cursor:pointer;font-size:0.75rem;padding:0;line-height:1;margin-left:2px;" title="Sil">×</button>'
+            + '</div>';
+    }).join('');
+}
+
+function gunlukGorevEkle() {
+    var inp = document.getElementById('gunlukGorevInput');
+    if (!inp) return;
+    var metin = inp.value.trim();
+    if (!metin) return;
+    var d = _gunlukGorevleriOku();
+    if (!d.veri[d.bugun]) d.veri[d.bugun] = [];
+    d.veri[d.bugun].push({ metin: metin, tamam: false, zaman: Date.now() });
+    _gunlukGorevleriYaz(d.veri, d.key);
+    inp.value = '';
+    gunlukGorevleriGoster();
+}
+
+function gunlukGorevToggle(idx) {
+    var d = _gunlukGorevleriOku();
+    var gorevler = d.veri[d.bugun] || [];
+    if (gorevler[idx]) gorevler[idx].tamam = !gorevler[idx].tamam;
+    d.veri[d.bugun] = gorevler;
+    _gunlukGorevleriYaz(d.veri, d.key);
+    gunlukGorevleriGoster();
+}
+
+function gunlukGorevSil(idx) {
+    var d = _gunlukGorevleriOku();
+    var gorevler = d.veri[d.bugun] || [];
+    gorevler.splice(idx, 1);
+    d.veri[d.bugun] = gorevler;
+    _gunlukGorevleriYaz(d.veri, d.key);
+    gunlukGorevleriGoster();
+}
+
+function gunlukGorevleriSifirla() {
+    if (!confirm('Bugünkü tüm görevler silinecek. Emin misiniz?')) return;
+    var d = _gunlukGorevleriOku();
+    d.veri[d.bugun] = [];
+    _gunlukGorevleriYaz(d.veri, d.key);
+    gunlukGorevleriGoster();
+}
+
+// ===================== ÖĞRETmen PANELİ — ÖĞRENCİ BAZLI GÖREV TAKİBİ =====================
+
+function ogretmenGorevleriBolumu(profil) {
+    // Öğretmen dashboard'una görev takip bölümü ekler
+    var middleGrid = document.querySelector('#ozet-tab .middle-grid');
+    if (!middleGrid) return;
+    // Görev bölümü zaten varsa ekleme
+    if (document.getElementById('ogretmenGorevBolumu')) return;
+    var gorevDiv = document.createElement('div');
+    gorevDiv.id = 'ogretmenGorevBolumu';
+    gorevDiv.className = 'analysis-card';
+    gorevDiv.style.cssText = 'border-top:3px solid #f59e0b;grid-column:span 6;';
+    gorevDiv.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;flex-wrap:wrap;gap:0.5rem;">'
+        + '<h3 style="color:#f59e0b;margin:0;font-size:0.88rem;">📋 Öğrenci Görev Takibi</h3>'
+        + '<div style="display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap;">'
+        + '<select id="gorevOgrenciSec" onchange="ogretmenGorevListesiGoster()" style="background:rgba(0,0,0,0.4);border:1px solid rgba(245,158,11,0.3);color:var(--text-main);padding:0.4rem 0.75rem;border-radius:8px;font-size:0.8rem;font-family:Poppins,sans-serif;cursor:pointer;">'
+        + '<option value="">-- Öğrenci Seçin --</option>'
+        + '</select>'
+        + '<input type="text" id="ogretmenGorevMetin" placeholder="Görev açıklaması..." autocomplete="off" style="background:rgba(0,0,0,0.4);border:1px solid rgba(245,158,11,0.3);border-radius:8px;color:var(--text-main);padding:0.4rem 0.75rem;font-size:0.8rem;font-family:Roboto,sans-serif;outline:none;width:200px;" onkeydown="if(event.key===\'Enter\')ogretmenGorevEkle()">'
+        + '<input type="date" id="ogretmenGorevTarih" style="background:rgba(0,0,0,0.4);border:1px solid rgba(245,158,11,0.3);border-radius:8px;color:var(--text-main);padding:0.4rem 0.65rem;font-size:0.8rem;font-family:Roboto,sans-serif;outline:none;">'
+        + '<button onclick="ogretmenGorevEkle()" style="background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.4);color:#f59e0b;padding:0.4rem 0.875rem;border-radius:8px;cursor:pointer;font-size:0.78rem;font-family:Poppins,sans-serif;font-weight:600;white-space:nowrap;">+ Görev Ver</button>'
+        + '</div></div>'
+        + '<div id="ogretmenGorevListesi" style="display:flex;flex-direction:column;gap:0.4rem;max-height:180px;overflow-y:auto;">'
+        + '<span style="color:var(--text-muted);font-size:0.78rem;font-style:italic;">Öğrenci seçin ve görev ekleyin.</span>'
+        + '</div>';
+    middleGrid.appendChild(gorevDiv);
+    // Öğrenci seçeneğini doldur
+    ogretmenGorevOgrenciListesiniDoldur();
+}
+
+function ogretmenGorevOgrenciListesiniDoldur() {
+    var sel = document.getElementById('gorevOgrenciSec');
+    if (!sel) return;
+    var veri = typeof _takipVeriOku === 'function' ? _takipVeriOku() : {};
+    var ogrenciler = Object.keys(veri.ogrenciler || {}).map(function(k){ var o=veri.ogrenciler[k]; o._key=k; return o; });
+    sel.innerHTML = '<option value="">-- Öğrenci Seçin --</option>';
+    ogrenciler.forEach(function(o) {
+        var opt = document.createElement('option');
+        opt.value = o._key;
+        opt.textContent = o.isim || o._key;
+        sel.appendChild(opt);
+    });
+}
+
+function _ogretmenGorevStorageKey(ogrKey) {
+    var uid = (window.currentUser && !window.currentUser.uid.includes('test_')) ? window.currentUser.uid : 'test';
+    return 'ogretmen_gorevler_' + uid + '_' + ogrKey;
+}
+
+function ogretmenGorevEkle() {
+    var sel = document.getElementById('gorevOgrenciSec');
+    var metinEl = document.getElementById('ogretmenGorevMetin');
+    var tarihEl = document.getElementById('ogretmenGorevTarih');
+    if (!sel || !sel.value) { alert('Önce bir öğrenci seçin!'); return; }
+    var metin = metinEl ? metinEl.value.trim() : '';
+    if (!metin) { alert('Görev açıklaması boş olamaz!'); return; }
+    var tarih = tarihEl ? tarihEl.value : '';
+    var storageKey = _ogretmenGorevStorageKey(sel.value);
+    var gorevler = [];
+    try { gorevler = JSON.parse(localStorage.getItem(storageKey) || '[]'); } catch(e) {}
+    gorevler.push({ id: Date.now(), metin: metin, tarih: tarih, tamam: false, zaman: Date.now() });
+    localStorage.setItem(storageKey, JSON.stringify(gorevler));
+    if (metinEl) metinEl.value = '';
+    ogretmenGorevListesiGoster();
+}
+
+function ogretmenGorevListesiGoster() {
+    var sel = document.getElementById('gorevOgrenciSec');
+    var listEl = document.getElementById('ogretmenGorevListesi');
+    if (!listEl) return;
+    if (!sel || !sel.value) {
+        listEl.innerHTML = '<span style="color:var(--text-muted);font-size:0.78rem;font-style:italic;">Öğrenci seçin ve görev ekleyin.</span>';
+        return;
+    }
+    var storageKey = _ogretmenGorevStorageKey(sel.value);
+    var gorevler = [];
+    try { gorevler = JSON.parse(localStorage.getItem(storageKey) || '[]'); } catch(e) {}
+    if (gorevler.length === 0) {
+        listEl.innerHTML = '<span style="color:var(--text-muted);font-size:0.78rem;font-style:italic;">Bu öğrenciye henüz görev verilmedi.</span>';
+        return;
+    }
+    var ogrKey = sel.value;
+    listEl.innerHTML = gorevler.sort(function(a,b){ return (b.zaman||0)-(a.zaman||0); }).map(function(g, i) {
+        var tarihStr = g.tarih ? ' · <span style="color:var(--warning);font-size:0.7rem;">📅 ' + g.tarih + '</span>' : '';
+        var durumRenk = g.tamam ? '#10b981' : '#f59e0b';
+        var durumEmoji = g.tamam ? '✅' : '⏳';
+        return '<div style="display:flex;align-items:center;justify-content:space-between;gap:0.5rem;background:rgba(0,0,0,0.28);border:1px solid rgba(245,158,11,0.15);border-radius:8px;padding:0.4rem 0.65rem;">'
+            + '<div style="flex:1;min-width:0;">'
+            + '<span style="font-size:0.8rem;color:var(--text-main);' + (g.tamam ? 'text-decoration:line-through;opacity:0.6;' : '') + '">' + g.metin + '</span>'
+            + tarihStr
+            + '</div>'
+            + '<div style="display:flex;gap:0.3rem;flex-shrink:0;">'
+            + '<button onclick="ogretmenGorevToggle(\'' + ogrKey + '\',' + i + ')" title="Durumu değiştir" style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.25);color:' + durumRenk + ';padding:0.2rem 0.45rem;border-radius:6px;cursor:pointer;font-size:0.75rem;">' + durumEmoji + '</button>'
+            + '<button onclick="ogretmenGorevSil(\'' + ogrKey + '\',' + i + ')" title="Sil" style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);color:var(--danger);padding:0.2rem 0.45rem;border-radius:6px;cursor:pointer;font-size:0.75rem;">🗑</button>'
+            + '</div></div>';
+    }).join('');
+}
+
+function ogretmenGorevToggle(ogrKey, idx) {
+    var storageKey = _ogretmenGorevStorageKey(ogrKey);
+    var gorevler = [];
+    try { gorevler = JSON.parse(localStorage.getItem(storageKey) || '[]'); } catch(e) {}
+    var sorted = gorevler.sort(function(a,b){ return (b.zaman||0)-(a.zaman||0); });
+    if (sorted[idx]) sorted[idx].tamam = !sorted[idx].tamam;
+    localStorage.setItem(storageKey, JSON.stringify(gorevler));
+    ogretmenGorevListesiGoster();
+}
+
+function ogretmenGorevSil(ogrKey, idx) {
+    var storageKey = _ogretmenGorevStorageKey(ogrKey);
+    var gorevler = [];
+    try { gorevler = JSON.parse(localStorage.getItem(storageKey) || '[]'); } catch(e) {}
+    var sorted = gorevler.sort(function(a,b){ return (b.zaman||0)-(a.zaman||0); });
+    sorted.splice(idx, 1);
+    localStorage.setItem(storageKey, JSON.stringify(gorevler));
+    ogretmenGorevListesiGoster();
 }
 
 </script>
